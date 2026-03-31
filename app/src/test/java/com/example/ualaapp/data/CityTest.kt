@@ -1,5 +1,6 @@
 package com.example.ualaapp.data
 
+import com.example.ualaapp.TestUtils
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Test
@@ -14,7 +15,7 @@ class CityTest {
             _id = 3433955,
             coord = Coordinates(
                 lat = -58.450001,
-                long = -34.599998
+                lon = -34.599998
             )
         )
 
@@ -24,7 +25,7 @@ class CityTest {
         assertEquals(3433955, city._id)
         assertNotNull(city.coord)
         assertEquals(-58.450001, city.coord.lat, 0.0)
-        assertEquals(-34.599998, city.coord.long, 0.0)
+        assertEquals(-34.599998, city.coord.lon, 0.0)
     }
 
     @Test
@@ -35,7 +36,7 @@ class CityTest {
             _id = 3433658,
             coord = Coordinates(
                 lat = -58.51722,
-                long = -33.00938
+                lon = -33.00938
             )
         )
 
@@ -45,6 +46,19 @@ class CityTest {
         assertEquals(3433658, city._id)
         assertNotNull(city.coord)
         assertEquals(-58.51722, city.coord.lat, 0.0)
-        assertEquals(-33.00938, city.coord.long, 0.0)
+        assertEquals(-33.00938, city.coord.lon, 0.0)
+    }
+
+    @Test
+    fun deserialize_json_city() {
+        val city = TestUtils.deserialize<City>("city.json")
+
+        assertNotNull(city)
+        assertEquals("FI", city.country)
+        assertEquals("Kirkkonummi", city.name)
+        assertEquals(649631, city._id)
+        assertNotNull(city.coord)
+        assertEquals(60.166672, city.coord.lat, 0.0)
+        assertEquals(24.41667, city.coord.lon, 0.0)
     }
 }
