@@ -47,4 +47,17 @@ class CityTest {
         assertEquals(-58.51722, city.coord.lat, 0.0)
         assertEquals(-33.00938, city.coord.long, 0.0)
     }
+
+    @Test
+    fun deserialize_json_city() {
+
+
+        assertNotNull(city)
+        assertEquals("AR", city.country)
+        assertEquals("Gualeguaychú", city.name)
+        assertEquals(3433658, city._id)
+        assertNotNull(city.coord)
+        assertEquals(-58.51722, city.coord.lat, 0.0)
+        assertEquals(-33.00938, city.coord.long, 0.0)
+    }
 }
