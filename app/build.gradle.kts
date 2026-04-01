@@ -49,6 +49,8 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.dagger.hilt)
+    implementation(libs.retrofit2.retrofit)
+
     ksp(libs.dagger.hilt.compiler)
 
     testImplementation(libs.junit)
