@@ -1,15 +1,17 @@
 [versions]
+activityCompose = "1.13.0"
 agp = "9.1.0"
+composeBom = "2024.09.00"
 coreKtx = "1.18.0"
+daggerHilt = "2.59.2"
+espressoCore = "3.7.0"
+kotlin = "2.2.20"
+kotlinSerialization = "2.2.20"
+kotlinSerializationJson = "1.9.0"
+ksp = "2.2.20-2.0.2"
 junit = "4.13.2"
 junitVersion = "1.3.0"
-espressoCore = "3.7.0"
 lifecycleRuntimeKtx = "2.10.0"
-activityCompose = "1.13.0"
-kotlin = "2.2.10"
-kotlinSerialization = "2.2.10"
-kotlinSerializationJson = "1.9.0"
-composeBom = "2024.09.00"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -26,9 +28,13 @@ androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "u
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+dagger-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "daggerHilt" }
+dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "daggerHilt" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinSerializationJson" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref= "daggerHilt" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinSerialization" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

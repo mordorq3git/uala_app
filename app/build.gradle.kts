@@ -1,16 +1,14 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.dagger.hilt)
     alias(libs.plugins.kotlin.serialization)
 }
 
 android {
     namespace = "com.example.ualaapp"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.ualaapp"
@@ -50,6 +48,8 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.dagger.hilt)
+    ksp(libs.dagger.hilt.compiler)
 
     testImplementation(libs.junit)
 
