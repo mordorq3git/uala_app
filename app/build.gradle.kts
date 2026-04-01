@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.ksp)
+    alias(libs.plugins.devtools.ksp)
     alias(libs.plugins.dagger.hilt)
     alias(libs.plugins.kotlin.serialization)
 }
@@ -50,8 +50,11 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.dagger.hilt)
     implementation(libs.retrofit2.retrofit)
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
 
     ksp(libs.dagger.hilt.compiler)
+    ksp(libs.room.compiler)
 
     testImplementation(libs.junit)
 
