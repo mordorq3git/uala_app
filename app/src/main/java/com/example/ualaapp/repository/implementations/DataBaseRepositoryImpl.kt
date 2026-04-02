@@ -5,6 +5,6 @@ import com.example.ualaapp.repository.Repository
 
 class DataBaseRepositoryImpl : Repository {
     override suspend fun getCities(): List<City> {
-        TODO("Not yet implemented")
+        return emptyList()
     }
 }
