@@ -1,8 +1,7 @@
-package com.example.ualaapp
+package com.example.ualaapp.repository
 
 import android.content.Context
 import androidx.room.Room
-import com.example.ualaapp.repository.DatabaseModule
 import com.example.ualaapp.repository.implementations.database.AppDatabase
 import dagger.Module
 import dagger.Provides

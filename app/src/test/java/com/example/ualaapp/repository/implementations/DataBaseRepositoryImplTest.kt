@@ -20,10 +20,8 @@ class DataBaseRepositoryImplTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
-
     @Inject
     lateinit var repository: DataBaseRepositoryImpl
-
 
     @Before
     fun init() {

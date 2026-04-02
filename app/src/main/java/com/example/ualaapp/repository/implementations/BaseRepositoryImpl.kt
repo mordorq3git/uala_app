@@ -5,8 +5,8 @@ import com.example.ualaapp.repository.Repository
 import javax.inject.Inject
 
 class BaseRepositoryImpl : Repository {
-    /*@Inject
-    lateinit var apiRepository: ApiRepository*/
+    @Inject
+    lateinit var apiRepository: ApiRepositoryImpl
 
     @Inject
     lateinit var dataBaseRepository: DataBaseRepositoryImpl
@@ -22,14 +22,10 @@ class BaseRepositoryImpl : Repository {
     }
 
     private suspend fun getCitiesFromDb(): List<City> {
-        // val dataBaseRepository = DataBaseRepositoryImpl()
-
         return dataBaseRepository.getCities()
     }
 
     private suspend fun getCitiesFromApi(): List<City> {
-        val apiRepository = ApiRepositoryImpl()
-
         return apiRepository.getCities()
     }
 }
