@@ -3,6 +3,7 @@ package com.example.ualaapp.repository.implementations.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.example.ualaapp.repository.implementations.database.daos.CityDao
+import com.example.ualaapp.repository.implementations.database.daos.FavouriteDao
 import com.example.ualaapp.repository.implementations.database.daos.UserDao
 import com.example.ualaapp.repository.implementations.database.entities.CityEntity
 import com.example.ualaapp.repository.implementations.database.entities.FavouriteEntity
@@ -15,5 +16,5 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun userDao(): UserDao
 
-    abstract fun favouriteDao(): UserDao
+    abstract fun favouriteDao(): FavouriteDao
 }
