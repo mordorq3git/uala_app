@@ -8,7 +8,13 @@ class BaseRepositoryImpl : Repository {
     override suspend fun getCities(): List<City> {
         val dataBaseRepository = DataBaseRepositoryImpl()
 
-        val cities = dataBaseRepository.getCities()
+        var cities = dataBaseRepository.getCities()
+
+        if(cities.isEmpty()) {
+            val apiRepository = ApiRepositoryImpl()
+
+            cities = apiRepository.getCities()
+        }
 
         return cities
     }

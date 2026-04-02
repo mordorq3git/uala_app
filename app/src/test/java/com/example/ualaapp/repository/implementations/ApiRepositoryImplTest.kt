@@ -12,6 +12,6 @@ class ApiRepositoryImplTest {
         val cities = repository.getCities()
 
         Assert.assertNotNull(cities)
-        Assert.assertFalse(cities.isNotEmpty())
+        Assert.assertTrue(cities.isEmpty())
     }
 }
