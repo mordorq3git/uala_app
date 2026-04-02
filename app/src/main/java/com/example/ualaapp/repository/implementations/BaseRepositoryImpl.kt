@@ -6,16 +6,24 @@ import com.example.ualaapp.repository.Repository
 class BaseRepositoryImpl : Repository {
 
     override suspend fun getCities(): List<City> {
-        val dataBaseRepository = DataBaseRepositoryImpl()
-
-        var cities = dataBaseRepository.getCities()
+        var cities = getCitiesFromDb()
 
         if(cities.isEmpty()) {
-            val apiRepository = ApiRepositoryImpl()
-
-            cities = apiRepository.getCities()
+            cities = getCitiesFromApi()
         }
 
         return cities
+    }
+
+    private suspend fun getCitiesFromDb(): List<City> {
+        val dataBaseRepository = DataBaseRepositoryImpl()
+
+        return dataBaseRepository.getCities()
+    }
+
+    private suspend fun getCitiesFromApi(): List<City> {
+        val apiRepository = ApiRepositoryImpl()
+
+        return apiRepository.getCities()
     }
 }
