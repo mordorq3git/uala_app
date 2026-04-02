@@ -1,4 +1,4 @@
-package com.example.ualaapp.repository
+package com.example.ualaapp.repository.implementations.api
 
 import com.example.ualaapp.data.City
 import retrofit2.http.GET

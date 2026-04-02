@@ -1,5 +1,6 @@
 package com.example.ualaapp.repository
 
+import com.example.ualaapp.repository.implementations.api.CitiesApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
