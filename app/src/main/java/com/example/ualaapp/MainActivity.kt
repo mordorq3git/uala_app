@@ -11,6 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.example.ualaapp.presentation.citieslist.CitiesListViewModel
 import com.example.ualaapp.ui.theme.UalaAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -33,7 +35,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
+fun Greeting(name: String, modifier: Modifier = Modifier, viewModel: CitiesListViewModel = hiltViewModel()) {
     Text(
         text = "Hello $name!",
         modifier = modifier
