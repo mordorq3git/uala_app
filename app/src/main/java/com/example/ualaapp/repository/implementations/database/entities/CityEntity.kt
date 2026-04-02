@@ -6,8 +6,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "cities")
 data class CityEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int,
-    val _id: String,
+    @PrimaryKey(autoGenerate = true) val id_city: Int,
+    val _id: Int,
     val name: String,
     val country: String,
     @Embedded val coord: CoordinatesEntity

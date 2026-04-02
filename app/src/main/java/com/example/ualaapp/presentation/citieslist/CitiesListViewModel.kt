@@ -1,7 +1,7 @@
 package com.example.ualaapp.presentation.citieslist
 
 import androidx.lifecycle.ViewModel
-import com.example.ualaapp.repository.CitiesApiService
+import com.example.ualaapp.repository.implementations.api.CitiesApiService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
