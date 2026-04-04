@@ -39,14 +39,11 @@ class BaseRepositoryImplTest {
 
     @Before
     fun init() {
-        // 1. Inyectamos los DAOs (esto requiere HiltRule)
         hiltRule.inject()
 
-        // 2. Inicializamos los repositorios manualmente pasando las dependencias
         dataBaseRepository = DataBaseRepositoryImpl(cityDao, userDao, favouriteDao)
         apiRepository = ApiRepositoryImpl(mockApiService)
 
-        // 3. Inicializamos el BaseRepository con sus hijos
         baseRepository = BaseRepositoryImpl(
             apiRepository = apiRepository,
             dataBaseRepository = dataBaseRepository
@@ -100,6 +97,27 @@ class BaseRepositoryImplTest {
         Assert.assertNotNull(cities)
         Assert.assertFalse(cities.isEmpty())
         Assert.assertEquals(5, cities.size)
+    }
+
+    @Test
+    fun setCities_toDb() = runTest {
+        val mockedCity = mockk<City>(relaxed = true)
+        val listOfCities = listOf(
+            mockedCity,
+            mockedCity,
+            mockedCity,
+            mockedCity,
+            mockedCity,
+            mockedCity
+        )
+
+        baseRepository.setCities(listOfCities)
+
+        val cities = baseRepository.getCities()
+
+        Assert.assertNotNull(cities)
+        Assert.assertFalse(cities.isEmpty())
+        Assert.assertEquals(6, cities.size)
     }
 
 }
