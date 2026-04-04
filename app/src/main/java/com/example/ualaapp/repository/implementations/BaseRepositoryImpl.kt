@@ -26,4 +26,8 @@ class BaseRepositoryImpl @Inject constructor(
     private suspend fun getCitiesFromApi(): List<City> {
         return apiRepository.getCities()
     }
+
+    suspend fun setCities(listOfCities: List<City>) {
+        dataBaseRepository.setCities(listOfCities)
+    }
 }
