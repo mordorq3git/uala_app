@@ -65,6 +65,7 @@ dependencies {
     testImplementation(libs.dagger.hilt.testing)
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockk)
     testImplementation(libs.robolectric)
 
     androidTestImplementation(libs.androidx.junit)
