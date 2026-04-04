@@ -14,6 +14,8 @@ class BaseRepositoryImpl @Inject constructor(
 
         if(cities.isEmpty()) {
             cities = getCitiesFromApi()
+
+            saveCities(cities)
         }
 
         return cities
@@ -21,6 +23,10 @@ class BaseRepositoryImpl @Inject constructor(
 
     private suspend fun getCitiesFromDb(): List<City> {
         return dataBaseRepository.getCities()
+    }
+
+    private suspend fun saveCities(listOfCities: List<City>) {
+        dataBaseRepository.setCities(listOfCities)
     }
 
     private suspend fun getCitiesFromApi(): List<City> {
