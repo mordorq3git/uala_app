@@ -1,8 +1,11 @@
 package com.example.ualaapp.repository.implementations
 
+import com.example.ualaapp.repository.implementations.database.daos.CityDao
+import com.example.ualaapp.repository.implementations.database.entities.CityEntity
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
+import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Before
@@ -23,6 +26,9 @@ class DataBaseRepositoryImplTest {
     @Inject
     lateinit var repository: DataBaseRepositoryImpl
 
+    @Inject
+    lateinit var cityDao: CityDao
+
     @Before
     fun init() {
         hiltRule.inject()
@@ -34,5 +40,17 @@ class DataBaseRepositoryImplTest {
 
         Assert.assertNotNull(cities)
         Assert.assertTrue(cities.isEmpty())
+    }
+
+    @Test
+    fun getCities_returnsNotEmptyList() = runTest {
+        val mockedCity = mockk<CityEntity>(relaxed = true)
+        for (n in 1 .. 5) cityDao.insert(mockedCity)
+
+        val cities = repository.getCities()
+
+        Assert.assertNotNull(cities)
+        Assert.assertFalse(cities.isEmpty())
+        Assert.assertEquals(5, cities.size)
     }
 }
