@@ -20,7 +20,7 @@ interface CityDao {
     suspend fun cleanTable()
 
     @Query("SELECT * FROM cities ORDER BY name ASC")
-    fun getAll(): List<CityEntity>
+    suspend fun getAll(): List<CityEntity>
 
     @Transaction
     suspend fun refreshData(listOfCityEntities: List<CityEntity>) {
