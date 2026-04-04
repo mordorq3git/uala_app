@@ -16,7 +16,17 @@ class DataBaseRepositoryImpl @Inject constructor(
     private val favouriteDao: FavouriteDao
 ) : DatabaseRepository {
     override suspend fun getCities(): List<City> {
-        return cityDao.getAll().map { entity ->
+        return mapCitiesEntitiesToDto(cityDao.getAll())
+    }
+
+    override suspend fun setCities(listOfCities: List<City>) {
+        val listOfCitiesEntities = mapCitiesDtoToEntities(listOfCities)
+
+        cityDao.refreshData(listOfCitiesEntities)
+    }
+
+    private fun mapCitiesEntitiesToDto(listOfEntities: List<CityEntity>) =
+        listOfEntities.map { entity ->
             City(
                 _id = entity._id,
                 name = entity.name,
@@ -27,10 +37,9 @@ class DataBaseRepositoryImpl @Inject constructor(
                 )
             )
         }
-    }
 
-    override suspend fun setCities(listOfCities: List<City>) {
-        val listOfCitiesEntities = listOfCities.map { city ->
+    private fun mapCitiesDtoToEntities(listOfDtos: List<City>) =
+        listOfDtos.map { city ->
             CityEntity(
                 _id = city._id,
                 name = city.name,
@@ -40,8 +49,5 @@ class DataBaseRepositoryImpl @Inject constructor(
                     lon = city.coord.lon
                 )
             )
-        }
-
-        cityDao.refreshData(listOfCitiesEntities)
     }
 }
