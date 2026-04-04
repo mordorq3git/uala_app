@@ -9,8 +9,7 @@ class ApiRepositoryImpl @Inject constructor(
     private val apiService: CitiesApiService
 ) : Repository {
     override suspend fun getCities(): List<City> {
-        // val response = apiService.getPagedCities(page = position, limit = params.loadSize)
-        return emptyList()
+        return apiService.getCities()
     }
 
 }

@@ -4,12 +4,10 @@ import com.example.ualaapp.data.City
 import com.example.ualaapp.repository.Repository
 import javax.inject.Inject
 
-class BaseRepositoryImpl : Repository {
-    @Inject
-    lateinit var apiRepository: ApiRepositoryImpl
-
-    @Inject
-    lateinit var dataBaseRepository: DataBaseRepositoryImpl
+class BaseRepositoryImpl @Inject constructor(
+    private val apiRepository: ApiRepositoryImpl,
+    private val dataBaseRepository: DataBaseRepositoryImpl
+) : Repository {
 
     override suspend fun getCities(): List<City> {
         var cities = getCitiesFromDb()

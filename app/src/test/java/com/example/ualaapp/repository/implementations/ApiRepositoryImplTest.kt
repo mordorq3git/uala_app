@@ -1,38 +1,51 @@
 package com.example.ualaapp.repository.implementations
 
-import dagger.hilt.android.testing.HiltAndroidRule
-import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.android.testing.HiltTestApplication
+import com.example.ualaapp.data.City
+import com.example.ualaapp.repository.implementations.api.CitiesApiService
+import io.mockk.coEvery
+import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
-import javax.inject.Inject
 
-@HiltAndroidTest
-@RunWith(RobolectricTestRunner::class)
-@Config(application = HiltTestApplication::class)
 class ApiRepositoryImplTest {
-
-    @get:Rule
-    var hiltRule = HiltAndroidRule(this)
-    @Inject
-    lateinit var repository: ApiRepositoryImpl
+    private val apisService: CitiesApiService = mockk()
+    private lateinit var repository: ApiRepositoryImpl
 
     @Before
     fun init() {
-        hiltRule.inject()
+        repository = ApiRepositoryImpl(apisService)
     }
 
     @Test
     fun getCities_returnsEmptyList() = runTest {
+        coEvery { apisService.getCities() } returns emptyList()
+
         val cities = repository.getCities()
 
         Assert.assertNotNull(cities)
         Assert.assertTrue(cities.isEmpty())
+    }
+
+    @Test
+    fun getCities_returnsNotEmptyList() = runTest {
+        val mockedCity = mockk<City>(relaxed = true)
+        val listOfCities = listOf(
+            mockedCity,
+            mockedCity,
+            mockedCity,
+            mockedCity,
+            mockedCity,
+            mockedCity
+        )
+
+        coEvery { apisService.getCities() } returns listOfCities
+
+        val cities = repository.getCities()
+
+        Assert.assertNotNull(cities)
+        Assert.assertTrue(cities.isNotEmpty())
+        Assert.assertEquals(6, cities.size)
     }
 }

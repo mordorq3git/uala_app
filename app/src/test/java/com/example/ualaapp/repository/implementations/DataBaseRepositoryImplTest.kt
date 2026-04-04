@@ -44,8 +44,8 @@ class DataBaseRepositoryImplTest {
 
     @Test
     fun getCities_returnsNotEmptyList() = runTest {
-        val mockedCity = mockk<CityEntity>(relaxed = true)
-        for (n in 1 .. 5) cityDao.insert(mockedCity)
+        val mockedCityEntity = mockk<CityEntity>(relaxed = true)
+        for (n in 1 .. 5) cityDao.insert(mockedCityEntity)
 
         val cities = repository.getCities()
 
