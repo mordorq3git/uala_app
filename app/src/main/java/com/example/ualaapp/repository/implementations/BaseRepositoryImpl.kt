@@ -16,6 +16,8 @@ class BaseRepositoryImpl : Repository {
 
         if(cities.isEmpty()) {
             cities = getCitiesFromApi()
+
+
         }
 
         return cities
