@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">UalaApp</string>
+    <string name="user_name">Nombre de usuario</string>
 </resources>

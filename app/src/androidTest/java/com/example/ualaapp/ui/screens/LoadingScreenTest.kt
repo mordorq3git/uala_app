@@ -28,4 +28,14 @@ class LoadingScreenTest {
 
         composeTestRule.onNodeWithText("Some text").assertIsDisplayed()
     }
+
+    @Test
+    fun testRegisterComponent() {
+        composeTestRule.setContent {
+            RegisterComponent()
+        }
+
+        composeTestRule.onNodeWithText("Bienvenido").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Ingresar").assertIsDisplayed()
+    }
 }

@@ -3,18 +3,26 @@ package com.example.ualaapp.ui.screens
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.example.ualaapp.R
 import com.example.ualaapp.presentation.loading.LoadingViewModel
 
 @Composable
@@ -56,8 +64,52 @@ fun LoadingComponent(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun RegisterComponent(
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .padding(4.dp)
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            modifier = Modifier.width(300.dp)
+        ) {
+            Text(
+                text = "Bienvenido",
+                modifier = Modifier.padding(4.dp),
+                fontSize = 20.sp
+            )
+            TextField(
+                value = "",
+                onValueChange = {},
+                modifier = Modifier
+                    .padding(top = 4.dp, bottom = 12.dp)
+                    .fillMaxWidth(),
+                placeholder = {
+                    Text(text = stringResource(R.string.user_name))
+                }
+            )
+            Button(
+                {},
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = "Ingresar")
+            }
+        }
+    }
+}
+
+/*@Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun LoadingScreen_Preview() {
     LoadingComponent(loadingText = "Cargando ciudades")
+}*/
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun RegisterScreen_Preview() {
+    RegisterComponent()
 }
