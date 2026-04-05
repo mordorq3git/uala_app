@@ -12,11 +12,20 @@ class LoadingScreenTest {
     val composeTestRule = createComposeRule()
 
     @Test
-    fun testLoadingComponent() {
+    fun testLoadingComponent_defaultText() {
         composeTestRule.setContent {
             LoadingComponent(loadingText = "Cargando ciudades...")
         }
 
         composeTestRule.onNodeWithText("Cargando ciudades...").assertIsDisplayed()
+    }
+
+    @Test
+    fun testLoadingComponent_someText() {
+        composeTestRule.setContent {
+            LoadingComponent(loadingText = "Some text")
+        }
+
+        composeTestRule.onNodeWithText("Some text").assertIsDisplayed()
     }
 }
