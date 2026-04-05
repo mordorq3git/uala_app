@@ -1,4 +1,4 @@
-package com.example.ualaapp.presentation.citieslist
+package com.example.ualaapp.presentation.loading
 
 import androidx.lifecycle.ViewModel
 import com.example.ualaapp.repository.Repository

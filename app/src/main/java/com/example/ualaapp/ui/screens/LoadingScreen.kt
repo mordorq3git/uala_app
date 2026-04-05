@@ -2,6 +2,7 @@ package com.example.ualaapp.ui.screens
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -14,21 +15,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.example.ualaapp.presentation.citieslist.LoadingViewModel
+import com.example.ualaapp.presentation.loading.LoadingViewModel
 
 @Composable
 fun LoadingScreen(
     modifier: Modifier = Modifier,
     viewModel: LoadingViewModel = hiltViewModel()
 ) {
-    LoadingComponent(modifier)
+    val loadingText = "Cargando ciudades..."
+
+    LoadingComponent(modifier, loadingText)
 }
 
 @Composable
-fun LoadingComponent(modifier: Modifier = Modifier) {
+fun LoadingComponent(
+    modifier: Modifier = Modifier,
+    loadingText: String
+) {
     Box(
         modifier = modifier
-            .padding(4.dp),
+            .padding(4.dp)
+            .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         Column {
@@ -41,7 +48,7 @@ fun LoadingComponent(modifier: Modifier = Modifier) {
                 trackColor = MaterialTheme.colorScheme.surfaceVariant,
             )
             Text(
-                text = "Cargando ciudades...",
+                text = loadingText,
                 modifier = Modifier
                     .padding(top = 4.dp)
             )
@@ -49,8 +56,8 @@ fun LoadingComponent(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun LoadingScreen_Preview() {
-    LoadingScreen()
+    LoadingComponent(loadingText = "Cargando ciudades")
 }
