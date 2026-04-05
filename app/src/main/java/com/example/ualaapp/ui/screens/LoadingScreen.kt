@@ -18,14 +18,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.ualaapp.R
+import com.example.ualaapp.presentation.loading.LoadingUIState
 import com.example.ualaapp.presentation.loading.LoadingViewModel
 
 @Composable
@@ -33,25 +32,22 @@ fun LoadingScreen(
     modifier: Modifier = Modifier,
     viewModel: LoadingViewModel = hiltViewModel()
 ) {
-    val cities by viewModel.citiesState.collectAsStateWithLifecycle()
+    val loadingState by viewModel.loadingUIState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.loadData()
     }
 
-    if(cities.isEmpty()) {
-        val loadingText = "Cargando ciudades..."
-
-        LoadingComponent(modifier, loadingText)
-    } else {
-        RegisterComponent(modifier)
+    when(loadingState) {
+        LoadingUIState.Idle -> {}
+        LoadingUIState.Loading -> { LoadingComponent(modifier) }
+        LoadingUIState.Success -> { RegisterComponent(modifier) }
     }
 }
 
 @Composable
 fun LoadingComponent(
-    modifier: Modifier = Modifier,
-    loadingText: String
+    modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
@@ -69,7 +65,7 @@ fun LoadingComponent(
                 trackColor = MaterialTheme.colorScheme.surfaceVariant,
             )
             Text(
-                text = loadingText,
+                text = stringResource(R.string.loading_cities),
                 modifier = Modifier
                     .padding(top = 4.dp)
             )
@@ -118,7 +114,7 @@ fun RegisterComponent(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun LoadingScreen_Preview() {
-    LoadingComponent(loadingText = "Cargando ciudades")
+    LoadingComponent()
 }
 
 @Preview(showBackground = true, showSystemUi = true)

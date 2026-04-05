@@ -14,19 +14,10 @@ class LoadingScreenTest {
     @Test
     fun testLoadingComponent_defaultText() {
         composeTestRule.setContent {
-            LoadingComponent(loadingText = "Cargando ciudades...")
+            LoadingComponent()
         }
 
         composeTestRule.onNodeWithText("Cargando ciudades...").assertIsDisplayed()
-    }
-
-    @Test
-    fun testLoadingComponent_someText() {
-        composeTestRule.setContent {
-            LoadingComponent(loadingText = "Some text")
-        }
-
-        composeTestRule.onNodeWithText("Some text").assertIsDisplayed()
     }
 
     @Test

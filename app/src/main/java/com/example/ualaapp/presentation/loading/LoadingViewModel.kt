@@ -3,7 +3,6 @@ package com.example.ualaapp.presentation.loading
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.ualaapp.data.City
 import com.example.ualaapp.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,14 +16,18 @@ import javax.inject.Inject
 class LoadingViewModel @Inject constructor(
     private val baseRepository: Repository
 ) : ViewModel() {
-    private val _citiesState = MutableStateFlow<List<City>>(emptyList())
-    val citiesState: StateFlow<List<City>> = _citiesState.asStateFlow()
+    private val _loadingUiState = MutableStateFlow<LoadingUIState>(LoadingUIState.Idle)
+    val loadingUIState: StateFlow<LoadingUIState> = _loadingUiState.asStateFlow()
 
     fun loadData() {
         viewModelScope.launch {
             Log.d("TAG", "loadData: comienzo")
 
-            _citiesState.update { baseRepository.getCities() }
+            _loadingUiState.update { LoadingUIState.Loading }
+
+            baseRepository.getCities()
+
+            _loadingUiState.update { LoadingUIState.Success }
 
             Log.d("TAG", "loadData: fin")
         }

@@ -17,4 +17,17 @@ import kotlin.collections.emptyList
 @HiltViewModel
 class CitiesListViewModel @Inject constructor(
     private val baseRepository: Repository
-) : ViewModel()
+) : ViewModel() {
+    private val _citiesState = MutableStateFlow<List<City>>(emptyList())
+    val citiesState: StateFlow<List<City>> = _citiesState.asStateFlow()
+
+    fun loadData() {
+        viewModelScope.launch {
+            Log.d("TAG", "loadData: comienzo")
+
+            _citiesState.update { baseRepository.getCities() }
+
+            Log.d("TAG", "loadData: fin")
+        }
+    }
+}
