@@ -13,6 +13,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -22,6 +24,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.ualaapp.R
 import com.example.ualaapp.presentation.loading.LoadingViewModel
 
@@ -30,9 +33,19 @@ fun LoadingScreen(
     modifier: Modifier = Modifier,
     viewModel: LoadingViewModel = hiltViewModel()
 ) {
-    val loadingText = "Cargando ciudades..."
+    val cities by viewModel.citiesState.collectAsStateWithLifecycle()
 
-    LoadingComponent(modifier, loadingText)
+    LaunchedEffect(Unit) {
+        viewModel.loadData()
+    }
+
+    if(cities.isEmpty()) {
+        val loadingText = "Cargando ciudades..."
+
+        LoadingComponent(modifier, loadingText)
+    } else {
+        RegisterComponent(modifier)
+    }
 }
 
 @Composable
