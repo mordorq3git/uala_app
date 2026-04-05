@@ -17,6 +17,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -75,7 +76,8 @@ fun LoadingComponent(
 
 @Composable
 fun RegisterComponent(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    userName: String = ""
 ) {
     Box(
         modifier = modifier
@@ -92,11 +94,14 @@ fun RegisterComponent(
                 fontSize = 20.sp
             )
             TextField(
-                value = "",
-                onValueChange = {},
+                value = userName,
+                onValueChange = {
+
+                },
                 modifier = Modifier
                     .padding(top = 4.dp, bottom = 12.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .testTag("register_with_username_textfield"),
                 placeholder = {
                     Text(text = stringResource(R.string.user_name))
                 }
