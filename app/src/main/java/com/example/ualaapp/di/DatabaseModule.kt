@@ -1,4 +1,4 @@
-package com.example.ualaapp.repository
+package com.example.ualaapp.di
 
 import android.content.Context
 import androidx.room.Room
