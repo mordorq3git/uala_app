@@ -78,7 +78,7 @@ fun RegisterComponent(
             modifier = Modifier.width(300.dp)
         ) {
             Text(
-                text = "Bienvenido",
+                text = stringResource(R.string.welcome),
                 modifier = Modifier.padding(4.dp),
                 fontSize = 20.sp
             )
@@ -96,17 +96,17 @@ fun RegisterComponent(
                 {},
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = "Ingresar")
+                Text(text = stringResource(R.string.enter))
             }
         }
     }
 }
 
-/*@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun LoadingScreen_Preview() {
     LoadingComponent(loadingText = "Cargando ciudades")
-}*/
+}
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable

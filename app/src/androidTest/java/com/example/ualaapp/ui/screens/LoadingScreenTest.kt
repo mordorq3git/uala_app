@@ -36,6 +36,7 @@ class LoadingScreenTest {
         }
 
         composeTestRule.onNodeWithText("Bienvenido").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Nombre de usuario").assertIsDisplayed()
         composeTestRule.onNodeWithText("Ingresar").assertIsDisplayed()
     }
 }
