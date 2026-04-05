@@ -1,5 +1,6 @@
-package com.example.ualaapp.repository
+package com.example.ualaapp.di
 
+import com.example.ualaapp.repository.Repository
 import com.example.ualaapp.repository.implementations.BaseRepositoryImpl
 import dagger.Binds
 import dagger.Module
