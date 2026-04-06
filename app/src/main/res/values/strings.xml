@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">UalaApp</string>
+    <string name="user_name">Nombre de usuario</string>
+    <string name="welcome">Bienvenido</string>
+    <string name="enter">Ingresar</string>
+    <string name="loading_cities">Cargando ciudades...</string>
 </resources>

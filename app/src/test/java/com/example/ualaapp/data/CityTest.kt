@@ -1,6 +1,6 @@
 package com.example.ualaapp.data
 
-import com.example.ualaapp.TestUtils
+import com.example.ualaapp.utils.TestUtils
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Test
