@@ -22,7 +22,12 @@ fun NavigationWrapper(modifier: Modifier = Modifier) {
     NavHost(navController = navController, startDestination = Loading) {
         composable<Loading> {
             LoadingAndRegisterScreen(
-                modifier = modifier
+                modifier = modifier,
+                goToCitiesListScreen = {
+                    navController.navigate(CitiesList) {
+                        popUpTo<Loading> { inclusive = true }
+                    }
+                }
             )
         }
 
