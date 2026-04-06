@@ -34,6 +34,7 @@ import com.example.ualaapp.presentation.citieslist.CitiesListViewModel
 @Composable
 fun CitiesListScreen(
     modifier: Modifier = Modifier,
+    onCitySelected: (Int) -> Unit = {},
     viewModel: CitiesListViewModel = hiltViewModel()
 ) {
     val citiesStates by viewModel.citiesState.collectAsStateWithLifecycle()
@@ -42,7 +43,10 @@ fun CitiesListScreen(
         viewModel.onEvent(CitiesListIntent.Get)
     }
 
-    CitiesFilterListComponent(citiesStates)
+    CitiesFilterListComponent(
+        cities = citiesStates,
+        onRowClickEvent = onCitySelected
+    )
 }
 
 @Composable
