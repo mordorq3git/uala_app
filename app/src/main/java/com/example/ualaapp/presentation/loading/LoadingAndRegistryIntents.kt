@@ -5,6 +5,6 @@ sealed interface LoadingIntent {
 }
 
 sealed interface RegistryIntent {
-    data class UpdateUsername(val username: String) : RegistryIntent
+    data class SetUserName(val username: String) : RegistryIntent
     object Register : RegistryIntent
 }

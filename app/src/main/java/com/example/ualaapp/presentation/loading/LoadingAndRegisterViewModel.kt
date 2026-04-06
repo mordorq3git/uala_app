@@ -20,9 +20,21 @@ class LoadingAndRegisterViewModel @Inject constructor(
     val loadingAndRegistryUIState: StateFlow<LoadingAndRegistryUIState> =
         _loadingAndRegistryUiState.asStateFlow()
 
+    private val _registerUserValue = MutableStateFlow("")
+    val registerUserValue: StateFlow<String> = _registerUserValue.asStateFlow()
+
     fun onEvent(event: LoadingIntent) {
         when(event) {
             LoadingIntent.Load -> loadData()
+        }
+    }
+
+    fun onEvent(event: RegistryIntent) {
+        when(event) {
+            is RegistryIntent.SetUserName -> _registerUserValue.update { event.username }
+            RegistryIntent.Register -> {
+                TODO()
+            }
         }
     }
 
