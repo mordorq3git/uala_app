@@ -11,17 +11,21 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+private const val UserNameMinLength = 3
+
 @HiltViewModel
 class LoadingAndRegisterViewModel @Inject constructor(
     private val baseRepository: Repository
 ) : ViewModel() {
+
     private val _loadingAndRegistryUiState =
         MutableStateFlow<LoadingAndRegistryUIState>(LoadingAndRegistryUIState.Idle)
     val loadingAndRegistryUIState: StateFlow<LoadingAndRegistryUIState> =
         _loadingAndRegistryUiState.asStateFlow()
-
     private val _registerUserValue = MutableStateFlow("")
     val registerUserValue: StateFlow<String> = _registerUserValue.asStateFlow()
+    private val _registerButtonEnabled = MutableStateFlow(false)
+    val registerButtonEnabled: StateFlow<Boolean> = _registerButtonEnabled.asStateFlow()
 
     fun onEvent(event: LoadingIntent) {
         when(event) {
@@ -31,10 +35,20 @@ class LoadingAndRegisterViewModel @Inject constructor(
 
     fun onEvent(event: RegistryIntent) {
         when(event) {
-            is RegistryIntent.SetUserName -> _registerUserValue.update { event.username }
+            is RegistryIntent.SetUserName -> {
+                userNameValidator(event.username)
+            }
             RegistryIntent.Register -> {
                 TODO()
             }
+        }
+    }
+
+    private fun userNameValidator(username: String) {
+        _registerUserValue.update { username }
+
+        if(username.length > UserNameMinLength) {
+            _registerButtonEnabled.update { true }
         }
     }
 
