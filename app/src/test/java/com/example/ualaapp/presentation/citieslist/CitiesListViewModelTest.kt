@@ -28,7 +28,7 @@ class CitiesListViewModelTest {
 
     @Test
     fun getCities_withOutValues() = runTest {
-        viewModel.getCities()
+        viewModel.onEvent(CitiesListIntent.Get)
 
         assertEquals(0, viewModel.citiesState.value.size)
     }
@@ -46,7 +46,7 @@ class CitiesListViewModelTest {
 
         viewModel = CitiesListViewModel(repository)
 
-        viewModel.getCities()
+        viewModel.onEvent(CitiesListIntent.Get)
 
         assertEquals(5, viewModel.citiesState.value.size)
     }

@@ -28,6 +28,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.ualaapp.R
 import com.example.ualaapp.data.City
+import com.example.ualaapp.presentation.citieslist.CitiesListIntent
 import com.example.ualaapp.presentation.citieslist.CitiesListViewModel
 
 @Composable
@@ -38,7 +39,7 @@ fun CitiesListScreen(
     val citiesStates by viewModel.citiesState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.getCities()
+        viewModel.onEvent(CitiesListIntent.Get)
     }
 
     CitiesFilterListComponent(citiesStates)
