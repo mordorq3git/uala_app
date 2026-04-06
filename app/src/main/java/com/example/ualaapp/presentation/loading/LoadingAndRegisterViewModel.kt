@@ -3,6 +3,7 @@ package com.example.ualaapp.presentation.loading
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ualaapp.repository.Repository
+import com.example.ualaapp.repository.implementations.BaseRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +16,7 @@ private const val UserNameMinLength = 3
 
 @HiltViewModel
 class LoadingAndRegisterViewModel @Inject constructor(
-    private val baseRepository: Repository
+    private val baseRepository: BaseRepositoryImpl
 ) : ViewModel() {
     private val _loadingAndRegistryUiState =
         MutableStateFlow<LoadingAndRegistryUIState>(LoadingAndRegistryUIState.Idle)
@@ -47,7 +48,7 @@ class LoadingAndRegisterViewModel @Inject constructor(
         viewModelScope.launch {
             _loadingAndRegistryUiState.update { LoadingAndRegistryUIState.Loading }
 
-            baseRepository.getCities()
+            baseRepository.loadCities()
 
             _loadingAndRegistryUiState.update { LoadingAndRegistryUIState.Success }
         }

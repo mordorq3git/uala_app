@@ -5,4 +5,6 @@ import com.example.ualaapp.repository.Repository
 
 interface DatabaseRepository : Repository {
     suspend fun setCities(listOfCities: List<City>)
+
+    suspend fun getCities(): List<City>
 }
