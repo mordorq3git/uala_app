@@ -28,6 +28,7 @@ import com.example.ualaapp.R
 import com.example.ualaapp.presentation.loading.LoadingAndRegistryUIState
 import com.example.ualaapp.presentation.loading.LoadingAndRegisterViewModel
 import com.example.ualaapp.presentation.loading.LoadingIntent
+import com.example.ualaapp.presentation.loading.RegistryIntent
 import com.example.ualaapp.ui.theme.UalaAppTheme
 
 @Composable
@@ -36,6 +37,7 @@ fun LoadingAndRegisterScreen(
     viewModel: LoadingAndRegisterViewModel = hiltViewModel()
 ) {
     val loadingState by viewModel.loadingAndRegistryUIState.collectAsStateWithLifecycle()
+    val registerUserValue by viewModel.registerUserValue.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.onEvent(LoadingIntent.Load)
@@ -44,7 +46,11 @@ fun LoadingAndRegisterScreen(
     when(loadingState) {
         LoadingAndRegistryUIState.Idle -> {}
         LoadingAndRegistryUIState.Loading -> { LoadingComponent(modifier) }
-        LoadingAndRegistryUIState.Success -> { RegisterComponent(modifier) }
+        LoadingAndRegistryUIState.Success -> {
+            RegisterComponent(modifier, userName = registerUserValue, onValueChangeEvent = { name ->
+                viewModel.onEvent(RegistryIntent.SetUserName(name))
+            })
+        }
     }
 }
 
