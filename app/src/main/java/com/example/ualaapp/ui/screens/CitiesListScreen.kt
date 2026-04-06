@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,11 +25,40 @@ import com.example.ualaapp.R
 
 @Composable
 fun CitiesListScreen(modifier: Modifier = Modifier) {
-    CitiesListComponent()
+    CitiesFilterListComponent(modifier)
 }
 
 @Composable
-fun CitiesListComponent(modifier: Modifier = Modifier) {
+fun CitiesFilterListComponent(modifier: Modifier = Modifier) {
+    Column {
+        CitiesFilterComponent()
+        CitiesListComponent()
+    }
+}
+
+@Composable
+fun CitiesFilterComponent(
+    tfValue: String = "",
+    onValueChangeEvent: (String) -> Unit = {}
+) {
+    TextField(
+        value = tfValue,
+        onValueChange = { newValue ->
+            onValueChangeEvent(newValue)
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag("city_filter"),
+        placeholder = {
+            Text(
+                text = "Filter city"
+            )
+        }
+    )
+}
+
+@Composable
+fun CitiesListComponent() {
     LazyColumn {
         items(10) {
             CityItemComponent(
@@ -94,6 +124,12 @@ fun CityItemComponent(
 
 @Preview(showBackground = true)
 @Composable
+private fun CitiesFilterComponent_Preview() {
+    CitiesFilterComponent()
+}
+
+@Preview(showBackground = true)
+@Composable
 private fun CityItemComponent_Preview() {
     CityItemComponent(
         title = "City, CountryCode",
@@ -110,7 +146,6 @@ private fun CityItemComponent_favourite_Preview() {
         isFavourite = true
     )
 }
-
 
 @Preview(showBackground = true)
 @Composable

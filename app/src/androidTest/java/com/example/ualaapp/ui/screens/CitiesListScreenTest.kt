@@ -7,6 +7,8 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextReplacement
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -15,6 +17,37 @@ class CitiesListScreenTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()
+
+    @Test
+    fun filterItemComponent_default() {
+        composeTestRule.setContent {
+            CitiesFilterComponent()
+        }
+
+        composeTestRule.onNodeWithText("Filter city").assertIsDisplayed()
+    }
+
+    @Test
+    fun filterItemComponent_setCustomValue() {
+        composeTestRule.setContent {
+            CitiesFilterComponent(tfValue = "Gualeguaychu, AR")
+        }
+
+        composeTestRule.onNodeWithText("Gualeguaychu, AR").assertIsDisplayed()
+    }
+
+    @Test
+    fun filterItemComponent_onValueChangeEvent() {
+        var currentValue = "Gualeguaychu, AR"
+
+        composeTestRule.setContent {
+            CitiesFilterComponent(onValueChangeEvent = { newValue -> currentValue = newValue })
+        }
+
+        composeTestRule.onNodeWithTag("city_filter").performTextReplacement("Buenos Aires, AR")
+
+        assertEquals("Buenos Aires, AR", currentValue)
+    }
 
     @Test
     fun cityItemComponent_default() {
