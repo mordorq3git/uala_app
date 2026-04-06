@@ -7,6 +7,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performTextInput
+import androidx.compose.ui.test.performTextReplacement
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -58,5 +59,19 @@ class LoadingScreenTest {
             .performTextInput("John Doe")
 
         assertEquals("John Doe", currentValue)
+    }
+
+    @Test
+    fun testRegisterComponent_onChangeValue_initialized_setString() {
+        var currentValue = ""
+
+        composeTestRule.setContent {
+            RegisterComponent(userName = "Jhone Doe", onValueChangeEvent = { newValue -> currentValue = newValue })
+        }
+
+        composeTestRule.onNodeWithTag("register_with_username_textfield")
+            .performTextReplacement("mordorq3")
+
+        assertEquals("mordorq3", currentValue)
     }
 }
