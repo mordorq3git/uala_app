@@ -1,6 +1,5 @@
 package com.example.ualaapp.presentation.loading
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ualaapp.repository.Repository
@@ -16,16 +15,24 @@ import javax.inject.Inject
 class LoadingAndRegisterViewModel @Inject constructor(
     private val baseRepository: Repository
 ) : ViewModel() {
-    private val _loadingUiState = MutableStateFlow<LoadingUIState>(LoadingUIState.Idle)
-    val loadingUIState: StateFlow<LoadingUIState> = _loadingUiState.asStateFlow()
+    private val _loadingAndRegistryUiState =
+        MutableStateFlow<LoadingAndRegistryUIState>(LoadingAndRegistryUIState.Idle)
+    val loadingAndRegistryUIState: StateFlow<LoadingAndRegistryUIState> =
+        _loadingAndRegistryUiState.asStateFlow()
 
-    fun loadData() {
+    fun onEvent(event: LoadingIntent) {
+        when(event) {
+            LoadingIntent.Load -> loadData()
+        }
+    }
+
+    private fun loadData() {
         viewModelScope.launch {
-            _loadingUiState.update { LoadingUIState.Loading }
+            _loadingAndRegistryUiState.update { LoadingAndRegistryUIState.Loading }
 
             baseRepository.getCities()
 
-            _loadingUiState.update { LoadingUIState.Success }
+            _loadingAndRegistryUiState.update { LoadingAndRegistryUIState.Success }
         }
     }
 }

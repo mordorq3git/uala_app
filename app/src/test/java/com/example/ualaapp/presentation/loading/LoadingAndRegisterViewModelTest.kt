@@ -16,15 +16,16 @@ class LoadingAndRegisterViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
+
     @Test
-    fun loadData() = runTest {
+    fun onEvent_Loading() = runTest {
         val repository = mockk<BaseRepositoryImpl>()
         coEvery { repository.getCities() } returns emptyList()
 
         val viewModel = LoadingAndRegisterViewModel(repository)
 
-        viewModel.loadData()
+        viewModel.onEvent(LoadingIntent.Load)
 
-        assertTrue(viewModel.loadingUIState.value == LoadingUIState.Success)
+        assertTrue(viewModel.loadingAndRegistryUIState.value == LoadingAndRegistryUIState.Success)
     }
 }

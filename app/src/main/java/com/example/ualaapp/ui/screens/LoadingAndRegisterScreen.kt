@@ -25,8 +25,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.ualaapp.R
-import com.example.ualaapp.presentation.loading.LoadingUIState
+import com.example.ualaapp.presentation.loading.LoadingAndRegistryUIState
 import com.example.ualaapp.presentation.loading.LoadingAndRegisterViewModel
+import com.example.ualaapp.presentation.loading.LoadingIntent
 import com.example.ualaapp.ui.theme.UalaAppTheme
 
 @Composable
@@ -34,16 +35,16 @@ fun LoadingAndRegisterScreen(
     modifier: Modifier = Modifier,
     viewModel: LoadingAndRegisterViewModel = hiltViewModel()
 ) {
-    val loadingState by viewModel.loadingUIState.collectAsStateWithLifecycle()
+    val loadingState by viewModel.loadingAndRegistryUIState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.loadData()
+        viewModel.onEvent(LoadingIntent.Load)
     }
 
     when(loadingState) {
-        LoadingUIState.Idle -> {}
-        LoadingUIState.Loading -> { LoadingComponent(modifier) }
-        LoadingUIState.Success -> { RegisterComponent(modifier) }
+        LoadingAndRegistryUIState.Idle -> {}
+        LoadingAndRegistryUIState.Loading -> { LoadingComponent(modifier) }
+        LoadingAndRegistryUIState.Success -> { RegisterComponent(modifier) }
     }
 }
 
