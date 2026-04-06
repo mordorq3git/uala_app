@@ -15,9 +15,8 @@ class DataBaseRepositoryImpl @Inject constructor(
     private val userDao: UserDao,
     private val favouriteDao: FavouriteDao
 ) : DatabaseRepository {
-    override suspend fun getCities(): List<City> {
-        return mapCitiesEntitiesToDto(cityDao.getAll())
-    }
+
+    override suspend fun getCities() = mapCitiesEntitiesToDto(cityDao.getAll())
 
     override suspend fun setCities(listOfCities: List<City>) {
         val listOfCitiesEntities = mapCitiesDtoToEntities(listOfCities)

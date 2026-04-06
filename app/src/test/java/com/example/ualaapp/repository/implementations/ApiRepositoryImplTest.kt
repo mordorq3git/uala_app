@@ -22,7 +22,7 @@ class ApiRepositoryImplTest {
     fun getCities_returnsEmptyList() = runTest {
         coEvery { apisService.getCities() } returns emptyList()
 
-        val cities = repository.getCities()
+        val cities = repository.loadCities()
 
         Assert.assertNotNull(cities)
         Assert.assertTrue(cities.isEmpty())
@@ -42,7 +42,7 @@ class ApiRepositoryImplTest {
 
         coEvery { apisService.getCities() } returns listOfCities
 
-        val cities = repository.getCities()
+        val cities = repository.loadCities()
 
         Assert.assertNotNull(cities)
         Assert.assertTrue(cities.isNotEmpty())

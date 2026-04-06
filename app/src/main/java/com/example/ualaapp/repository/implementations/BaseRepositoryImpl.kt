@@ -1,15 +1,15 @@
 package com.example.ualaapp.repository.implementations
 
 import com.example.ualaapp.data.City
-import com.example.ualaapp.repository.Repository
+import com.example.ualaapp.repository.BaseRepository
 import javax.inject.Inject
 
 class BaseRepositoryImpl @Inject constructor(
     private val apiRepository: ApiRepositoryImpl,
     private val dataBaseRepository: DataBaseRepositoryImpl
-) : Repository {
+) : BaseRepository {
 
-    override suspend fun getCities(): List<City> {
+    override suspend fun loadCities() {
         var cities = getCitiesFromDb()
 
         if(cities.isEmpty()) {
@@ -17,9 +17,9 @@ class BaseRepositoryImpl @Inject constructor(
 
             saveCities(cities)
         }
-
-        return cities
     }
+
+    override suspend fun getCities() = getCitiesFromDb()
 
     private suspend fun getCitiesFromDb(): List<City> {
         return dataBaseRepository.getCities()
@@ -30,7 +30,7 @@ class BaseRepositoryImpl @Inject constructor(
     }
 
     private suspend fun getCitiesFromApi(): List<City> {
-        return apiRepository.getCities()
+        return apiRepository.loadCities()
     }
 
     suspend fun setCities(listOfCities: List<City>) {

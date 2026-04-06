@@ -1,10 +1,9 @@
 package com.example.ualaapp.presentation.citieslist
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ualaapp.data.City
-import com.example.ualaapp.repository.Repository
+import com.example.ualaapp.repository.implementations.BaseRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,18 +15,20 @@ import kotlin.collections.emptyList
 
 @HiltViewModel
 class CitiesListViewModel @Inject constructor(
-    private val baseRepository: Repository
+    private val baseRepository: BaseRepositoryImpl
 ) : ViewModel() {
     private val _citiesState = MutableStateFlow<List<City>>(emptyList())
     val citiesState: StateFlow<List<City>> = _citiesState.asStateFlow()
 
-    fun loadData() {
+    fun onEvent(intent: CitiesListIntent) {
+        when(intent) {
+            CitiesListIntent.Get -> getCities()
+        }
+    }
+
+    private fun getCities() {
         viewModelScope.launch {
-            Log.d("TAG", "loadData: comienzo")
-
             _citiesState.update { baseRepository.getCities() }
-
-            Log.d("TAG", "loadData: fin")
         }
     }
 }
