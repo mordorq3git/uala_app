@@ -19,21 +19,15 @@ class BaseRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getCities() = getCitiesFromDb()
+    private suspend fun getCitiesFromDb() = dataBaseRepository.getCities()
 
-    private suspend fun getCitiesFromDb(): List<City> {
-        return dataBaseRepository.getCities()
-    }
+    private suspend fun getCitiesFromApi() = apiRepository.loadCities()
+
+
+    override suspend fun getCities() = getCitiesFromDb()
+    override suspend fun getCity(id: Int) = dataBaseRepository.getCity(id)!!
 
     private suspend fun saveCities(listOfCities: List<City>) {
-        dataBaseRepository.setCities(listOfCities)
-    }
-
-    private suspend fun getCitiesFromApi(): List<City> {
-        return apiRepository.loadCities()
-    }
-
-    suspend fun setCities(listOfCities: List<City>) {
         dataBaseRepository.setCities(listOfCities)
     }
 }

@@ -1,6 +1,7 @@
 package com.example.ualaapp.repository.implementations
 
 import com.example.ualaapp.data.City
+import com.example.ualaapp.data.Coordinates
 import com.example.ualaapp.repository.implementations.api.CitiesApiService
 import com.example.ualaapp.repository.implementations.database.daos.CityDao
 import com.example.ualaapp.repository.implementations.database.daos.FavouriteDao
@@ -113,7 +114,9 @@ class BaseRepositoryImplTest {
             mockedCity
         )
 
-        baseRepository.setCities(listOfCities)
+        coEvery { apiRepository.loadCities() } returns listOfCities
+
+        baseRepository.loadCities()
 
         val cities = baseRepository.getCities()
 
@@ -122,4 +125,34 @@ class BaseRepositoryImplTest {
         Assert.assertEquals(6, cities.size)
     }
 
+    @Test
+    fun getCity_fromDb() = runTest {
+        val city = City(
+            _id = 214,
+            name = "Buenos Aires",
+            country = "AR",
+            coord = Coordinates(lat = 1.0, lon = 2.0)
+        )
+
+        val listOfCities = listOf(
+            city,
+            city.copy(_id = 215, name = "Chubut"),
+            city.copy(_id = 216, name = "Salta")
+        )
+
+        coEvery { apiRepository.loadCities() } returns listOfCities
+
+        baseRepository.loadCities()
+
+        val cities = baseRepository.getCities()
+
+        Assert.assertFalse(cities.isEmpty())
+        Assert.assertEquals(3, cities.size)
+
+        val cityFromDb = baseRepository.getCity(216)
+
+        Assert.assertNotNull(cityFromDb)
+        Assert.assertEquals("Salta", cityFromDb.name)
+        Assert.assertEquals("AR", cityFromDb.country)
+    }
 }
