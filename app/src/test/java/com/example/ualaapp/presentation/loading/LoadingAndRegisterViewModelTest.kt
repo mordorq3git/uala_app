@@ -52,13 +52,6 @@ class LoadingAndRegisterViewModelTest {
     }
 
     @Test
-    fun onEvent_Registry() {
-        viewModel.onEvent(RegistryIntent.SetUserName("username"))
-
-        assertEquals("username", viewModel.registerUserValue.value)
-    }
-
-    @Test
     fun onEvent_Registry_button_disabled() {
         viewModel.onEvent(RegistryIntent.SetUserName(""))
 
@@ -110,4 +103,13 @@ class LoadingAndRegisterViewModelTest {
 
         assertFalse(viewModel.registerButtonEnabled.value)
     }
+
+    @Test
+    fun onEvent_Registry() {
+        viewModel.onEvent(RegistryIntent.SetUserName("username"))
+        viewModel.onEvent(RegistryIntent.Register)
+
+        assertEquals("username - registrado", viewModel.registerUserValue.value)
+    }
+
 }

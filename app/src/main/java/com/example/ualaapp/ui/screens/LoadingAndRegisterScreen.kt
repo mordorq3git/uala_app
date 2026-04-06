@@ -54,6 +54,9 @@ fun LoadingAndRegisterScreen(
                 isButtonEnabled = registerButtonEnabled,
                 onValueChangeEvent = {
                     name -> viewModel.onEvent(RegistryIntent.SetUserName(name))
+                },
+                onClickEvent = {
+                    viewModel.onEvent(RegistryIntent.Register)
                 }
             )
         }
@@ -94,7 +97,7 @@ fun RegisterComponent(
     tfValue: String = "",
     isButtonEnabled: Boolean = false,
     onValueChangeEvent: (String) -> Unit = {},
-    onRegistryClickEvent: () -> Unit = {}
+    onClickEvent: () -> Unit = {}
 ) {
     Box(
         modifier = modifier
@@ -127,7 +130,7 @@ fun RegisterComponent(
                 }
             )
             Button(
-                { onRegistryClickEvent() },
+                onClick = { onClickEvent() },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = isButtonEnabled
             ) {

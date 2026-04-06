@@ -38,7 +38,7 @@ class LoadingAndRegisterViewModel @Inject constructor(
                 userNameValidator(event.username)
             }
             RegistryIntent.Register -> {
-                TODO()
+                _registerUserValue.update { username -> "$username - registrado" }
             }
         }
     }

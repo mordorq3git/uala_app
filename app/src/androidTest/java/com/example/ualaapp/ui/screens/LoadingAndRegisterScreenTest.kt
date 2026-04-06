@@ -100,7 +100,7 @@ class LoadingAndRegisterScreenTest {
         var currentValue = ""
 
         composeTestRule.setContent {
-            RegisterComponent(tfValue = "JhoneDoe", isButtonEnabled = true, onRegistryClickEvent = {
+            RegisterComponent(tfValue = "JhoneDoe", isButtonEnabled = true, onClickEvent = {
                 currentValue = "evento registrado"
             })
         }
