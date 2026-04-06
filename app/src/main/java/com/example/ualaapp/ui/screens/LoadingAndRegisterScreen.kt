@@ -34,7 +34,8 @@ import com.example.ualaapp.ui.theme.UalaAppTheme
 @Composable
 fun LoadingAndRegisterScreen(
     modifier: Modifier = Modifier,
-    viewModel: LoadingAndRegisterViewModel = hiltViewModel()
+    viewModel: LoadingAndRegisterViewModel = hiltViewModel(),
+    goToCitiesListScreen: () -> Unit = {}
 ) {
     val loadingState by viewModel.loadingAndRegistryUIState.collectAsStateWithLifecycle()
     val registerUserValue by viewModel.registerUserValue.collectAsStateWithLifecycle()
@@ -57,6 +58,7 @@ fun LoadingAndRegisterScreen(
                 },
                 onClickEvent = {
                     viewModel.onEvent(RegistryIntent.Register)
+                    goToCitiesListScreen()
                 }
             )
         }

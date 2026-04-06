@@ -1,12 +1,9 @@
 package com.example.ualaapp.presentation.citieslist
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ualaapp.data.City
-import com.example.ualaapp.repository.Repository
 import com.example.ualaapp.repository.implementations.BaseRepositoryImpl
-import com.example.ualaapp.repository.implementations.database.DatabaseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
