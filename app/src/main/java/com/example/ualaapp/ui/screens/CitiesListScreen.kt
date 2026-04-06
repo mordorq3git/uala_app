@@ -1,10 +1,8 @@
 package com.example.ualaapp.ui.screens
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -42,6 +40,7 @@ fun CityItemComponent(
     isFavourite: Boolean = false
 ) {
     val favouriteContentDescription = if (isFavourite) "Favourite activated" else "Favourite deactivated"
+    val favouriteImage = if (isFavourite) R.drawable.ic_favourite_activated else R.drawable.ic_favourite_deactivated
 
     Row(modifier = Modifier.fillMaxWidth().padding(4.dp)) {
         Column(
@@ -59,7 +58,7 @@ fun CityItemComponent(
             )
         }
         Image(
-            painter = painterResource(R.drawable.ic_favourite_unmarked),
+            painter = painterResource(favouriteImage),
             contentDescription = favouriteContentDescription,
             modifier = Modifier
                 .size(24.dp)
@@ -76,6 +75,13 @@ fun CityItemComponent(
 private fun CityItemComponent_Preview() {
     CityItemComponent()
 }
+
+@Preview(showBackground = true)
+@Composable
+private fun CityItemComponent_favourite_Preview() {
+    CityItemComponent(isFavourite = true)
+}
+
 
 @Preview(showBackground = true)
 @Composable
