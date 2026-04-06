@@ -1,13 +1,20 @@
 package com.example.ualaapp.ui.screens
 
 import androidx.compose.ui.test.assertContentDescriptionEquals
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsNotDisplayed
+import androidx.compose.ui.test.filter
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onChildren
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextReplacement
+import com.example.ualaapp.data.City
+import com.example.ualaapp.data.Coordinates
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Rule
@@ -47,6 +54,45 @@ class CitiesListScreenTest {
         composeTestRule.onNodeWithTag("city_filter").performTextReplacement("Buenos Aires, AR")
 
         assertEquals("Buenos Aires, AR", currentValue)
+    }
+
+    @Test
+    fun citiesListComponent_withoutItems_byDefault() {
+        composeTestRule.setContent {
+            CitiesListComponent()
+        }
+
+        composeTestRule.onNodeWithTag("cities_list").assertIsNotDisplayed()
+    }
+
+    @Test
+    fun citiesListComponent_withItems() {
+        composeTestRule.setContent {
+            val listOfCities = listOf(
+                City(123, "City", "CTY", Coordinates(1.0, 2.0)),
+                City(456, "City 2", "CTY 2", Coordinates(3.0, 4.0)),
+                City(789, "City 3", "CTY 3", Coordinates(5.0, 6.0))
+            )
+
+            CitiesListComponent(
+                cities = listOfCities
+            )
+        }
+
+        composeTestRule.onNodeWithTag("cities_list").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("cities_list")
+            .onChildren()
+            .filter(hasTestTag("city_item_row"))
+            .assertCountEquals(3)
+    }
+
+    @Test
+    fun citiesListComponent_withoutItems() {
+        composeTestRule.setContent {
+            CitiesListComponent(cities = emptyList())
+        }
+
+        composeTestRule.onNodeWithTag("cities_list").assertIsNotDisplayed()
     }
 
     @Test
