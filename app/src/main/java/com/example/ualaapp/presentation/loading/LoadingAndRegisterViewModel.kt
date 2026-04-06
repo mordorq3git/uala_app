@@ -21,15 +21,11 @@ class LoadingAndRegisterViewModel @Inject constructor(
 
     fun loadData() {
         viewModelScope.launch {
-            Log.d("TAG", "loadData: comienzo")
-
             _loadingUiState.update { LoadingUIState.Loading }
 
             baseRepository.getCities()
 
             _loadingUiState.update { LoadingUIState.Success }
-
-            Log.d("TAG", "loadData: fin")
         }
     }
 }

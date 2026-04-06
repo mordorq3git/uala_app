@@ -1,4 +1,4 @@
-package com.example.ualaapp
+package com.example.ualaapp.utils
 
 import kotlinx.serialization.json.Json
 
@@ -9,7 +9,7 @@ class TestUtils {
                 ?.getResource(fileName)?.readText()
                 ?: throw Exception("File not found")
 
-            return Json.decodeFromString<T>(jsonString)
+            return Json.Default.decodeFromString<T>(jsonString)
         }
     }
 }
