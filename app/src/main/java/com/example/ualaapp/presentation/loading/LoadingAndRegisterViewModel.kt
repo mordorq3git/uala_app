@@ -17,7 +17,6 @@ private const val UserNameMinLength = 3
 class LoadingAndRegisterViewModel @Inject constructor(
     private val baseRepository: Repository
 ) : ViewModel() {
-
     private val _loadingAndRegistryUiState =
         MutableStateFlow<LoadingAndRegistryUIState>(LoadingAndRegistryUIState.Idle)
     val loadingAndRegistryUIState: StateFlow<LoadingAndRegistryUIState> =

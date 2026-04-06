@@ -93,7 +93,8 @@ fun RegisterComponent(
     modifier: Modifier = Modifier,
     tfValue: String = "",
     isButtonEnabled: Boolean = false,
-    onValueChangeEvent: (String) -> Unit = {}
+    onValueChangeEvent: (String) -> Unit = {},
+    onRegistryClickEvent: () -> Unit = {}
 ) {
     Box(
         modifier = modifier
@@ -126,7 +127,7 @@ fun RegisterComponent(
                 }
             )
             Button(
-                {},
+                { onRegistryClickEvent() },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = isButtonEnabled
             ) {

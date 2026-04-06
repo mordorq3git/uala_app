@@ -7,6 +7,7 @@ import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTextReplacement
 import org.junit.Assert.assertEquals
@@ -92,5 +93,20 @@ class LoadingAndRegisterScreenTest {
             .performTextReplacement("mordorq3")
 
         assertEquals("mordorq3", currentValue)
+    }
+
+    @Test
+    fun testRegisterComponent_onClickRegistryButton() {
+        var currentValue = ""
+
+        composeTestRule.setContent {
+            RegisterComponent(tfValue = "JhoneDoe", isButtonEnabled = true, onRegistryClickEvent = {
+                currentValue = "evento registrado"
+            })
+        }
+
+        composeTestRule.onNodeWithText("Ingresar").performClick()
+
+        assertEquals("evento registrado", currentValue)
     }
 }
