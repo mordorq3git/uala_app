@@ -44,6 +44,7 @@ fun CitiesListScreen(
     }
 
     CitiesFilterListComponent(
+        modifier = modifier,
         cities = citiesStates,
         onRowClickEvent = onCitySelected
     )
@@ -51,10 +52,11 @@ fun CitiesListScreen(
 
 @Composable
 fun CitiesFilterListComponent(
+    modifier: Modifier = Modifier,
     cities: List<City>,
     onRowClickEvent: (Int) -> Unit = {}
 ) {
-    Column {
+    Column(modifier = modifier) {
         CitiesFilterComponent()
         CitiesListComponent(cities, onRowClickEvent)
     }
