@@ -22,7 +22,13 @@ class CitiesListViewModel @Inject constructor(
     private val _citiesState = MutableStateFlow<List<City>>(emptyList())
     val citiesState: StateFlow<List<City>> = _citiesState.asStateFlow()
 
-    fun getCities() {
+    fun onEvent(intent: CitiesListIntent) {
+        when(intent) {
+            CitiesListIntent.Get -> getCities()
+        }
+    }
+
+    private fun getCities() {
         viewModelScope.launch {
             _citiesState.update { baseRepository.getCities() }
         }

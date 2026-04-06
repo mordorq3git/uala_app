@@ -43,16 +43,6 @@ class LoadingAndRegisterViewModel @Inject constructor(
         }
     }
 
-    private fun userNameValidator(username: String) {
-        _registerUserValue.update { username }
-
-        if(username.length > UserNameMinLength) {
-            _registerButtonEnabled.update { true }
-        } else {
-            _registerButtonEnabled.update { false }
-        }
-    }
-
     private fun loadData() {
         viewModelScope.launch {
             _loadingAndRegistryUiState.update { LoadingAndRegistryUIState.Loading }
@@ -60,6 +50,16 @@ class LoadingAndRegisterViewModel @Inject constructor(
             baseRepository.getCities()
 
             _loadingAndRegistryUiState.update { LoadingAndRegistryUIState.Success }
+        }
+    }
+
+    private fun userNameValidator(username: String) {
+        _registerUserValue.update { username }
+
+        if(username.length > UserNameMinLength) {
+            _registerButtonEnabled.update { true }
+        } else {
+            _registerButtonEnabled.update { false }
         }
     }
 }
