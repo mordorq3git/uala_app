@@ -7,6 +7,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
@@ -51,9 +52,64 @@ class LoadingAndRegisterViewModelTest {
     }
 
     @Test
-    fun onEvent_Registry() {
+    fun onEvent_Registry_button_disabled() {
+        viewModel.onEvent(RegistryIntent.SetUserName(""))
+
+        assertFalse(viewModel.registerButtonEnabled.value)
+
+        viewModel.onEvent(RegistryIntent.SetUserName("u"))
+
+        assertFalse(viewModel.registerButtonEnabled.value)
+
+        viewModel.onEvent(RegistryIntent.SetUserName("us"))
+
+        assertFalse(viewModel.registerButtonEnabled.value)
+
+        viewModel.onEvent(RegistryIntent.SetUserName("use"))
+
+        assertFalse(viewModel.registerButtonEnabled.value)
+    }
+
+    @Test
+    fun onEvent_Registry_button_enable() {
+        viewModel.onEvent(RegistryIntent.SetUserName("user"))
+
+        assertTrue(viewModel.registerButtonEnabled.value)
+
+        viewModel.onEvent(RegistryIntent.SetUserName("usern"))
+
+        assertTrue(viewModel.registerButtonEnabled.value)
+
+        viewModel.onEvent(RegistryIntent.SetUserName("userna"))
+
+        assertTrue(viewModel.registerButtonEnabled.value)
+
+        viewModel.onEvent(RegistryIntent.SetUserName("usernam"))
+
+        assertTrue(viewModel.registerButtonEnabled.value)
+
         viewModel.onEvent(RegistryIntent.SetUserName("username"))
 
-        assertEquals("username", viewModel.registerUserValue.value)
+        assertTrue(viewModel.registerButtonEnabled.value)
     }
+
+    @Test
+    fun onEvent_Registry_button_enable_disabled() {
+        viewModel.onEvent(RegistryIntent.SetUserName("user"))
+
+        assertTrue(viewModel.registerButtonEnabled.value)
+
+        viewModel.onEvent(RegistryIntent.SetUserName("use"))
+
+        assertFalse(viewModel.registerButtonEnabled.value)
+    }
+
+    @Test
+    fun onEvent_Registry() {
+        viewModel.onEvent(RegistryIntent.SetUserName("username"))
+        viewModel.onEvent(RegistryIntent.Register)
+
+        assertEquals("username - registrado", viewModel.registerUserValue.value)
+    }
+
 }
