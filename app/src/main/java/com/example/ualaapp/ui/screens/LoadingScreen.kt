@@ -27,6 +27,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.ualaapp.R
 import com.example.ualaapp.presentation.loading.LoadingUIState
 import com.example.ualaapp.presentation.loading.LoadingViewModel
+import com.example.ualaapp.ui.theme.UalaAppTheme
 
 @Composable
 fun LoadingScreen(
@@ -86,11 +87,14 @@ fun RegisterComponent(
         contentAlignment = Alignment.Center
     ) {
         Column(
-            modifier = Modifier.width(300.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
         ) {
             Text(
                 text = stringResource(R.string.welcome),
-                modifier = Modifier.padding(4.dp),
+                modifier = Modifier
+                    .padding(4.dp),
                 fontSize = 20.sp
             )
             TextField(
@@ -124,6 +128,22 @@ private fun LoadingScreen_Preview() {
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
+private fun LoadingScreen_DarkTheme_Preview() {
+    UalaAppTheme(darkTheme = true) {
+        LoadingComponent()
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
 private fun RegisterScreen_Preview() {
     RegisterComponent()
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+private fun RegisterScreenDarkTheme_Preview() {
+    UalaAppTheme(darkTheme = true) {
+        RegisterComponent()
+    }
 }

@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.time.measureTime
 
 @HiltViewModel
 class LoadingViewModel @Inject constructor(
@@ -25,7 +26,10 @@ class LoadingViewModel @Inject constructor(
 
             _loadingUiState.update { LoadingUIState.Loading }
 
-            baseRepository.getCities()
+            val tiempo = measureTime {
+                baseRepository.getCities()
+            }
+            Log.d("BaseRepoLog", "--> Total tiempo final: $tiempo")
 
             _loadingUiState.update { LoadingUIState.Success }
 
