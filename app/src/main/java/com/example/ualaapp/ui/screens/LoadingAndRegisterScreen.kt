@@ -38,6 +38,7 @@ fun LoadingAndRegisterScreen(
 ) {
     val loadingState by viewModel.loadingAndRegistryUIState.collectAsStateWithLifecycle()
     val registerUserValue by viewModel.registerUserValue.collectAsStateWithLifecycle()
+    val registerButtonEnabled by viewModel.registerButtonEnabled.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.onEvent(LoadingIntent.Load)
@@ -47,9 +48,14 @@ fun LoadingAndRegisterScreen(
         LoadingAndRegistryUIState.Idle -> {}
         LoadingAndRegistryUIState.Loading -> { LoadingComponent(modifier) }
         LoadingAndRegistryUIState.Success -> {
-            RegisterComponent(modifier, tfValue = registerUserValue, onValueChangeEvent = { name ->
-                viewModel.onEvent(RegistryIntent.SetUserName(name))
-            })
+            RegisterComponent(
+                modifier = modifier,
+                tfValue = registerUserValue,
+                isButtonEnabled = registerButtonEnabled,
+                onValueChangeEvent = {
+                    name -> viewModel.onEvent(RegistryIntent.SetUserName(name))
+                }
+            )
         }
     }
 }

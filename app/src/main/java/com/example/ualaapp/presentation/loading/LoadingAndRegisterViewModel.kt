@@ -49,6 +49,8 @@ class LoadingAndRegisterViewModel @Inject constructor(
 
         if(username.length > UserNameMinLength) {
             _registerButtonEnabled.update { true }
+        } else {
+            _registerButtonEnabled.update { false }
         }
     }
 

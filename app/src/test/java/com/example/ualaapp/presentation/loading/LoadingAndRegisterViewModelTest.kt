@@ -99,4 +99,15 @@ class LoadingAndRegisterViewModelTest {
 
         assertTrue(viewModel.registerButtonEnabled.value)
     }
+
+    @Test
+    fun onEvent_Registry_button_enable_disabled() {
+        viewModel.onEvent(RegistryIntent.SetUserName("user"))
+
+        assertTrue(viewModel.registerButtonEnabled.value)
+
+        viewModel.onEvent(RegistryIntent.SetUserName("use"))
+
+        assertFalse(viewModel.registerButtonEnabled.value)
+    }
 }
