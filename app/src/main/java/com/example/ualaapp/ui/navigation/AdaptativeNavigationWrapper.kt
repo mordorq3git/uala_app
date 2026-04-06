@@ -7,6 +7,7 @@ import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaf
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.ualaapp.ui.screens.CitiesListScreen
+import com.example.ualaapp.ui.screens.MapScreen
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
@@ -18,12 +19,13 @@ fun AdaptativeNavigationWrapper(modifier: Modifier = Modifier) {
         value = navigator.scaffoldValue,
         listPane = {
             AnimatedPane {
-                CitiesListScreen(
-                    modifier = modifier
-                )
+                CitiesListScreen(modifier = modifier)
             }
         },
         detailPane = {
+            AnimatedPane {
+                MapScreen(modifier = modifier)
+            }
         }
     )
 }
