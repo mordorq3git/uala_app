@@ -40,6 +40,14 @@ class LoadingAndRegisterViewModelTest {
         viewModel.onEvent(RegistryIntent.SetUserName("username"))
 
         assertEquals("username", viewModel.registerUserValue.value)
+
+        viewModel.onEvent(RegistryIntent.SetUserName(""))
+
+        assertEquals("", viewModel.registerUserValue.value)
+
+        viewModel.onEvent(RegistryIntent.SetUserName("other_username"))
+
+        assertEquals("other_username", viewModel.registerUserValue.value)
     }
 
     @Test
