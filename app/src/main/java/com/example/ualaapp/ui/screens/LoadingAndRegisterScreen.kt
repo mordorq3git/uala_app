@@ -25,8 +25,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.ualaapp.R
-import com.example.ualaapp.presentation.loading.LoadingUIState
+import com.example.ualaapp.presentation.loading.LoadingAndRegistryUIState
 import com.example.ualaapp.presentation.loading.LoadingAndRegisterViewModel
+import com.example.ualaapp.presentation.loading.LoadingIntent
+import com.example.ualaapp.presentation.loading.RegistryIntent
 import com.example.ualaapp.ui.theme.UalaAppTheme
 
 @Composable
@@ -34,16 +36,21 @@ fun LoadingAndRegisterScreen(
     modifier: Modifier = Modifier,
     viewModel: LoadingAndRegisterViewModel = hiltViewModel()
 ) {
-    val loadingState by viewModel.loadingUIState.collectAsStateWithLifecycle()
+    val loadingState by viewModel.loadingAndRegistryUIState.collectAsStateWithLifecycle()
+    val registerUserValue by viewModel.registerUserValue.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.loadData()
+        viewModel.onEvent(LoadingIntent.Load)
     }
 
     when(loadingState) {
-        LoadingUIState.Idle -> {}
-        LoadingUIState.Loading -> { LoadingComponent(modifier) }
-        LoadingUIState.Success -> { RegisterComponent(modifier) }
+        LoadingAndRegistryUIState.Idle -> {}
+        LoadingAndRegistryUIState.Loading -> { LoadingComponent(modifier) }
+        LoadingAndRegistryUIState.Success -> {
+            RegisterComponent(modifier, tfValue = registerUserValue, onValueChangeEvent = { name ->
+                viewModel.onEvent(RegistryIntent.SetUserName(name))
+            })
+        }
     }
 }
 
@@ -78,7 +85,8 @@ fun LoadingComponent(
 @Composable
 fun RegisterComponent(
     modifier: Modifier = Modifier,
-    userName: String = "",
+    tfValue: String = "",
+    isButtonEnabled: Boolean = false,
     onValueChangeEvent: (String) -> Unit = {}
 ) {
     Box(
@@ -99,7 +107,7 @@ fun RegisterComponent(
                 fontSize = 20.sp
             )
             TextField(
-                value = userName,
+                value = tfValue,
                 onValueChange = { newValue ->
                     onValueChangeEvent(newValue)
                 },
@@ -113,7 +121,8 @@ fun RegisterComponent(
             )
             Button(
                 {},
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                enabled = isButtonEnabled
             ) {
                 Text(text = stringResource(R.string.enter))
             }
