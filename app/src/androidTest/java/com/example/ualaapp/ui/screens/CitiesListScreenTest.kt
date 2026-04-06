@@ -6,6 +6,8 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 
@@ -68,5 +70,22 @@ class CitiesListScreenTest {
         }
 
         composeTestRule.onNodeWithTag("favourite_icon_city_item").assertContentDescriptionEquals("Favourite deactivated").assertIsDisplayed()
+    }
+
+    @Test
+    fun cityItemComponent_clicOnRow_event() {
+        var itemClicked = false
+
+        composeTestRule.setContent {
+            CityItemComponent(
+                title = "City, CountryCode",
+                subtitle = "latitude, longitude",
+                onRowClickEvent = { itemClicked = true }
+            )
+        }
+
+        composeTestRule.onNodeWithTag("city_item").assertHasClickAction()
+        composeTestRule.onNodeWithTag("city_item").performClick()
+        assertTrue(itemClicked)
     }
 }
