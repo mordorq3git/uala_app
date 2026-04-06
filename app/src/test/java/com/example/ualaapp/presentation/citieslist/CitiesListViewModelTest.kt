@@ -1,6 +1,7 @@
 package com.example.ualaapp.presentation.citieslist
 
 import com.example.ualaapp.data.City
+import com.example.ualaapp.repository.implementations.BaseRepositoryImpl
 import com.example.ualaapp.repository.implementations.DataBaseRepositoryImpl
 import com.example.ualaapp.utils.MainDispatcherRule
 import io.mockk.coEvery
@@ -20,7 +21,7 @@ class CitiesListViewModelTest {
 
     @Before
     fun init() {
-        val repository = mockk<DataBaseRepositoryImpl>()
+        val repository = mockk<BaseRepositoryImpl>()
         coEvery { repository.getCities() } returns emptyList()
 
         this.viewModel = CitiesListViewModel(repository)
@@ -35,7 +36,7 @@ class CitiesListViewModelTest {
 
     @Test
     fun getCities_withValues() = runTest {
-        val repository = mockk<DataBaseRepositoryImpl>()
+        val repository = mockk<BaseRepositoryImpl>()
         coEvery { repository.getCities() } returns listOf(
             mockk<City>(),
             mockk<City>(),

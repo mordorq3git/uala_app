@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.ualaapp.data.City
 import com.example.ualaapp.repository.Repository
+import com.example.ualaapp.repository.implementations.BaseRepositoryImpl
 import com.example.ualaapp.repository.implementations.database.DatabaseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +18,7 @@ import kotlin.collections.emptyList
 
 @HiltViewModel
 class CitiesListViewModel @Inject constructor(
-    private val baseRepository: DatabaseRepository
+    private val baseRepository: BaseRepositoryImpl
 ) : ViewModel() {
     private val _citiesState = MutableStateFlow<List<City>>(emptyList())
     val citiesState: StateFlow<List<City>> = _citiesState.asStateFlow()

@@ -52,7 +52,7 @@ class BaseRepositoryImplTest {
 
     @Test
     fun getCities_returnsEmptyList() = runTest {
-        coEvery { apiRepository.getCities() } returns emptyList()
+        coEvery { apiRepository.loadCities() } returns emptyList()
 
         val cities = baseRepository.getCities()
 
@@ -71,7 +71,9 @@ class BaseRepositoryImplTest {
             mockedCity,
             mockedCity
         )
-        coEvery { apiRepository.getCities() } returns listOfCities
+        coEvery { apiRepository.loadCities() } returns listOfCities
+
+        baseRepository.loadCities()
 
         val cities = baseRepository.getCities()
 
