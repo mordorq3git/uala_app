@@ -8,10 +8,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,18 +24,31 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.ualaapp.R
+import com.example.ualaapp.data.City
+import com.example.ualaapp.presentation.citieslist.CitiesListViewModel
 
 @Composable
-fun CitiesListScreen(modifier: Modifier = Modifier) {
-    CitiesFilterListComponent(modifier)
+fun CitiesListScreen(
+    modifier: Modifier = Modifier,
+    viewModel: CitiesListViewModel = hiltViewModel()
+) {
+    val citiesStates by viewModel.citiesState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.getCities()
+    }
+
+    CitiesFilterListComponent(citiesStates)
 }
 
 @Composable
-fun CitiesFilterListComponent(modifier: Modifier = Modifier) {
+fun CitiesFilterListComponent(cities: List<City>) {
     Column {
         CitiesFilterComponent()
-        CitiesListComponent()
+        CitiesListComponent(cities)
     }
 }
 
@@ -58,9 +74,14 @@ fun CitiesFilterComponent(
 }
 
 @Composable
-fun CitiesListComponent() {
-    LazyColumn {
-        items(10) {
+fun CitiesListComponent(
+    cities: List<City> = emptyList()
+) {
+    LazyColumn(
+        modifier = Modifier
+            .testTag("cities_list")
+    ) {
+        items(cities) {
             CityItemComponent(
                 title = "City, CountryCode",
                 subtitle = "latitude, longitude"
@@ -84,6 +105,7 @@ fun CityItemComponent(
         modifier = Modifier
             .fillMaxWidth()
             .padding(4.dp, 8.dp)
+            .testTag("city_item_row")
     ) {
         Column(
             modifier = Modifier
