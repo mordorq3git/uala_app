@@ -24,7 +24,7 @@ class LoadingAndRegisterViewModelTest {
     @Before
     fun init() {
         val repository = mockk<BaseRepositoryImpl>()
-        coEvery { repository.getCities() } returns emptyList()
+        coEvery { repository.loadCities() } returns Unit
 
         this.viewModel = LoadingAndRegisterViewModel(repository)
     }
