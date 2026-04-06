@@ -47,7 +47,7 @@ fun LoadingAndRegisterScreen(
         LoadingAndRegistryUIState.Idle -> {}
         LoadingAndRegistryUIState.Loading -> { LoadingComponent(modifier) }
         LoadingAndRegistryUIState.Success -> {
-            RegisterComponent(modifier, userName = registerUserValue, onValueChangeEvent = { name ->
+            RegisterComponent(modifier, tfValue = registerUserValue, onValueChangeEvent = { name ->
                 viewModel.onEvent(RegistryIntent.SetUserName(name))
             })
         }
@@ -85,7 +85,8 @@ fun LoadingComponent(
 @Composable
 fun RegisterComponent(
     modifier: Modifier = Modifier,
-    userName: String = "",
+    tfValue: String = "",
+    isButtonEnabled: Boolean = false,
     onValueChangeEvent: (String) -> Unit = {}
 ) {
     Box(
@@ -106,7 +107,7 @@ fun RegisterComponent(
                 fontSize = 20.sp
             )
             TextField(
-                value = userName,
+                value = tfValue,
                 onValueChange = { newValue ->
                     onValueChangeEvent(newValue)
                 },
@@ -120,7 +121,8 @@ fun RegisterComponent(
             )
             Button(
                 {},
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                enabled = isButtonEnabled
             ) {
                 Text(text = stringResource(R.string.enter))
             }

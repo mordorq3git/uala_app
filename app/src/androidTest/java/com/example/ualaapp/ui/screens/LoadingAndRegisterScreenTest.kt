@@ -2,6 +2,7 @@ package com.example.ualaapp.ui.screens
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
@@ -27,20 +28,38 @@ class LoadingAndRegisterScreenTest {
     }
 
     @Test
-    fun testRegisterComponent() {
+    fun testRegisterComponent_byDefault() {
         composeTestRule.setContent {
             RegisterComponent()
         }
 
         composeTestRule.onNodeWithText("Bienvenido").assertIsDisplayed()
         composeTestRule.onNodeWithText("Nombre de usuario").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Ingresar").assertIsDisplayed().assertIsNotEnabled()
+    }
+
+    @Test
+    fun testRegisterComponent_disabled() {
+        composeTestRule.setContent {
+            RegisterComponent(isButtonEnabled = false)
+        }
+
+        composeTestRule.onNodeWithText("Ingresar").assertIsDisplayed().assertIsNotEnabled()
+    }
+
+    @Test
+    fun testRegisterComponent_enabled() {
+        composeTestRule.setContent {
+            RegisterComponent(isButtonEnabled = true)
+        }
+
         composeTestRule.onNodeWithText("Ingresar").assertIsDisplayed().assertIsEnabled()
     }
 
     @Test
     fun testRegisterComponent_onChangeValue() {
         composeTestRule.setContent {
-            RegisterComponent(userName = "John Doe")
+            RegisterComponent(tfValue = "John Doe")
         }
 
         composeTestRule.onNodeWithTag("register_with_username_textfield")
@@ -52,7 +71,7 @@ class LoadingAndRegisterScreenTest {
         var currentValue = ""
 
         composeTestRule.setContent {
-            RegisterComponent(userName = "", onValueChangeEvent = { newValue -> currentValue = newValue })
+            RegisterComponent(tfValue = "", onValueChangeEvent = { newValue -> currentValue = newValue })
         }
 
         composeTestRule.onNodeWithTag("register_with_username_textfield")
@@ -66,7 +85,7 @@ class LoadingAndRegisterScreenTest {
         var currentValue = ""
 
         composeTestRule.setContent {
-            RegisterComponent(userName = "Jhone Doe", onValueChangeEvent = { newValue -> currentValue = newValue })
+            RegisterComponent(tfValue = "Jhone Doe", onValueChangeEvent = { newValue -> currentValue = newValue })
         }
 
         composeTestRule.onNodeWithTag("register_with_username_textfield")
