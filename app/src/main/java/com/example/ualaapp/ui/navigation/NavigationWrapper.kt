@@ -27,7 +27,7 @@ fun NavigationWrapper(modifier: Modifier = Modifier) {
         }
 
         composable<CitiesList> {
-            CitiesListScreen(
+            AdaptativeNavigationWrapper(
                 modifier = modifier
             )
         }
