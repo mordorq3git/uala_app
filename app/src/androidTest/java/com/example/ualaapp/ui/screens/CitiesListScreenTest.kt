@@ -16,7 +16,10 @@ class CitiesListScreenTest {
     @Test
     fun cityItemComponent_default() {
         composeTestRule.setContent {
-            CityItemComponent()
+            CityItemComponent(
+                title = "City, CountryCode",
+                subtitle = "latitude, longitude"
+            )
         }
 
         composeTestRule.onNodeWithText("City, CountryCode").assertIsDisplayed()
@@ -25,9 +28,27 @@ class CitiesListScreenTest {
     }
 
     @Test
+    fun cityItemComponent_otherValues() {
+        composeTestRule.setContent {
+            CityItemComponent(
+                title = "City 2, CountryCode 2",
+                subtitle = "latitude 2, longitude 2"
+            )
+        }
+
+        composeTestRule.onNodeWithText("City 2, CountryCode 2").assertIsDisplayed()
+        composeTestRule.onNodeWithText("latitude 2, longitude 2").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("favourite_city_item").assertContentDescriptionEquals("Favourite deactivated").assertIsDisplayed()
+    }
+
+    @Test
     fun cityItemComponent_setFavourite() {
         composeTestRule.setContent {
-            CityItemComponent(isFavourite = true)
+            CityItemComponent(
+                title = "City, CountryCode",
+                subtitle = "latitude, longitude",
+                isFavourite = true
+            )
         }
 
         composeTestRule.onNodeWithTag("favourite_city_item").assertContentDescriptionEquals("Favourite activated").assertIsDisplayed()
@@ -36,7 +57,11 @@ class CitiesListScreenTest {
     @Test
     fun cityItemComponent_unsetFavourite() {
         composeTestRule.setContent {
-            CityItemComponent(isFavourite = false)
+            CityItemComponent(
+                title = "City, CountryCode",
+                subtitle = "latitude, longitude",
+                isFavourite = false
+            )
         }
 
         composeTestRule.onNodeWithTag("favourite_city_item").assertContentDescriptionEquals("Favourite deactivated").assertIsDisplayed()

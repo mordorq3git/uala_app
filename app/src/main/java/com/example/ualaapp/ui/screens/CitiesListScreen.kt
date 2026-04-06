@@ -1,5 +1,6 @@
 package com.example.ualaapp.ui.screens
 
+import android.icu.text.CaseMap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,7 +30,10 @@ fun CitiesListScreen(modifier: Modifier = Modifier) {
 fun CitiesListComponent(modifier: Modifier = Modifier) {
     LazyColumn {
         items(10) {
-            CityItemComponent()
+            CityItemComponent(
+                title = "City, CountryCode",
+                subtitle = "latitude, longitude"
+            )
         }
     }
 }
@@ -37,22 +41,31 @@ fun CitiesListComponent(modifier: Modifier = Modifier) {
 @Composable
 fun CityItemComponent(
     modifier: Modifier = Modifier,
+    title: String,
+    subtitle: String,
     isFavourite: Boolean = false
 ) {
     val favouriteContentDescription = if (isFavourite) "Favourite activated" else "Favourite deactivated"
     val favouriteImage = if (isFavourite) R.drawable.ic_favourite_activated else R.drawable.ic_favourite_deactivated
 
-    Row(modifier = Modifier.fillMaxWidth().padding(4.dp)) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(4.dp, 8.dp)
+    ) {
         Column(
-            modifier = Modifier.fillMaxWidth().weight(0.85f)
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(0.85f)
         ) {
             Text(
-                text = "City, CountryCode",
+                text = title,
                 fontSize = 20.sp
             )
             Text(
-                text = "latitude, longitude",
-                modifier = Modifier.padding(top = 6.dp),
+                text = subtitle,
+                modifier = Modifier
+                    .padding(top = 6.dp),
                 fontSize = 16.sp,
                 color = Color.Gray
             )
@@ -73,13 +86,20 @@ fun CityItemComponent(
 @Preview(showBackground = true)
 @Composable
 private fun CityItemComponent_Preview() {
-    CityItemComponent()
+    CityItemComponent(
+        title = "City, CountryCode",
+        subtitle = "latitude, longitude"
+    )
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun CityItemComponent_favourite_Preview() {
-    CityItemComponent(isFavourite = true)
+    CityItemComponent(
+        title = "City, CountryCode",
+        subtitle = "latitude, longitude",
+        isFavourite = true
+    )
 }
 
 
