@@ -1,6 +1,7 @@
 package com.example.ualaapp.ui.screens
 
 import androidx.compose.ui.test.assertContentDescriptionEquals
+import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
@@ -22,9 +23,11 @@ class CitiesListScreenTest {
             )
         }
 
+        composeTestRule.onNodeWithTag("city_item").assertHasClickAction()
         composeTestRule.onNodeWithText("City, CountryCode").assertIsDisplayed()
         composeTestRule.onNodeWithText("latitude, longitude").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("favourite_city_item").assertContentDescriptionEquals("Favourite deactivated").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("favourite_icon_city_item").assertContentDescriptionEquals("Favourite deactivated").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("favourite_icon_city_item").assertHasClickAction()
     }
 
     @Test
@@ -38,7 +41,7 @@ class CitiesListScreenTest {
 
         composeTestRule.onNodeWithText("City 2, CountryCode 2").assertIsDisplayed()
         composeTestRule.onNodeWithText("latitude 2, longitude 2").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("favourite_city_item").assertContentDescriptionEquals("Favourite deactivated").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("favourite_icon_city_item").assertContentDescriptionEquals("Favourite deactivated").assertIsDisplayed()
     }
 
     @Test
@@ -51,7 +54,7 @@ class CitiesListScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithTag("favourite_city_item").assertContentDescriptionEquals("Favourite activated").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("favourite_icon_city_item").assertContentDescriptionEquals("Favourite activated").assertIsDisplayed()
     }
 
     @Test
@@ -64,6 +67,6 @@ class CitiesListScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithTag("favourite_city_item").assertContentDescriptionEquals("Favourite deactivated").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("favourite_icon_city_item").assertContentDescriptionEquals("Favourite deactivated").assertIsDisplayed()
     }
 }

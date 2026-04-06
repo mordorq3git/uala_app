@@ -2,6 +2,7 @@ package com.example.ualaapp.ui.screens
 
 import android.icu.text.CaseMap
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -40,7 +41,6 @@ fun CitiesListComponent(modifier: Modifier = Modifier) {
 
 @Composable
 fun CityItemComponent(
-    modifier: Modifier = Modifier,
     title: String,
     subtitle: String,
     isFavourite: Boolean = false
@@ -57,6 +57,8 @@ fun CityItemComponent(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(0.85f)
+                .clickable(enabled = true, onClick = {})
+                .testTag("city_item")
         ) {
             Text(
                 text = title,
@@ -77,7 +79,8 @@ fun CityItemComponent(
                 .size(24.dp)
                 .align(Alignment.CenterVertically)
                 .weight(0.15f)
-                .testTag("favourite_city_item")
+                .clickable(enabled = true, onClick = {})
+                .testTag("favourite_icon_city_item")
         )
     }
     HorizontalDivider()
