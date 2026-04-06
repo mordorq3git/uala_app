@@ -60,6 +60,8 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.com.google.android.play.services.maps)
+    implementation(libs.com.google.maps.android)
     implementation(libs.dagger.hilt)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.coroutines.android)
