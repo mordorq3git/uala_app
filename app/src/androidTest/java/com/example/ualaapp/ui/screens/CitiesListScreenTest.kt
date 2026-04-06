@@ -24,7 +24,7 @@ class CitiesListScreenTest {
             CitiesFilterComponent()
         }
 
-        composeTestRule.onNodeWithText("Filter city").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Filter by City Name").assertIsDisplayed()
     }
 
     @Test
