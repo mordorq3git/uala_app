@@ -12,9 +12,9 @@ interface UserDao {
     suspend fun insert(userEntity: UserEntity)
 
     @Query("SELECT * FROM users WHERE name = :name")
-    fun getUserEntity(name: String): UserEntity
+    suspend fun getUserEntity(name: String): UserEntity
 
     @Query("SELECT id_user FROM users WHERE name = :name")
-    fun getUserId(name: String): Int
+    suspend fun getUserId(name: String): Int
 
 }

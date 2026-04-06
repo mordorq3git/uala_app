@@ -1,5 +1,7 @@
 package com.example.ualaapp.repository.implementations
 
+import com.example.ualaapp.data.City
+import com.example.ualaapp.data.Coordinates
 import com.example.ualaapp.repository.implementations.database.daos.CityDao
 import com.example.ualaapp.repository.implementations.database.entities.CityEntity
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -52,5 +54,28 @@ class DataBaseRepositoryImplTest {
         Assert.assertNotNull(cities)
         Assert.assertFalse(cities.isEmpty())
         Assert.assertEquals(5, cities.size)
+    }
+
+    @Test
+    fun getCities_insertMultipleCities_returnsNotEmptyList() = runTest {
+        val listOfCities = (0 .. 6).map { key ->
+            City(
+                _id = key,
+                name = "City $key",
+                country = "Country $key",
+                coord = Coordinates(
+                    lat = key.toDouble(),
+                    lon = key.toDouble()
+                )
+            )
+        }
+
+        repository.setCities(listOfCities)
+
+        val cities = repository.getCities()
+
+        Assert.assertNotNull(cities)
+        Assert.assertFalse(cities.isEmpty())
+        Assert.assertEquals(7, cities.size)
     }
 }

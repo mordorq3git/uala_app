@@ -1,4 +1,4 @@
-package com.example.ualaapp.repository
+package com.example.ualaapp.di
 
 import com.example.ualaapp.repository.implementations.api.CitiesApiService
 import dagger.Module
