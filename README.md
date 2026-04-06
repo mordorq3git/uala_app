@@ -46,3 +46,10 @@ Para deserializar un objeto desde un archivo JSON en los tests:
 
 ---
 Desarrollado como parte del ecosistema de aprendizaje de Android moderno.
+
+
+Tiempos:
+<img width="1349" alt="Captura de pantalla 2026-04-05 210209" src="https://github.com/user-attachments/assets/20408d3e-6d10-4baf-9eec-4932e33e599d" />
+
+
+
