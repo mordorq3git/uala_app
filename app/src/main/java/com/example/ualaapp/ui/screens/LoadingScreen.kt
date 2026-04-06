@@ -78,7 +78,8 @@ fun LoadingComponent(
 @Composable
 fun RegisterComponent(
     modifier: Modifier = Modifier,
-    userName: String = ""
+    userName: String = "",
+    onValueChangeEvent: (String) -> Unit = {}
 ) {
     Box(
         modifier = modifier
@@ -99,8 +100,8 @@ fun RegisterComponent(
             )
             TextField(
                 value = userName,
-                onValueChange = {
-
+                onValueChange = { newValue ->
+                    onValueChangeEvent(newValue)
                 },
                 modifier = Modifier
                     .padding(top = 4.dp, bottom = 12.dp)
