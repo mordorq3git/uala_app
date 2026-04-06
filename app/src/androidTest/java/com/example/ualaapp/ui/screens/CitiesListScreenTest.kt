@@ -134,6 +134,42 @@ class CitiesListScreenTest {
     }
 
     @Test
+    fun citiesFilterListComponent_onRowClickEvent() {
+        var valueChanged = 0
+
+        composeTestRule.setContent {
+            val listOfCities = listOf(
+                City(2456, "City", "CTY", Coordinates(1.0, 2.0)),
+                City(164, "City 2", "CTY 2", Coordinates(3.0, 4.0)),
+                City(1212, "City 3", "CTY 3", Coordinates(5.0, 6.0))
+            )
+
+            CitiesFilterListComponent(
+                cities = listOfCities,
+                onRowClickEvent = { _id -> valueChanged = _id }
+            )
+        }
+
+        composeTestRule
+            .onNodeWithTag("cities_list")
+            .onChildren()
+            .filter(hasTestTag("city_item_row"))
+            .onFirst()
+            .performClick()
+
+        assertEquals(2456, valueChanged)
+
+        composeTestRule
+            .onNodeWithTag("cities_list")
+            .onChildren()
+            .filter(hasTestTag("city_item_row"))
+            .onLast()
+            .performClick()
+
+        assertEquals(1212, valueChanged)
+    }
+
+    @Test
     fun cityItemComponent_default() {
         composeTestRule.setContent {
             CityItemComponent(

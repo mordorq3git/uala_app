@@ -46,10 +46,13 @@ fun CitiesListScreen(
 }
 
 @Composable
-fun CitiesFilterListComponent(cities: List<City>) {
+fun CitiesFilterListComponent(
+    cities: List<City>,
+    onRowClickEvent: (Int) -> Unit = {}
+) {
     Column {
         CitiesFilterComponent()
-        CitiesListComponent(cities)
+        CitiesListComponent(cities, onRowClickEvent)
     }
 }
 
