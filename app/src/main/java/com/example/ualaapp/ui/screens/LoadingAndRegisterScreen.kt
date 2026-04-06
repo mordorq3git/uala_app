@@ -26,13 +26,13 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.ualaapp.R
 import com.example.ualaapp.presentation.loading.LoadingUIState
-import com.example.ualaapp.presentation.loading.LoadingViewModel
+import com.example.ualaapp.presentation.loading.LoadingAndRegisterViewModel
 import com.example.ualaapp.ui.theme.UalaAppTheme
 
 @Composable
-fun LoadingScreen(
+fun LoadingAndRegisterScreen(
     modifier: Modifier = Modifier,
-    viewModel: LoadingViewModel = hiltViewModel()
+    viewModel: LoadingAndRegisterViewModel = hiltViewModel()
 ) {
     val loadingState by viewModel.loadingUIState.collectAsStateWithLifecycle()
 

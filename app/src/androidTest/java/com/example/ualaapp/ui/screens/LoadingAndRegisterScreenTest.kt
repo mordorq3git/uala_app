@@ -12,7 +12,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 
-class LoadingScreenTest {
+class LoadingAndRegisterScreenTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()

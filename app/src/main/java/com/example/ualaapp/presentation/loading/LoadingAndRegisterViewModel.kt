@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoadingViewModel @Inject constructor(
+class LoadingAndRegisterViewModel @Inject constructor(
     private val baseRepository: Repository
 ) : ViewModel() {
     private val _loadingUiState = MutableStateFlow<LoadingUIState>(LoadingUIState.Idle)
