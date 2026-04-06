@@ -88,4 +88,21 @@ class CitiesListScreenTest {
         composeTestRule.onNodeWithTag("city_item").performClick()
         assertTrue(itemClicked)
     }
+
+    @Test
+    fun cityItemComponent_clicOnFavourite_event() {
+        var favouriteClicked = false
+
+        composeTestRule.setContent {
+            CityItemComponent(
+                title = "City, CountryCode",
+                subtitle = "latitude, longitude",
+                onFavouriteClickEvent = { favouriteClicked = true }
+            )
+        }
+
+        composeTestRule.onNodeWithTag("favourite_icon_city_item").assertHasClickAction()
+        composeTestRule.onNodeWithTag("favourite_icon_city_item").performClick()
+        assertTrue(favouriteClicked)
+    }
 }

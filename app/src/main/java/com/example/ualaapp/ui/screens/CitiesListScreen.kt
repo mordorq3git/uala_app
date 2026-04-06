@@ -44,7 +44,8 @@ fun CityItemComponent(
     title: String,
     subtitle: String,
     isFavourite: Boolean = false,
-    onRowClickEvent: () -> Unit = {}
+    onRowClickEvent: () -> Unit = {},
+    onFavouriteClickEvent: () -> Unit = {}
 ) {
     val favouriteContentDescription = if (isFavourite) "Favourite activated" else "Favourite deactivated"
     val favouriteImage = if (isFavourite) R.drawable.ic_favourite_activated else R.drawable.ic_favourite_deactivated
@@ -82,7 +83,9 @@ fun CityItemComponent(
                 .size(24.dp)
                 .align(Alignment.CenterVertically)
                 .weight(0.15f)
-                .clickable(enabled = true, onClick = {})
+                .clickable(enabled = true, onClick = {
+                    onFavouriteClickEvent()
+                })
                 .testTag("favourite_icon_city_item")
         )
     }
