@@ -1,9 +1,7 @@
 package com.example.ualaapp.ui.screens
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.android.gms.maps.model.CameraPosition
@@ -26,6 +24,7 @@ fun MapScreen(modifier: Modifier = Modifier) {
     val marker = rememberMarkerState(position = positionOfMarker)
 
     MapComponent(
+        modifier = modifier,
         cameraPositionState = cameraPositionState,
         markerState = marker
     )
