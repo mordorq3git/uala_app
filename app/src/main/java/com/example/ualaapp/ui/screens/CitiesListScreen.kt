@@ -81,10 +81,10 @@ fun CitiesListComponent(
         modifier = Modifier
             .testTag("cities_list")
     ) {
-        items(cities) {
+        items(cities) { city ->
             CityItemComponent(
-                title = "City, CountryCode",
-                subtitle = "latitude, longitude"
+                title = "${city.name}, ${city.country}",
+                subtitle = "${city.coord.lat}, ${city.coord.lon}"
             )
         }
     }
