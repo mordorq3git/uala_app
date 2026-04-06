@@ -30,7 +30,6 @@ fun NavigationWrapper(modifier: Modifier = Modifier) {
                 }
             )
         }
-
         composable<CitiesList> {
             AdaptativeNavigationWrapper(
                 modifier = modifier

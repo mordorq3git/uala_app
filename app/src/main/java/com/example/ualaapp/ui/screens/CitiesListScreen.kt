@@ -76,7 +76,8 @@ fun CitiesFilterComponent(
 
 @Composable
 fun CitiesListComponent(
-    cities: List<City> = emptyList()
+    cities: List<City> = emptyList(),
+    onRowClickEvent: (Int) -> Unit = {}
 ) {
     LazyColumn(
         modifier = Modifier
@@ -85,7 +86,8 @@ fun CitiesListComponent(
         items(cities) { city ->
             CityItemComponent(
                 title = "${city.name}, ${city.country}",
-                subtitle = "${city.coord.lat}, ${city.coord.lon}"
+                subtitle = "${city.coord.lat}, ${city.coord.lon}",
+                onRowClickEvent = { onRowClickEvent(city._id) }
             )
         }
     }
