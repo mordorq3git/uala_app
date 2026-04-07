@@ -9,7 +9,7 @@ import com.example.ualaapp.repository.implementations.database.entities.CityEnti
 import com.example.ualaapp.repository.implementations.database.entities.FavouriteEntity
 import com.example.ualaapp.repository.implementations.database.entities.UserEntity
 
-@Database(entities = [UserEntity::class, CityEntity::class, FavouriteEntity::class], version = 2)
+@Database(entities = [UserEntity::class, CityEntity::class, FavouriteEntity::class], version = 3)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun cityDao(): CityDao

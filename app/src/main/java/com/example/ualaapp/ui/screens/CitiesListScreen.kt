@@ -49,7 +49,13 @@ fun CitiesListScreen(
         filterState = filterState,
         onValueChangeEvent = { newValue -> viewModel.onEvent(CitiesListIntent.Filter(newValue)) },
         listOfCities = citiesStates,
-        onRowClickEvent = onCitySelected
+        onRowClickEvent = onCitySelected,
+        onAddFavouriteClickEvent = {
+            newValue -> viewModel.onEvent(CitiesListIntent.AddToFavourites(newValue))
+        },
+        onRemoveFavouriteClickEvent = {
+            newValue -> viewModel.onEvent(CitiesListIntent.RemoveFromFavourites(newValue))
+        }
     )
 }
 
@@ -59,14 +65,21 @@ fun CitiesFilterListComponent(
     filterState: String = "",
     onValueChangeEvent: (String) -> Unit = {},
     listOfCities: List<City>,
-    onRowClickEvent: (Int) -> Unit = {}
+    onRowClickEvent: (Int) -> Unit = {},
+    onAddFavouriteClickEvent: (Int) -> Unit = {},
+    onRemoveFavouriteClickEvent: (Int) -> Unit = {}
 ) {
     Column(modifier = modifier) {
         CitiesFilterComponent(
             tfValue = filterState,
             onValueChangeEvent = { newValue -> onValueChangeEvent(newValue) }
         )
-        CitiesListComponent(listOfCities, onRowClickEvent)
+        CitiesListComponent(
+            listOfCities = listOfCities,
+            onRowClickEvent = onRowClickEvent,
+            onAddFavouriteClickEvent = onAddFavouriteClickEvent,
+            onRemoveFavouriteClickEvent = onRemoveFavouriteClickEvent
+        )
     }
 }
 
@@ -93,18 +106,21 @@ fun CitiesFilterComponent(
 
 @Composable
 fun CitiesListComponent(
-    cities: List<City> = emptyList(),
-    onRowClickEvent: (Int) -> Unit = {}
+    listOfCities: List<City> = emptyList(),
+    onRowClickEvent: (Int) -> Unit = {},
+    onAddFavouriteClickEvent: (Int) -> Unit = {},
+    onRemoveFavouriteClickEvent: (Int) -> Unit = {}
 ) {
     LazyColumn(
         modifier = Modifier
             .testTag("cities_list")
     ) {
-        items(cities) { city ->
+        items(listOfCities) { city ->
             CityItemComponent(
                 title = "${city.name}, ${city.country}",
                 subtitle = "${city.coord.lat}, ${city.coord.lon}",
-                onRowClickEvent = { onRowClickEvent(city._id) }
+                onRowClickEvent = { onRowClickEvent(city._id) },
+                onFavouriteClickEvent = { onAddFavouriteClickEvent(city._id) }
             )
         }
     }
@@ -152,7 +168,7 @@ fun CityItemComponent(
             painter = painterResource(favouriteImage),
             contentDescription = favouriteContentDescription,
             modifier = Modifier
-                .size(24.dp)
+                .size(36.dp)
                 .align(Alignment.CenterVertically)
                 .weight(0.15f)
                 .clickable(enabled = true, onClick = {
@@ -187,10 +203,4 @@ private fun CityItemComponent_favourite_Preview() {
         subtitle = "latitude, longitude",
         isFavourite = true
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun CitiesListScreen_Preview() {
-    CitiesListScreen()
 }
