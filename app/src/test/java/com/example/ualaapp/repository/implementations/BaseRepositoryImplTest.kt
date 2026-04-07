@@ -169,4 +169,52 @@ class BaseRepositoryImplTest {
 
         Assert.assertEquals("username", user.name)
     }
+
+    @Test
+    fun saveFavourite_toDb() = runTest {
+        val city = City(
+            _id = 214,
+            name = "Buenos Aires",
+            country = "AR",
+            coord = Coordinates(lat = 1.0, lon = 2.0)
+        )
+
+        val listOfCities = listOf(
+            city,
+            city.copy(_id = 215, name = "Chubut"),
+            city.copy(_id = 216, name = "Salta")
+        )
+
+        coEvery { apiRepository.loadCities() } returns listOfCities
+
+        baseRepository.loadCities()
+
+        baseRepository.saveUser("username")
+
+        baseRepository.saveFavourite(214)
+    }
+
+    @Test
+    fun removeFavourite_toDb() = runTest {
+        val city = City(
+            _id = 214,
+            name = "Buenos Aires",
+            country = "AR",
+            coord = Coordinates(lat = 1.0, lon = 2.0)
+        )
+
+        val listOfCities = listOf(
+            city,
+            city.copy(_id = 215, name = "Chubut"),
+            city.copy(_id = 216, name = "Salta")
+        )
+
+        coEvery { apiRepository.loadCities() } returns listOfCities
+
+        baseRepository.loadCities()
+
+        baseRepository.saveUser("username")
+
+        baseRepository.removeFavourite(214)
+    }
 }

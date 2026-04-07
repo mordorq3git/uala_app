@@ -8,6 +8,7 @@ import javax.inject.Inject
 import kotlin.apply
 
 private const val USER_ID = "USER_ID"
+private const val USER_ID_DEF_VALUE: Long = -999
 class BaseRepositoryImpl @Inject constructor(
     private val apiRepository: ApiRepositoryImpl,
     private val dataBaseRepository: DataBaseRepositoryImpl,
@@ -43,7 +44,7 @@ class BaseRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getUser(username: String) : User {
-        val sessionId = sharedPreferences.getLong(USER_ID, -999)
+        val sessionId = sharedPreferences.getLong(USER_ID, USER_ID_DEF_VALUE)
 
         return dataBaseRepository.getUser(sessionId)
     }
@@ -53,5 +54,17 @@ class BaseRepositoryImpl @Inject constructor(
             putLong(USER_ID, generatedId)
             apply()
         }
+    }
+
+    override suspend fun saveFavourite(cityId: Int) {
+        val sessionId = sharedPreferences.getLong(USER_ID, USER_ID_DEF_VALUE)
+
+        dataBaseRepository.saveFavourite(sessionId, cityId)
+    }
+
+    override suspend fun removeFavourite(cityId: Int) {
+        val sessionId = sharedPreferences.getLong(USER_ID, USER_ID_DEF_VALUE)
+
+        dataBaseRepository.removeFavourite(sessionId, cityId)
     }
 }
