@@ -80,5 +80,20 @@ class CitiesListViewModelTest {
 
         assertEquals("Ala", viewModel.filterState.value)
         assertEquals(1, viewModel.citiesState.value.size)
+
+        viewModel.onEvent(CitiesListIntent.Filter("bue"))
+
+        assertEquals("bue", viewModel.filterState.value)
+        assertEquals(0, viewModel.citiesState.value.size)
+
+        viewModel.onEvent(CitiesListIntent.Filter("al"))
+
+        assertEquals("al", viewModel.filterState.value)
+        assertEquals(2, viewModel.citiesState.value.size)
+
+        viewModel.onEvent(CitiesListIntent.Filter("ala"))
+
+        assertEquals("ala", viewModel.filterState.value)
+        assertEquals(1, viewModel.citiesState.value.size)
     }
 }

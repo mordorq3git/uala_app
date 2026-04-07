@@ -40,7 +40,7 @@ class CitiesListViewModel @Inject constructor(
     private fun filterCities(filterText: String) {
         _filterState.update { filterText }
 
-        val filteredList = _originalListOfCities.filter { city -> city.name.contains(filterText, ignoreCase = false) }
+        val filteredList = _originalListOfCities.filter { city -> city.name.contains(filterText, ignoreCase = true) }
 
         _citiesState.update { filteredList }
     }
