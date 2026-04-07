@@ -14,4 +14,8 @@ interface DatabaseRepository : Repository {
     suspend fun saveUser(username: String) : Long
 
     suspend fun getUser(id: Long) : User
+
+    suspend fun saveFavourite(user_id: Long, city_id: Int)
+
+    suspend fun removeFavourite(id: Int)
 }

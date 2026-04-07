@@ -44,6 +44,8 @@ class CitiesListViewModel @Inject constructor(
         when(intent) {
             CitiesListIntent.Get -> getCities()
             is CitiesListIntent.Filter -> filterCities(intent.filter)
+            is CitiesListIntent.AddToFavourites -> addToFavourites(intent._id)
+            is CitiesListIntent.RemoveFromFavourites -> removeFromFavourites(intent._id)
         }
     }
 
@@ -55,5 +57,13 @@ class CitiesListViewModel @Inject constructor(
 
     private fun filterCities(filterText: String) {
         _filterState.update { filterText }
+    }
+
+    private fun removeFromFavourites(_id: Int) {
+
+    }
+
+    private fun addToFavourites(_id: Int) {
+
     }
 }

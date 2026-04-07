@@ -101,4 +101,9 @@ class DataBaseRepositoryImplTest {
         Assert.assertEquals("username_repeated", user.name)
     }
 
+    @Test
+    fun saveFavourite_toDb() = runTest {
+        repository.saveFavourite(54, 854)
+    }
+
 }
