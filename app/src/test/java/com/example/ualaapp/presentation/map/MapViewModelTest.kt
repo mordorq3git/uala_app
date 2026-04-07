@@ -27,7 +27,7 @@ class MapViewModelTest {
 
     @Test
     fun getCityFromDatabase() {
-        /*val city = City(
+        val city = City(
             _id = 214,
             name = "Buenos Aires",
             country = "AR",
@@ -42,10 +42,10 @@ class MapViewModelTest {
 
         viewModel.onEvent(MapIntent.GetCity(214))
 
-        assertEquals(214, viewModel.currentCityState._id)
-        assertEquals("Buenos Aires", viewModel.currentCityState.name)
-        assertEquals("AR", viewModel.currentCityState.country)
-        assertEquals(1.0, viewModel.currentCityState.coord.lat, 0f)
-        assertEquals(2.0, viewModel.currentCityState.coord.lon, 0f)*/
+        assertEquals(214, viewModel.currentCityState.value!!._id)
+        assertEquals("Buenos Aires", viewModel.currentCityState.value!!.name)
+        assertEquals("AR", viewModel.currentCityState.value!!.country)
+        assertEquals(1.0, viewModel.currentCityState.value!!.coord.lat, 0.0)
+        assertEquals(2.0, viewModel.currentCityState.value!!.coord.lon, 0.0)
     }
 }
