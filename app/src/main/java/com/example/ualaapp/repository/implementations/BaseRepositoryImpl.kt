@@ -1,6 +1,7 @@
 package com.example.ualaapp.repository.implementations
 
 import com.example.ualaapp.data.City
+import com.example.ualaapp.data.User
 import com.example.ualaapp.repository.BaseRepository
 import javax.inject.Inject
 
@@ -30,4 +31,10 @@ class BaseRepositoryImpl @Inject constructor(
     private suspend fun saveCities(listOfCities: List<City>) {
         dataBaseRepository.saveCities(listOfCities)
     }
+
+    override suspend fun saveUser(username: String) {
+        dataBaseRepository.saveUser(username)
+    }
+
+    override suspend fun getUser(username: String) = dataBaseRepository.getUser(username)
 }

@@ -161,8 +161,10 @@ class BaseRepositoryImplTest {
 
     @Test
     fun saveUser_toDb() = runTest {
-        /*baseRepository.saveUser("Juan")
+        baseRepository.saveUser("username")
 
-        val user = User()*/
+        val user: User = baseRepository.getUser("username")
+
+        Assert.assertEquals("username", user.name)
     }
 }
