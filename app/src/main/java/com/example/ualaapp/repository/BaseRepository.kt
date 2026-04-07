@@ -8,6 +8,8 @@ interface BaseRepository : Repository {
 
     suspend fun getCities(): List<City>
 
+    suspend fun getCitiesWithFavourites(): List<City>
+
     suspend fun getCity(id: Int) : City
 
     suspend fun saveUser(username: String)

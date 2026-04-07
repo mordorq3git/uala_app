@@ -51,7 +51,7 @@ class CitiesListViewModel @Inject constructor(
 
     private fun getCities() {
         viewModelScope.launch {
-            _citiesState.update { baseRepository.getCities() }
+            _citiesState.update { baseRepository.getCitiesWithFavourites() }
         }
     }
 

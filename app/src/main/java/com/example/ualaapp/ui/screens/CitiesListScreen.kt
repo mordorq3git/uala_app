@@ -119,6 +119,7 @@ fun CitiesListComponent(
             CityItemComponent(
                 title = "${city.name}, ${city.country}",
                 subtitle = "${city.coord.lat}, ${city.coord.lon}",
+                isFavourite = city.isFavourite,
                 onRowClickEvent = { onRowClickEvent(city._id) },
                 onFavouriteClickEvent = { onAddFavouriteClickEvent(city._id) }
             )

@@ -8,6 +8,7 @@ import com.example.ualaapp.repository.implementations.database.daos.CityDao
 import com.example.ualaapp.repository.implementations.database.daos.FavouriteDao
 import com.example.ualaapp.repository.implementations.database.daos.UserDao
 import com.example.ualaapp.repository.implementations.database.entities.CityEntity
+import com.example.ualaapp.repository.implementations.database.entities.CityWithFavorite
 import com.example.ualaapp.repository.implementations.database.entities.CoordinatesEntity
 import com.example.ualaapp.repository.implementations.database.entities.FavouriteEntity
 import com.example.ualaapp.repository.implementations.database.entities.UserEntity
@@ -22,6 +23,12 @@ class DataBaseRepositoryImpl @Inject constructor(
 ) : DatabaseRepository {
 
     override suspend fun getCities() = mapCitiesEntitiesToDto(cityDao.getAll())
+
+    override suspend fun getCities(userId: Long) : List<City> {
+        val listOfCitiesWithFavourites = mapCitiesWithFavoriteToDto(cityDao.getAllCitiesWithFavorite(userId))
+
+        return listOfCitiesWithFavourites
+    }
 
     override suspend fun getCity(id: Int): City {
         val cityEntity = cityDao.get(id)
@@ -40,6 +47,11 @@ class DataBaseRepositoryImpl @Inject constructor(
             mapCityEntityToDto(entity)
         }
 
+    private fun mapCitiesWithFavoriteToDto(listOfCitiesWithFavourites: List<CityWithFavorite>) =
+        listOfCitiesWithFavourites.map { entity ->
+            mapCityEntityToDto(entity)
+        }
+
     private fun mapCityEntityToDto(entity: CityEntity) = City(
         _id = entity._id,
         name = entity.name,
@@ -47,7 +59,19 @@ class DataBaseRepositoryImpl @Inject constructor(
         coord = Coordinates(
             lat = entity.coord.lat,
             lon = entity.coord.lon
-        )
+        ),
+        isFavourite = false
+    )
+
+    private fun mapCityEntityToDto(cityWithFavorite: CityWithFavorite) = City(
+        _id = cityWithFavorite.city._id,
+        name = cityWithFavorite.city.name,
+        country = cityWithFavorite.city.country,
+        coord = Coordinates(
+            lat = cityWithFavorite.city.coord.lat,
+            lon = cityWithFavorite.city.coord.lon
+        ),
+        isFavourite = cityWithFavorite.isFavorite
     )
 
     private fun mapCitiesDtoToEntities(listOfDtos: List<City>) =

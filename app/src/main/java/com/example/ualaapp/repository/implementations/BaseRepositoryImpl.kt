@@ -27,10 +27,19 @@ class BaseRepositoryImpl @Inject constructor(
 
     private suspend fun getCitiesFromDb() = dataBaseRepository.getCities()
 
+    private suspend fun getCitiesFromDb(userId: Long) = dataBaseRepository.getCities(userId)
+
     private suspend fun getCitiesFromApi() = apiRepository.loadCities()
 
 
     override suspend fun getCities() = getCitiesFromDb()
+
+    override suspend fun getCitiesWithFavourites() : List<City> {
+        val sessionId = sharedPreferences.getLong(USER_ID, USER_ID_DEF_VALUE)
+
+        return getCitiesFromDb(sessionId)
+    }
+
     override suspend fun getCity(id: Int) = dataBaseRepository.getCity(id)
 
     private suspend fun saveCities(listOfCities: List<City>) {
