@@ -1,12 +1,17 @@
 package com.example.ualaapp.repository.implementations
 
+import android.content.SharedPreferences
 import com.example.ualaapp.data.City
+import com.example.ualaapp.data.User
 import com.example.ualaapp.repository.BaseRepository
 import javax.inject.Inject
+import kotlin.apply
 
+private const val USER_ID = "USER_ID"
 class BaseRepositoryImpl @Inject constructor(
     private val apiRepository: ApiRepositoryImpl,
-    private val dataBaseRepository: DataBaseRepositoryImpl
+    private val dataBaseRepository: DataBaseRepositoryImpl,
+    private val sharedPreferences: SharedPreferences
 ) : BaseRepository {
 
     override suspend fun loadCities() {
@@ -25,9 +30,28 @@ class BaseRepositoryImpl @Inject constructor(
 
 
     override suspend fun getCities() = getCitiesFromDb()
-    override suspend fun getCity(id: Int) = dataBaseRepository.getCity(id)!!
+    override suspend fun getCity(id: Int) = dataBaseRepository.getCity(id)
 
     private suspend fun saveCities(listOfCities: List<City>) {
-        dataBaseRepository.setCities(listOfCities)
+        dataBaseRepository.saveCities(listOfCities)
+    }
+
+    override suspend fun saveUser(username: String) {
+        val idUser = dataBaseRepository.saveUser(username)
+
+        addUserToSession(idUser)
+    }
+
+    override suspend fun getUser(username: String) : User {
+        val sessionId = sharedPreferences.getLong(USER_ID, -999)
+
+        return dataBaseRepository.getUser(sessionId)
+    }
+
+    private fun addUserToSession(generatedId: Long) {
+        sharedPreferences.edit().apply {
+            putLong(USER_ID, generatedId)
+            apply()
+        }
     }
 }
