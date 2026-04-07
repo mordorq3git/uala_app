@@ -59,11 +59,15 @@ class CitiesListViewModel @Inject constructor(
         _filterState.update { filterText }
     }
 
-    private fun removeFromFavourites(_id: Int) {
-
+    private fun addToFavourites(cityId: Int) {
+        viewModelScope.launch {
+            baseRepository.saveFavourite(cityId)
+        }
     }
 
-    private fun addToFavourites(_id: Int) {
-
+    private fun removeFromFavourites(cityId: Int) {
+        viewModelScope.launch {
+            baseRepository.removeFavourite(cityId)
+        }
     }
 }
