@@ -82,19 +82,21 @@ class DataBaseRepositoryImplTest {
 
     @Test
     fun saveUser_toDb() = runTest {
-        repository.saveUser("username")
+        val generatedId = repository.saveUser("username")
 
-        val user: User = repository.getUser("username")
+        val user: User = repository.getUser(generatedId)
 
         Assert.assertEquals("username", user.name)
     }
 
     @Test
     fun intent_saveUser_toDb_whenIsSecondTime() = runTest {
-        repository.saveUser("username_repeated")
-        repository.saveUser("username_repeated")
+        var generatedId = 0L
 
-        val user: User = repository.getUser("username_repeated")
+        generatedId = repository.saveUser("username_repeated")
+        generatedId = repository.saveUser("username_repeated")
+
+        val user: User = repository.getUser(generatedId)
 
         Assert.assertEquals("username_repeated", user.name)
     }

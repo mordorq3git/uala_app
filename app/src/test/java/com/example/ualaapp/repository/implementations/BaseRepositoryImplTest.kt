@@ -45,12 +45,13 @@ class BaseRepositoryImplTest {
     fun init() {
         hiltRule.inject()
 
-        dataBaseRepository = DataBaseRepositoryImpl(cityDao, userDao, favouriteDao, sharedPreferences)
+        dataBaseRepository = DataBaseRepositoryImpl(cityDao, userDao, favouriteDao)
         apiRepository = ApiRepositoryImpl(mockApiService)
 
         baseRepository = BaseRepositoryImpl(
             apiRepository = apiRepository,
-            dataBaseRepository = dataBaseRepository
+            dataBaseRepository = dataBaseRepository,
+            sharedPreferences = sharedPreferences
         )
     }
 
@@ -91,11 +92,12 @@ class BaseRepositoryImplTest {
         val mockedCityEntity = mockk<CityEntity>(relaxed = true)
         for (n in 1 .. 5) cityDao.insert(mockedCityEntity)
 
-        dataBaseRepository = DataBaseRepositoryImpl(cityDao, userDao, favouriteDao, sharedPreferences)
+        dataBaseRepository = DataBaseRepositoryImpl(cityDao, userDao, favouriteDao)
 
         baseRepository = BaseRepositoryImpl(
             apiRepository = apiRepository,
-            dataBaseRepository = dataBaseRepository
+            dataBaseRepository = dataBaseRepository,
+            sharedPreferences = sharedPreferences
         )
 
         val cities = baseRepository.getCities()

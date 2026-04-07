@@ -11,7 +11,7 @@ interface DatabaseRepository : Repository {
 
     suspend fun getCity(id: Int): City
 
-    suspend fun saveUser(username: String)
+    suspend fun saveUser(username: String) : Long
 
-    suspend fun getUser(username: String) : User
+    suspend fun getUser(id: Long) : User
 }

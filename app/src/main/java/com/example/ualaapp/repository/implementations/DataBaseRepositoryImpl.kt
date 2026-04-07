@@ -1,6 +1,5 @@
 package com.example.ualaapp.repository.implementations
 
-import android.content.SharedPreferences
 import com.example.ualaapp.data.City
 import com.example.ualaapp.data.Coordinates
 import com.example.ualaapp.data.User
@@ -18,8 +17,7 @@ private const val USER_ID = "USER_ID"
 class DataBaseRepositoryImpl @Inject constructor(
     private val cityDao: CityDao,
     private val userDao: UserDao,
-    private val favouriteDao: FavouriteDao,
-    private val sharedPreferences: SharedPreferences
+    private val favouriteDao: FavouriteDao
 ) : DatabaseRepository {
 
     override suspend fun getCities() = mapCitiesEntitiesToDto(cityDao.getAll())
@@ -64,27 +62,19 @@ class DataBaseRepositoryImpl @Inject constructor(
             )
     }
 
-    override suspend fun saveUser(username: String) {
+    override suspend fun saveUser(username: String) : Long {
         var generatedId = userDao.getUserId(username)
 
         if(generatedId == 0L) {
             generatedId = userDao.insert(UserEntity(name = username))
         }
 
-        addUserToSession(generatedId)
+        return generatedId
     }
 
-    private fun addUserToSession(generatedId: Long) {
-        sharedPreferences.edit().apply {
-            putLong(USER_ID, generatedId)
-            apply()
-        }
-    }
 
-    override suspend fun getUser(username: String): User {
-        val sessionId = sharedPreferences.getLong(USER_ID, -1)
-
-        val userEntity = userDao.getUserEntity(sessionId)
+    override suspend fun getUser(id: Long): User {
+        val userEntity = userDao.getUserEntity(id)
 
         return mapUserEntityToDto(userEntity)
     }
