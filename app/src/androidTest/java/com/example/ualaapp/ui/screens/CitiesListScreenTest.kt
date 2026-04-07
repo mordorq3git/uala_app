@@ -77,7 +77,7 @@ class CitiesListScreenTest {
             )
 
             CitiesListComponent(
-                cities = listOfCities
+                listOfCities = listOfCities
             )
         }
 
@@ -91,7 +91,7 @@ class CitiesListScreenTest {
     @Test
     fun citiesListComponent_withoutItems() {
         composeTestRule.setContent {
-            CitiesListComponent(cities = emptyList())
+            CitiesListComponent(listOfCities = emptyList())
         }
 
         composeTestRule.onNodeWithTag("cities_list").assertIsNotDisplayed()
@@ -109,7 +109,7 @@ class CitiesListScreenTest {
             )
 
             CitiesListComponent(
-                cities = listOfCities,
+                listOfCities = listOfCities,
                 onRowClickEvent = { _id -> valueChanged = _id }
             )
         }

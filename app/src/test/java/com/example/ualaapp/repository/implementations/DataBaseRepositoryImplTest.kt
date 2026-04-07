@@ -3,6 +3,7 @@ package com.example.ualaapp.repository.implementations
 import com.example.ualaapp.data.City
 import com.example.ualaapp.data.Coordinates
 import com.example.ualaapp.data.User
+import com.example.ualaapp.repository.implementations.database.AppDatabase
 import com.example.ualaapp.repository.implementations.database.daos.CityDao
 import com.example.ualaapp.repository.implementations.database.entities.CityEntity
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -10,6 +11,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
+import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -32,9 +34,19 @@ class DataBaseRepositoryImplTest {
     @Inject
     lateinit var cityDao: CityDao
 
+    @Inject
+    lateinit var database: AppDatabase
+
     @Before
     fun init() {
         hiltRule.inject()
+    }
+
+    @After
+    fun tearDown() {
+        if (::database.isInitialized) {
+            database.close()
+        }
     }
 
     @Test
