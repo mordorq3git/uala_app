@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private const val UserNameMinLength = 3
+private const val USER_NAME_MIN_LENGTH = 3
 
 @HiltViewModel
 class LoadingAndRegisterViewModel @Inject constructor(
@@ -56,7 +56,7 @@ class LoadingAndRegisterViewModel @Inject constructor(
     private fun userNameValidator(username: String) {
         _registerUserValue.update { username }
 
-        if(username.length > UserNameMinLength) {
+        if(username.length > USER_NAME_MIN_LENGTH) {
             _registerButtonEnabled.update { true }
         } else {
             _registerButtonEnabled.update { false }
