@@ -84,15 +84,18 @@ class DataBaseRepositoryImpl @Inject constructor(
         name = userEntity.name
     )
 
-    override suspend fun saveFavourite(idUser: Long, city_id: Int) {
+    override suspend fun saveFavourite(userId: Long, cityId: Int) {
         val favouriteEntity = FavouriteEntity(
-            id_user = idUser,
-            _id = city_id
+            id_user = userId,
+            _id = cityId
         )
         favouriteDao.insert(favouriteEntity)
     }
 
-    override suspend fun removeFavourite(id: Int) {
-        TODO("Not yet implemented")
+    override suspend fun removeFavourite(userId: Long, cityId: Int) {
+        favouriteDao.delete(
+            id_user = userId,
+            city_id = cityId
+        )
     }
 }
