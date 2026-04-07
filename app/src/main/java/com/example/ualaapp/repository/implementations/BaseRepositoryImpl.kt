@@ -43,7 +43,7 @@ class BaseRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getUser(username: String) : User {
-        val sessionId = sharedPreferences.getLong(USER_ID, -1)
+        val sessionId = sharedPreferences.getLong(USER_ID, -999)
 
         return dataBaseRepository.getUser(sessionId)
     }

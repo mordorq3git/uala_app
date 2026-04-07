@@ -2,7 +2,6 @@ package com.example.ualaapp.presentation.loading
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.ualaapp.repository.Repository
 import com.example.ualaapp.repository.implementations.BaseRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,7 +38,8 @@ class LoadingAndRegisterViewModel @Inject constructor(
                 userNameValidator(event.username)
             }
             RegistryIntent.Register -> {
-                _registerUserValue.update { username -> "$username - registrado" }
+                registerUser()
+                //_registerUserValue.update { username -> "$username - registrado" }
             }
         }
     }
@@ -61,6 +61,12 @@ class LoadingAndRegisterViewModel @Inject constructor(
             _registerButtonEnabled.update { true }
         } else {
             _registerButtonEnabled.update { false }
+        }
+    }
+
+    private fun registerUser() {
+        viewModelScope.launch {
+            baseRepository.saveUser(_registerUserValue.value)
         }
     }
 }
