@@ -14,8 +14,6 @@ import com.example.ualaapp.repository.implementations.database.entities.Favourit
 import com.example.ualaapp.repository.implementations.database.entities.UserEntity
 import javax.inject.Inject
 
-private const val USER_ID = "USER_ID"
-
 class DataBaseRepositoryImpl @Inject constructor(
     private val cityDao: CityDao,
     private val userDao: UserDao,
