@@ -13,4 +13,8 @@ interface BaseRepository : Repository {
     suspend fun saveUser(username: String)
 
     suspend fun getUser(username: String) : User
+
+    suspend fun saveFavourite(cityId: Int)
+
+    suspend fun removeFavourite(cityId: Int)
 }

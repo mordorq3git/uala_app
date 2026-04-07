@@ -9,6 +9,7 @@ import com.example.ualaapp.repository.implementations.database.daos.FavouriteDao
 import com.example.ualaapp.repository.implementations.database.daos.UserDao
 import com.example.ualaapp.repository.implementations.database.entities.CityEntity
 import com.example.ualaapp.repository.implementations.database.entities.CoordinatesEntity
+import com.example.ualaapp.repository.implementations.database.entities.FavouriteEntity
 import com.example.ualaapp.repository.implementations.database.entities.UserEntity
 import javax.inject.Inject
 
@@ -72,7 +73,6 @@ class DataBaseRepositoryImpl @Inject constructor(
         return generatedId
     }
 
-
     override suspend fun getUser(id: Long): User {
         val userEntity = userDao.getUserEntity(id)
 
@@ -84,4 +84,18 @@ class DataBaseRepositoryImpl @Inject constructor(
         name = userEntity.name
     )
 
+    override suspend fun saveFavourite(userId: Long, cityId: Int) {
+        val favouriteEntity = FavouriteEntity(
+            id_user = userId,
+            _id = cityId
+        )
+        favouriteDao.insert(favouriteEntity)
+    }
+
+    override suspend fun removeFavourite(userId: Long, cityId: Int) {
+        favouriteDao.delete(
+            id_user = userId,
+            city_id = cityId
+        )
+    }
 }

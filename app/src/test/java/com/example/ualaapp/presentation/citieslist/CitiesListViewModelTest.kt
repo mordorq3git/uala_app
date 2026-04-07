@@ -5,6 +5,7 @@ import com.example.ualaapp.data.Coordinates
 import com.example.ualaapp.repository.implementations.BaseRepositoryImpl
 import com.example.ualaapp.utils.MainDispatcherRule
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
@@ -108,5 +109,29 @@ class CitiesListViewModelTest {
 
         assertEquals("ala", viewModel.filterState.value)
         assertEquals(1, viewModel.citiesState.value.size)
+    }
+
+    @Test
+    fun add_to_favourites() = runTest {
+        val repository = mockk<BaseRepositoryImpl>()
+        coEvery { repository.saveFavourite(214) } returns Unit
+
+        viewModel = CitiesListViewModel(repository)
+
+        viewModel.onEvent(CitiesListIntent.AddToFavourites(214))
+
+        coVerify { repository.saveFavourite(214) }
+    }
+
+    @Test
+    fun remove_to_favourites() = runTest {
+        val repository = mockk<BaseRepositoryImpl>()
+        coEvery { repository.removeFavourite(218) } returns Unit
+
+        viewModel = CitiesListViewModel(repository)
+
+        viewModel.onEvent(CitiesListIntent.RemoveFromFavourites(218))
+
+        coVerify { repository.removeFavourite(218) }
     }
 }
