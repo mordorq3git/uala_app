@@ -44,9 +44,16 @@ fun MapScreen(
         }
     }
 
-    LaunchedEffect(currentCity) {
-        cameraPositionState.position = CameraPosition.fromLatLngZoom(displayPosition, 10f)
+    LaunchedEffect(displayPosition) {
         markerState.position = displayPosition
+
+        cameraPositionState.animate(
+            update = com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom(
+                displayPosition,
+                10f
+            ),
+            durationMs = 1000
+        )
     }
 
     MapComponent(
