@@ -36,36 +36,6 @@ class DataBaseRepositoryImpl @Inject constructor(
         cityDao.refreshData(listOfCitiesEntities)
     }
 
-    override suspend fun saveUser(username: String) {
-        var generatedId = userDao.getUserId(username)
-
-        if(generatedId == 0L) {
-            generatedId = userDao.insert(UserEntity(name = username))
-        }
-
-        addUserToSession(generatedId)
-    }
-
-    private fun addUserToSession(generatedId: Long) {
-        sharedPreferences.edit().apply {
-            putLong(USER_ID, generatedId)
-            apply()
-        }
-    }
-
-    override suspend fun getUser(username: String): User {
-        val sessionId = sharedPreferences.getLong(USER_ID, -1)
-
-        val userEntity = userDao.getUserEntity(sessionId)
-
-        return mapUserEntityToDto(userEntity)
-    }
-
-    private fun mapUserEntityToDto(userEntity: UserEntity) = User(
-            id_user = userEntity.id_user,
-            name = userEntity.name
-        )
-
     private fun mapCitiesEntitiesToDto(listOfEntities: List<CityEntity>) =
         listOfEntities.map { entity ->
             mapCityEntityToDto(entity)
@@ -93,4 +63,35 @@ class DataBaseRepositoryImpl @Inject constructor(
                 )
             )
     }
+
+    override suspend fun saveUser(username: String) {
+        var generatedId = userDao.getUserId(username)
+
+        if(generatedId == 0L) {
+            generatedId = userDao.insert(UserEntity(name = username))
+        }
+
+        addUserToSession(generatedId)
+    }
+
+    private fun addUserToSession(generatedId: Long) {
+        sharedPreferences.edit().apply {
+            putLong(USER_ID, generatedId)
+            apply()
+        }
+    }
+
+    override suspend fun getUser(username: String): User {
+        val sessionId = sharedPreferences.getLong(USER_ID, -1)
+
+        val userEntity = userDao.getUserEntity(sessionId)
+
+        return mapUserEntityToDto(userEntity)
+    }
+
+    private fun mapUserEntityToDto(userEntity: UserEntity) = User(
+        id_user = userEntity.id_user,
+        name = userEntity.name
+    )
+
 }
