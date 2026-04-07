@@ -19,16 +19,29 @@ class CitiesListViewModel @Inject constructor(
 ) : ViewModel() {
     private val _citiesState = MutableStateFlow<List<City>>(emptyList())
     val citiesState: StateFlow<List<City>> = _citiesState.asStateFlow()
+    private val _filterState: MutableStateFlow<String> = MutableStateFlow("")
+    val filterState: StateFlow<String> = _filterState.asStateFlow()
+    private val _originalListOfCities: MutableList<City> = mutableListOf()
 
     fun onEvent(intent: CitiesListIntent) {
         when(intent) {
             CitiesListIntent.Get -> getCities()
+            is CitiesListIntent.Filter -> filterCities(intent.filter)
         }
     }
 
     private fun getCities() {
         viewModelScope.launch {
             _citiesState.update { baseRepository.getCities() }
+            _originalListOfCities.addAll(_citiesState.value)
         }
+    }
+
+    private fun filterCities(filterText: String) {
+        _filterState.update { filterText }
+
+        val filteredList = _originalListOfCities.filter { city -> city.name.contains(filterText, ignoreCase = false) }
+
+        _citiesState.update { filteredList }
     }
 }
