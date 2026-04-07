@@ -2,7 +2,6 @@ package com.example.ualaapp.presentation.citieslist
 
 import com.example.ualaapp.data.City
 import com.example.ualaapp.repository.implementations.BaseRepositoryImpl
-import com.example.ualaapp.repository.implementations.DataBaseRepositoryImpl
 import com.example.ualaapp.utils.MainDispatcherRule
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -11,7 +10,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-
 
 class CitiesListViewModelTest {
     @get:Rule
@@ -50,5 +48,10 @@ class CitiesListViewModelTest {
         viewModel.onEvent(CitiesListIntent.Get)
 
         assertEquals(5, viewModel.citiesState.value.size)
+    }
+
+    @Test
+    fun filter_cities() = runTest {
+        viewModel.onEvent(CitiesListIntent.Get)
     }
 }
