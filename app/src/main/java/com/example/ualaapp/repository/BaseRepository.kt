@@ -7,4 +7,5 @@ interface BaseRepository : Repository {
 
     suspend fun getCities(): List<City>
 
+    suspend fun getCity(id: Int) : City
 }

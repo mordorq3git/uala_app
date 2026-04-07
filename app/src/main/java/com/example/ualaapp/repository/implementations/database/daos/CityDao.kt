@@ -22,6 +22,9 @@ interface CityDao {
     @Query("SELECT * FROM cities ORDER BY name ASC")
     suspend fun getAll(): List<CityEntity>
 
+    @Query("SELECT * FROM cities WHERE _id = :id")
+    suspend fun get(id: Int): CityEntity
+
     @Transaction
     suspend fun refreshData(listOfCityEntities: List<CityEntity>) {
         cleanTable()

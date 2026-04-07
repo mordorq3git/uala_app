@@ -7,4 +7,6 @@ interface DatabaseRepository : Repository {
     suspend fun setCities(listOfCities: List<City>)
 
     suspend fun getCities(): List<City>
+
+    suspend fun getCity(id: Int): City
 }

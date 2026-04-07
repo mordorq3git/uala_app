@@ -18,6 +18,12 @@ class DataBaseRepositoryImpl @Inject constructor(
 
     override suspend fun getCities() = mapCitiesEntitiesToDto(cityDao.getAll())
 
+    override suspend fun getCity(id: Int): City {
+        val cityEntity = cityDao.get(id)
+
+        return mapCityEntityToDto(cityEntity)
+    }
+
     override suspend fun setCities(listOfCities: List<City>) {
         val listOfCitiesEntities = mapCitiesDtoToEntities(listOfCities)
 
@@ -26,16 +32,18 @@ class DataBaseRepositoryImpl @Inject constructor(
 
     private fun mapCitiesEntitiesToDto(listOfEntities: List<CityEntity>) =
         listOfEntities.map { entity ->
-            City(
-                _id = entity._id,
-                name = entity.name,
-                country = entity.country,
-                coord = Coordinates(
-                    lat = entity.coord.lat,
-                    lon = entity.coord.lon
-                )
-            )
+            mapCityEntityToDto(entity)
         }
+
+    private fun mapCityEntityToDto(entity: CityEntity) = City(
+        _id = entity._id,
+        name = entity.name,
+        country = entity.country,
+        coord = Coordinates(
+            lat = entity.coord.lat,
+            lon = entity.coord.lon
+        )
+    )
 
     private fun mapCitiesDtoToEntities(listOfDtos: List<City>) =
         listOfDtos.map { city ->
