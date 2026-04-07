@@ -145,7 +145,7 @@ class CitiesListScreenTest {
             )
 
             CitiesFilterListComponent(
-                cities = listOfCities,
+                listOfCities = listOfCities,
                 onRowClickEvent = { _id -> valueChanged = _id }
             )
         }
