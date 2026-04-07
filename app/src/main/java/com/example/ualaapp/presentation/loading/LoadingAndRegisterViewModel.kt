@@ -39,7 +39,6 @@ class LoadingAndRegisterViewModel @Inject constructor(
             }
             RegistryIntent.Register -> {
                 registerUser()
-                //_registerUserValue.update { username -> "$username - registrado" }
             }
         }
     }
