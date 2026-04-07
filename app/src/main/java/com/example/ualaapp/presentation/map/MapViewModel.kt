@@ -32,5 +32,4 @@ class MapViewModel @Inject constructor(
             _currentCityState.update { city }
         }
     }
-
 }
