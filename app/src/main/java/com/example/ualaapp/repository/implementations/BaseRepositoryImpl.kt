@@ -25,9 +25,9 @@ class BaseRepositoryImpl @Inject constructor(
 
 
     override suspend fun getCities() = getCitiesFromDb()
-    override suspend fun getCity(id: Int) = dataBaseRepository.getCity(id)!!
+    override suspend fun getCity(id: Int) = dataBaseRepository.getCity(id)
 
     private suspend fun saveCities(listOfCities: List<City>) {
-        dataBaseRepository.setCities(listOfCities)
+        dataBaseRepository.saveCities(listOfCities)
     }
 }

@@ -1,7 +1,9 @@
 package com.example.ualaapp.repository.implementations
 
+import android.content.SharedPreferences
 import com.example.ualaapp.data.City
 import com.example.ualaapp.data.Coordinates
+import com.example.ualaapp.data.User
 import com.example.ualaapp.repository.implementations.api.CitiesApiService
 import com.example.ualaapp.repository.implementations.database.daos.CityDao
 import com.example.ualaapp.repository.implementations.database.daos.FavouriteDao
@@ -31,6 +33,7 @@ class BaseRepositoryImplTest {
     @Inject lateinit var cityDao: CityDao
     @Inject lateinit var userDao: UserDao
     @Inject lateinit var favouriteDao: FavouriteDao
+    @Inject lateinit var sharedPreferences: SharedPreferences
 
     private val mockApiService: CitiesApiService = mockk()
 
@@ -42,7 +45,7 @@ class BaseRepositoryImplTest {
     fun init() {
         hiltRule.inject()
 
-        dataBaseRepository = DataBaseRepositoryImpl(cityDao, userDao, favouriteDao)
+        dataBaseRepository = DataBaseRepositoryImpl(cityDao, userDao, favouriteDao, sharedPreferences)
         apiRepository = ApiRepositoryImpl(mockApiService)
 
         baseRepository = BaseRepositoryImpl(
@@ -88,7 +91,7 @@ class BaseRepositoryImplTest {
         val mockedCityEntity = mockk<CityEntity>(relaxed = true)
         for (n in 1 .. 5) cityDao.insert(mockedCityEntity)
 
-        dataBaseRepository = DataBaseRepositoryImpl(cityDao, userDao, favouriteDao)
+        dataBaseRepository = DataBaseRepositoryImpl(cityDao, userDao, favouriteDao, sharedPreferences)
 
         baseRepository = BaseRepositoryImpl(
             apiRepository = apiRepository,
@@ -154,5 +157,12 @@ class BaseRepositoryImplTest {
         Assert.assertNotNull(cityFromDb)
         Assert.assertEquals("Salta", cityFromDb.name)
         Assert.assertEquals("AR", cityFromDb.country)
+    }
+
+    @Test
+    fun saveUser_toDb() = runTest {
+        /*baseRepository.saveUser("Juan")
+
+        val user = User()*/
     }
 }
