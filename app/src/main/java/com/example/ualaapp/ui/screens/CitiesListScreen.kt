@@ -38,6 +38,7 @@ fun CitiesListScreen(
     viewModel: CitiesListViewModel = hiltViewModel()
 ) {
     val citiesStates by viewModel.citiesState.collectAsStateWithLifecycle()
+    val filterState by viewModel.filterState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.onEvent(CitiesListIntent.Get)
@@ -45,6 +46,8 @@ fun CitiesListScreen(
 
     CitiesFilterListComponent(
         modifier = modifier,
+        filterState = filterState,
+        onValueChangeEvent = { newValue -> viewModel.onEvent(CitiesListIntent.Filter(newValue)) },
         listOfCities = citiesStates,
         onRowClickEvent = onCitySelected
     )
@@ -53,11 +56,16 @@ fun CitiesListScreen(
 @Composable
 fun CitiesFilterListComponent(
     modifier: Modifier = Modifier,
+    filterState: String = "",
+    onValueChangeEvent: (String) -> Unit = {},
     listOfCities: List<City>,
     onRowClickEvent: (Int) -> Unit = {}
 ) {
     Column(modifier = modifier) {
-        CitiesFilterComponent()
+        CitiesFilterComponent(
+            tfValue = filterState,
+            onValueChangeEvent = { newValue -> onValueChangeEvent(newValue) }
+        )
         CitiesListComponent(listOfCities, onRowClickEvent)
     }
 }
