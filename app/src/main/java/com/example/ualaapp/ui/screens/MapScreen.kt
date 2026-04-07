@@ -27,32 +27,35 @@ fun MapScreen(
 ) {
     val currentCity by viewModel.currentCityState.collectAsStateWithLifecycle()
 
+    val initLocation = LatLng(-34.6037, -58.3816) // Buenos Aires
+
+    val displayPosition = currentCity?.let {
+        LatLng(it.coord.lat, it.coord.lon)
+    } ?: initLocation
+
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(displayPosition, 10f)
+    }
+    val markerState = rememberMarkerState(position = displayPosition)
+
     LaunchedEffect(selectedCityId) {
-        viewModel.onEvent(MapIntent.GetCity(selectedCityId))
+        if(selectedCityId != -1) {
+            viewModel.onEvent(MapIntent.GetCity(selectedCityId))
+        }
     }
 
-    currentCity?.let { city ->
-        val positionOfMarker = LatLng(city.coord.lat, city.coord.lon)
-
-        val cameraPositionState = rememberCameraPositionState {
-            position = CameraPosition.fromLatLngZoom(positionOfMarker, 10f)
-        }
-
-        val markerState = rememberMarkerState(position = positionOfMarker)
-
-        LaunchedEffect(city) {
-            cameraPositionState.position = CameraPosition.fromLatLngZoom(positionOfMarker, 10f)
-            markerState.position = positionOfMarker
-        }
-
-        MapComponent(
-            modifier = modifier,
-            cameraPositionState = cameraPositionState,
-            markerState = markerState,
-            title = "${city.name}, ${city.country}",
-            snippet = "${city.coord.lat}, ${city.coord.lon}"
-        )
+    LaunchedEffect(currentCity) {
+        cameraPositionState.position = CameraPosition.fromLatLngZoom(displayPosition, 10f)
+        markerState.position = displayPosition
     }
+
+    MapComponent(
+        modifier = modifier,
+        cameraPositionState = cameraPositionState,
+        markerState = markerState,
+        title = currentCity?.let { "${it.name}, ${it.country}" } ?: "Buenos Aires, AR",
+        snippet = currentCity?.let { "${it.coord.lat}, ${it.coord.lon}" } ?: "Ubicación por defecto"
+    )
 }
 
 @Composable

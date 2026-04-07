@@ -46,11 +46,9 @@ fun AdaptativeNavigationWrapper(modifier: Modifier = Modifier) {
         },
         detailPane = {
             AnimatedPane {
-                val selectedCityId = navigator.currentDestination?.contentKey
+                val selectedCityId = navigator.currentDestination?.contentKey ?: -1
 
-                selectedCityId?.let { id ->
-                    MapScreen(modifier = modifier, selectedCityId = id)
-                }
+                MapScreen(modifier = modifier, selectedCityId = selectedCityId)
             }
         }
     )
