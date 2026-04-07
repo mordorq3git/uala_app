@@ -6,12 +6,17 @@ import com.example.ualaapp.repository.implementations.BaseRepositoryImpl
 import com.example.ualaapp.utils.MainDispatcherRule
 import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class CitiesListViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
@@ -46,6 +51,10 @@ class CitiesListViewModelTest {
 
         viewModel = CitiesListViewModel(repository)
 
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            viewModel.citiesState.collect()
+        }
+
         viewModel.onEvent(CitiesListIntent.Get)
 
         assertEquals(5, viewModel.citiesState.value.size)
@@ -63,6 +72,10 @@ class CitiesListViewModelTest {
         )
 
         viewModel = CitiesListViewModel(repository)
+
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            viewModel.citiesState.collect()
+        }
 
         viewModel.onEvent(CitiesListIntent.Get)
 
