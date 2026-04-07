@@ -35,7 +35,10 @@ fun AdaptativeNavigationWrapper(modifier: Modifier = Modifier) {
                     modifier = modifier,
                     onCitySelected = { city_id ->
                         scope.launch {
-                            navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, city_id)
+                            navigator.navigateTo(
+                                ListDetailPaneScaffoldRole.Detail,
+                                city_id
+                            )
                         }
                     }
                 )
@@ -45,9 +48,9 @@ fun AdaptativeNavigationWrapper(modifier: Modifier = Modifier) {
             AnimatedPane {
                 val selectedCityId = navigator.currentDestination?.contentKey
 
-                Log.d("TAG", "AdaptativeNavigationWrapper: $selectedCityId")
-
-                MapScreen(modifier = modifier)
+                selectedCityId?.let { id ->
+                    MapScreen(modifier = modifier, selectedCityId = id)
+                }
             }
         }
     )
