@@ -27,6 +27,8 @@ class MapViewModel @Inject constructor(
     val currentCityState: StateFlow<City?> = _currentCityState.asStateFlow()
     private val _currentCityId = MutableStateFlow(-999)
     private val _currentUserId = MutableStateFlow(baseRepository.getUserSessionId())
+    private val _shouldShowMapCard = MutableStateFlow(false)
+    val shouldShowMapCard = _shouldShowMapCard.asStateFlow()
 
     val existFavourite: StateFlow<Boolean> = combine(_currentCityId, _currentUserId) { cityId, userId ->
         if (cityId != -999 && userId != -999L) {
@@ -46,6 +48,7 @@ class MapViewModel @Inject constructor(
             is MapIntent.GetCity -> getCity(intent.id)
             is MapIntent.AddToFavourites -> addToFavourites(intent._id)
             is MapIntent.RemoveFromFavourites -> removeFromFavourites(intent._id)
+            is MapIntent.ShowMapCard -> showMapCard(intent.shouldShow)
         }
     }
 
@@ -70,6 +73,14 @@ class MapViewModel @Inject constructor(
     }
 
     fun checkFavouriteStatus(cityId: Int) {
-        _currentCityId.update { cityId }
+        viewModelScope.launch {
+            _currentCityId.update { cityId }
+        }
+    }
+
+    private fun showMapCard(shouldShow: Boolean) {
+        viewModelScope.launch {
+            _shouldShowMapCard.update { shouldShow }
+        }
     }
 }
