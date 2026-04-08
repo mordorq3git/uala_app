@@ -1,6 +1,7 @@
 package com.example.ualaapp.repository.implementations
 
 import android.content.SharedPreferences
+import app.cash.turbine.test
 import com.example.ualaapp.data.City
 import com.example.ualaapp.data.Coordinates
 import com.example.ualaapp.repository.implementations.api.CitiesApiService
@@ -16,7 +17,6 @@ import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -55,43 +55,67 @@ class BaseRepositoryImplTest {
         )
     }
 
-    @Ignore("Al cambiar por flow cambia la manera de como trabaja el test, revisar con mayor profundidad")
     @Test
-    fun getCities_returnsEmptyList() = runTest {
+    fun getCitiesWithFavouritesFlow_returnsEmptyList() = runTest {
         coEvery { apiRepository.loadCities() } returns emptyList()
-
-        val cities = baseRepository.getCitiesWithFavouritesFlow("")
-
-        Assert.assertNotNull(cities)
-        // Assert.assertTrue(cities.isEmpty())
-    }
-
-    @Ignore("Al cambiar por flow cambia la manera de como trabaja el test, revisar con mayor profundidad")
-    @Test
-    fun getCities_returnsEmptyList_from_db() = runTest {
-        val mockedCity = mockk<City>(relaxed = true)
-        val listOfCities = listOf(
-            mockedCity,
-            mockedCity,
-            mockedCity,
-            mockedCity,
-            mockedCity,
-            mockedCity
-        )
-        coEvery { apiRepository.loadCities() } returns listOfCities
 
         baseRepository.loadCities()
 
-        val cities = baseRepository.getCitiesWithFavouritesFlow("")
+        baseRepository.getCitiesWithFavouritesFlow("").test {
+            val cities = awaitItem()
 
-        Assert.assertNotNull(cities)
-        // Assert.assertFalse(cities.isEmpty())
-        // Assert.assertEquals(6, cities.size)
+            Assert.assertNotNull(cities)
+            Assert.assertTrue(cities.isEmpty())
+
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
-    @Ignore("Al cambiar por flow cambia la manera de como trabaja el test, revisar con mayor profundidad")
     @Test
-    fun getCities_returnsEmptyList_from_db_and_api() = runTest {
+    fun getCitiesWithFavouritesFlow_returnsEmptyList_from_db() = runTest {
+        val listOfMockedCities = List(6) { mockk<City>(relaxed = true) }
+
+        coEvery { apiRepository.loadCities() } returns listOfMockedCities
+
+        baseRepository.loadCities()
+
+        baseRepository.getCitiesWithFavouritesFlow("").test {
+            val cities = awaitItem()
+
+            Assert.assertNotNull(cities)
+            Assert.assertFalse(cities.isEmpty())
+            Assert.assertEquals(6, cities.size)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun getCitiesWithFavouritesFlow_returnsEmptyList_fromDbAndApi_with_insertAll() = runTest {
+        val listOfMockedCityEntities = List(8) { mockk<CityEntity>(relaxed = true) }
+        cityDao.insertAll(listOfMockedCityEntities)
+
+        dataBaseRepository = DataBaseRepositoryImpl(cityDao, userDao, favouriteDao)
+
+        baseRepository = BaseRepositoryImpl(
+            apiRepository = apiRepository,
+            dataBaseRepository = dataBaseRepository,
+            sharedPreferences = sharedPreferences
+        )
+
+        baseRepository.getCitiesWithFavouritesFlow("").test {
+            val cities = awaitItem()
+
+            Assert.assertNotNull(cities)
+            Assert.assertFalse(cities.isEmpty())
+            Assert.assertEquals(8, cities.size)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun getCitiesWithFavouritesFlow_returnsEmptyList_fromDbAndApi_With_isolatedInsert() = runTest {
         val mockedCityEntity = mockk<CityEntity>(relaxed = true)
         for (n in 1 .. 5) cityDao.insert(mockedCityEntity)
 
@@ -103,38 +127,36 @@ class BaseRepositoryImplTest {
             sharedPreferences = sharedPreferences
         )
 
-        val cities = baseRepository.getCitiesWithFavouritesFlow("")
+        baseRepository.getCitiesWithFavouritesFlow("").test {
+            val cities = awaitItem()
 
-        Assert.assertNotNull(cities)
-        //Assert.assertFalse(cities.isEmpty())
-        //Assert.assertEquals(5, cities.size)
+            Assert.assertNotNull(cities)
+            Assert.assertFalse(cities.isEmpty())
+            Assert.assertEquals(5, cities.size)
+
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
-    @Ignore("Al cambiar por flow cambia la manera de como trabaja el test, revisar con mayor profundidad")
     @Test
     fun setCities_toDb() = runTest {
-        val mockedCity = mockk<City>(relaxed = true)
-        val listOfCities = listOf(
-            mockedCity,
-            mockedCity,
-            mockedCity,
-            mockedCity,
-            mockedCity,
-            mockedCity
-        )
+        val listOfMockedCities = List(6) { mockk<City>(relaxed = true) }
 
-        coEvery { apiRepository.loadCities() } returns listOfCities
+        coEvery { apiRepository.loadCities() } returns listOfMockedCities
 
         baseRepository.loadCities()
 
-        val cities = baseRepository.getCitiesWithFavouritesFlow("")
+        baseRepository.getCitiesWithFavouritesFlow("").test {
+            val cities = awaitItem()
 
-        Assert.assertNotNull(cities)
-        // Assert.assertFalse(cities.isEmpty())
-        // Assert.assertEquals(6, cities.size)
+            Assert.assertNotNull(cities)
+            Assert.assertFalse(cities.isEmpty())
+            Assert.assertEquals(6, cities.size)
+
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
-    @Ignore("Al cambiar por flow cambia la manera de como trabaja el test, revisar con mayor profundidad")
     @Test
     fun getCity_fromDb() = runTest {
         val city = City(
@@ -154,16 +176,20 @@ class BaseRepositoryImplTest {
 
         baseRepository.loadCities()
 
-        val cities = baseRepository.getCitiesWithFavouritesFlow("")
+        baseRepository.getCitiesWithFavouritesFlow("").test {
+            val cities = awaitItem()
 
-        // Assert.assertFalse(cities.isEmpty())
-        // Assert.assertEquals(3, cities.size)
+            Assert.assertFalse(cities.isEmpty())
+            Assert.assertEquals(3, cities.size)
 
-        // val cityFromDb = baseRepository.getCity(216)
+            val cityFromDb = baseRepository.getCityFavorited(216)
 
-        // Assert.assertNotNull(cityFromDb)
-        // Assert.assertEquals("Salta", cityFromDb.name)
-        // Assert.assertEquals("AR", cityFromDb.country)
+            Assert.assertNotNull(cityFromDb)
+            Assert.assertEquals("Salta", cityFromDb.name)
+            Assert.assertEquals("AR", cityFromDb.country)
+
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
