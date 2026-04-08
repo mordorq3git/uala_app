@@ -9,6 +9,7 @@ import dagger.Provides
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
+import java.util.concurrent.Executors
 import javax.inject.Singleton
 
 @Module
@@ -26,6 +27,8 @@ object TestDatabaseModule {
             AppDatabase::class.java
         )
             .allowMainThreadQueries()
+            .setTransactionExecutor(Executors.newSingleThreadExecutor())
+            .setQueryExecutor(Executors.newSingleThreadExecutor())
             .build()
     }
 

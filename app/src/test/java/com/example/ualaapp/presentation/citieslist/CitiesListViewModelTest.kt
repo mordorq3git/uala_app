@@ -27,7 +27,7 @@ class CitiesListViewModelTest {
     @Before
     fun init() {
         val repository = mockk<BaseRepositoryImpl>()
-        coEvery { repository.getCities() } returns emptyList()
+        coEvery { repository.getCitiesWithFavourites() } returns emptyList()
 
         this.viewModel = CitiesListViewModel(repository)
     }
@@ -42,7 +42,7 @@ class CitiesListViewModelTest {
     @Test
     fun getCities_withValues() = runTest {
         val repository = mockk<BaseRepositoryImpl>()
-        coEvery { repository.getCities() } returns listOf(
+        coEvery { repository.getCitiesWithFavourites() } returns listOf(
             mockk<City>(),
             mockk<City>(),
             mockk<City>(),
@@ -64,7 +64,7 @@ class CitiesListViewModelTest {
     @Test
     fun filter_cities() = runTest {
         val repository = mockk<BaseRepositoryImpl>()
-        coEvery { repository.getCities() } returns listOf(
+        coEvery { repository.getCitiesWithFavourites() } returns listOf(
             City(_id = 1, name = "Alabama", country = "US", Coordinates(1.0, 2.0)),
             City(_id = 1, name = "Albuquerque", country = "US", Coordinates(1.0, 2.0)),
             City(_id = 1, name = "Anaheim", country = "US", Coordinates(1.0, 2.0)),

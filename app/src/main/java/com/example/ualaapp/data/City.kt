@@ -7,5 +7,6 @@ data class City(
     val _id: Int,
     val name: String,
     val country: String,
-    val coord: Coordinates
+    val coord: Coordinates,
+    val isFavourite: Boolean = false
 )

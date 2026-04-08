@@ -51,7 +51,7 @@ class CitiesListViewModel @Inject constructor(
 
     private fun getCities() {
         viewModelScope.launch {
-            _citiesState.update { baseRepository.getCities() }
+            _citiesState.update { baseRepository.getCitiesWithFavourites() }
         }
     }
 
@@ -62,12 +62,28 @@ class CitiesListViewModel @Inject constructor(
     private fun addToFavourites(cityId: Int) {
         viewModelScope.launch {
             baseRepository.saveFavourite(cityId)
+
+            updateFavouriteStatus(cityId, true)
         }
     }
 
     private fun removeFromFavourites(cityId: Int) {
         viewModelScope.launch {
             baseRepository.removeFavourite(cityId)
+
+            updateFavouriteStatus(cityId, false)
+        }
+    }
+
+    private fun updateFavouriteStatus(cityId: Int, isFavourite: Boolean) {
+        _citiesState.update { currentCities ->
+            currentCities.map { city ->
+                if (city._id == cityId) {
+                    city.copy(isFavourite = isFavourite)
+                } else {
+                    city
+                }
+            }
         }
     }
 }
