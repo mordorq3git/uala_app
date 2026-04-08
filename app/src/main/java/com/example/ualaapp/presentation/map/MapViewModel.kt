@@ -18,18 +18,47 @@ class MapViewModel @Inject constructor(
 ) : ViewModel() {
     private val _currentCityState: MutableStateFlow<City?> = MutableStateFlow(null)
     val currentCityState: StateFlow<City?> = _currentCityState.asStateFlow()
+    private val _listenerCityState: MutableStateFlow<City?> = MutableStateFlow(null)
+    val listenerCityState: StateFlow<City?> = _listenerCityState.asStateFlow()
 
     fun onEvent(intent: MapIntent) {
         when(intent) {
+            is MapIntent.ListenerState -> listenerState(intent.id)
             is MapIntent.GetCity -> getCity(intent.id)
+            is MapIntent.AddToFavourites -> addToFavourites(intent._id)
+            is MapIntent.RemoveFromFavourites -> removeFromFavourites(intent._id)
+        }
+    }
+
+    private fun listenerState(id: Int) {
+        viewModelScope.launch {
+            baseRepository.getCityFavoritedFlow(id).collect { city ->
+                _listenerCityState.update { city }
+            }
         }
     }
 
     private fun getCity(id: Int) {
         viewModelScope.launch {
-            val city = baseRepository.getCity(id)
+            _currentCityState.update {
+                baseRepository.getCityFavorited(id)
+            }
+        }
+    }
 
-            _currentCityState.update { city }
+    private fun addToFavourites(cityId: Int) {
+        viewModelScope.launch {
+            baseRepository.saveFavourite(cityId)
+
+            _currentCityState.update { it!!.copy(isFavourite = true) }
+        }
+    }
+
+    private fun removeFromFavourites(cityId: Int) {
+        viewModelScope.launch {
+            baseRepository.removeFavourite(cityId)
+
+            _currentCityState.update { it!!.copy(isFavourite = false) }
         }
     }
 }
