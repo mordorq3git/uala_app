@@ -10,6 +10,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -18,8 +21,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -138,8 +141,9 @@ fun CityItemComponent(
     onRowClickEvent: () -> Unit = {},
     onFavouriteClickEvent: () -> Unit = {}
 ) {
-    val favouriteContentDescription = if (isFavourite) "Favourite activated" else "Favourite deactivated"
-    val favouriteImage = if (isFavourite) R.drawable.ic_favourite_activated else R.drawable.ic_favourite_deactivated
+    val favouriteContentDescription = if (isFavourite)
+        stringResource(R.string.favorite_active) else stringResource(R.string.favorite_deactive)
+    val favouriteImage = if (isFavourite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder
 
     Row(
         modifier = Modifier
@@ -169,8 +173,9 @@ fun CityItemComponent(
             )
         }
         Image(
-            painter = painterResource(favouriteImage),
+            imageVector = favouriteImage,
             contentDescription = favouriteContentDescription,
+            colorFilter = ColorFilter.tint(if (isFavourite) Color.Red else Color.Gray),
             modifier = Modifier
                 .size(36.dp)
                 .align(Alignment.CenterVertically)
