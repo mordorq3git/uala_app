@@ -64,5 +64,12 @@ El código está organizado siguiendo **Clean Architecture**:
 3.  **API Key**: La clave de Google Maps ya está configurada en `AndroidManifest.xml` para facilitar la revisión.
 4.  **Ejecutar**: Selecciona un emulador (API 24+) y presiona **Run**.
 
+
+## Graficos de flujos
+![uala_flow_ingreso](https://github.com/user-attachments/assets/1ed463d9-f45b-46ae-943b-a13d1b04690f)
+![uala_flow_favorites](https://github.com/user-attachments/assets/7376c6db-3d32-439c-afb4-18b33b2c6a99)
+
+
+
 ---
 *Desarrollado como parte del desafío técnico para Ualá.*
