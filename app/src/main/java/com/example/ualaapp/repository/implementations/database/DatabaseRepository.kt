@@ -1,10 +1,28 @@
 package com.example.ualaapp.repository.implementations.database
 
 import com.example.ualaapp.data.City
+import com.example.ualaapp.data.User
 import com.example.ualaapp.repository.Repository
+import kotlinx.coroutines.flow.Flow
 
 interface DatabaseRepository : Repository {
-    suspend fun setCities(listOfCities: List<City>)
+    suspend fun saveCities(listOfCities: List<City>)
+
+    fun getCitiesFilteredFlow(userId: Long, query: String) : Flow<List<City>>
 
     suspend fun getCities(): List<City>
+
+    //fun getCities(userId: Long) : Flow<List<City>>
+
+    fun getCityFavoritedFlow(userId: Long, id: Int): Flow<City>
+
+    suspend fun getCityFavorited(userId: Long, id: Int): City
+
+    suspend fun saveUser(username: String) : Long
+
+    suspend fun getUser(id: Long) : User
+
+    suspend fun saveFavourite(userId: Long, cityId: Int)
+
+    suspend fun removeFavourite(userId: Long, cityId: Int)
 }

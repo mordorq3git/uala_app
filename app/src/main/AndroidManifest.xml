@@ -14,6 +14,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.UalaApp"
         android:name=".MainApplication" >
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyC_fSdhaEr6uV3JK-uDuzOiLK65sEq2HKo" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

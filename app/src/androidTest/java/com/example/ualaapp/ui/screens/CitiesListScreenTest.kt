@@ -9,6 +9,8 @@ import androidx.compose.ui.test.filter
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onChildren
+import androidx.compose.ui.test.onFirst
+import androidx.compose.ui.test.onLast
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -75,7 +77,7 @@ class CitiesListScreenTest {
             )
 
             CitiesListComponent(
-                cities = listOfCities
+                listOfCities = listOfCities
             )
         }
 
@@ -89,10 +91,82 @@ class CitiesListScreenTest {
     @Test
     fun citiesListComponent_withoutItems() {
         composeTestRule.setContent {
-            CitiesListComponent(cities = emptyList())
+            CitiesListComponent(listOfCities = emptyList())
         }
 
         composeTestRule.onNodeWithTag("cities_list").assertIsNotDisplayed()
+    }
+
+    @Test
+    fun citiesListComponent_onRowClickEvent() {
+        var valueChanged = 0
+
+        composeTestRule.setContent {
+            val listOfCities = listOf(
+                City(123, "City", "CTY", Coordinates(1.0, 2.0)),
+                City(456, "City 2", "CTY 2", Coordinates(3.0, 4.0)),
+                City(789, "City 3", "CTY 3", Coordinates(5.0, 6.0))
+            )
+
+            CitiesListComponent(
+                listOfCities = listOfCities,
+                onRowClickEvent = { _id -> valueChanged = _id }
+            )
+        }
+
+        composeTestRule
+            .onNodeWithTag("cities_list")
+            .onChildren()
+            .filter(hasTestTag("city_item_row"))
+            .onFirst()
+            .performClick()
+
+        assertEquals(123, valueChanged)
+
+        composeTestRule
+            .onNodeWithTag("cities_list")
+            .onChildren()
+            .filter(hasTestTag("city_item_row"))
+            .onLast()
+            .performClick()
+
+        assertEquals(789, valueChanged)
+    }
+
+    @Test
+    fun citiesFilterListComponent_onRowClickEvent() {
+        var valueChanged = 0
+
+        composeTestRule.setContent {
+            val listOfCities = listOf(
+                City(2456, "City", "CTY", Coordinates(1.0, 2.0)),
+                City(164, "City 2", "CTY 2", Coordinates(3.0, 4.0)),
+                City(1212, "City 3", "CTY 3", Coordinates(5.0, 6.0))
+            )
+
+            CitiesFilterListComponent(
+                listOfCities = listOfCities,
+                onRowClickEvent = { _id -> valueChanged = _id }
+            )
+        }
+
+        composeTestRule
+            .onNodeWithTag("cities_list")
+            .onChildren()
+            .filter(hasTestTag("city_item_row"))
+            .onFirst()
+            .performClick()
+
+        assertEquals(2456, valueChanged)
+
+        composeTestRule
+            .onNodeWithTag("cities_list")
+            .onChildren()
+            .filter(hasTestTag("city_item_row"))
+            .onLast()
+            .performClick()
+
+        assertEquals(1212, valueChanged)
     }
 
     @Test

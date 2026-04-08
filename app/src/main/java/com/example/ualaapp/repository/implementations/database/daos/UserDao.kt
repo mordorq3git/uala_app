@@ -9,12 +9,12 @@ import com.example.ualaapp.repository.implementations.database.entities.UserEnti
 interface UserDao {
 
     @Insert
-    suspend fun insert(userEntity: UserEntity)
+    suspend fun insert(userEntity: UserEntity): Long
 
-    @Query("SELECT * FROM users WHERE name = :name")
-    suspend fun getUserEntity(name: String): UserEntity
+    @Query("SELECT * FROM users WHERE id_user = :id_user")
+    suspend fun getUserEntity(id_user: Long): UserEntity
 
     @Query("SELECT id_user FROM users WHERE name = :name")
-    suspend fun getUserId(name: String): Int
+    suspend fun getUserId(name: String): Long
 
 }

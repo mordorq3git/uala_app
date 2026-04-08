@@ -3,6 +3,7 @@ package com.example.ualaapp.presentation.loading
 import com.example.ualaapp.repository.implementations.BaseRepositoryImpl
 import com.example.ualaapp.utils.MainDispatcherRule
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -25,6 +26,7 @@ class LoadingAndRegisterViewModelTest {
     fun init() {
         val repository = mockk<BaseRepositoryImpl>()
         coEvery { repository.loadCities() } returns Unit
+        coEvery { repository.saveUser("username") } returns Unit
 
         this.viewModel = LoadingAndRegisterViewModel(repository)
     }
@@ -106,10 +108,14 @@ class LoadingAndRegisterViewModelTest {
 
     @Test
     fun onEvent_Registry() {
+        val repository = mockk<BaseRepositoryImpl>()
+        coEvery { repository.saveUser("username") } returns Unit
+
+        val viewModel = LoadingAndRegisterViewModel(repository)
+
         viewModel.onEvent(RegistryIntent.SetUserName("username"))
         viewModel.onEvent(RegistryIntent.Register)
 
-        assertEquals("username - registrado", viewModel.registerUserValue.value)
+        coVerify { repository.saveUser("username") }
     }
-
 }

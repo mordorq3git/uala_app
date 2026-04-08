@@ -5,4 +5,5 @@
     <string name="enter">Ingresar</string>
     <string name="loading_cities">Cargando ciudades...</string>
     <string name="filter_city">Filter by City Name</string>
+    <string name="city_detail_title_topbar">Detalle de Ciudad</string>
 </resources>

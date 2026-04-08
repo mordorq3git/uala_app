@@ -2,6 +2,8 @@ package com.example.ualaapp.repository.implementations
 
 import com.example.ualaapp.data.City
 import com.example.ualaapp.data.Coordinates
+import com.example.ualaapp.data.User
+import com.example.ualaapp.repository.implementations.database.AppDatabase
 import com.example.ualaapp.repository.implementations.database.daos.CityDao
 import com.example.ualaapp.repository.implementations.database.entities.CityEntity
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -9,6 +11,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
+import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -31,9 +34,19 @@ class DataBaseRepositoryImplTest {
     @Inject
     lateinit var cityDao: CityDao
 
+    @Inject
+    lateinit var database: AppDatabase
+
     @Before
     fun init() {
         hiltRule.inject()
+    }
+
+    @After
+    fun tearDown() {
+        if (::database.isInitialized) {
+            database.close()
+        }
     }
 
     @Test
@@ -70,7 +83,7 @@ class DataBaseRepositoryImplTest {
             )
         }
 
-        repository.setCities(listOfCities)
+        repository.saveCities(listOfCities)
 
         val cities = repository.getCities()
 
@@ -78,4 +91,36 @@ class DataBaseRepositoryImplTest {
         Assert.assertFalse(cities.isEmpty())
         Assert.assertEquals(7, cities.size)
     }
+
+    @Test
+    fun saveUser_toDb() = runTest {
+        val generatedId = repository.saveUser("username")
+
+        val user: User = repository.getUser(generatedId)
+
+        Assert.assertEquals("username", user.name)
+    }
+
+    @Test
+    fun intent_saveUser_toDb_whenIsSecondTime() = runTest {
+        var generatedId = 0L
+
+        generatedId = repository.saveUser("username_repeated")
+        generatedId = repository.saveUser("username_repeated")
+
+        val user: User = repository.getUser(generatedId)
+
+        Assert.assertEquals("username_repeated", user.name)
+    }
+
+    @Test
+    fun saveFavourite_toDb() = runTest {
+        repository.saveFavourite(54, 854)
+    }
+
+    @Test
+    fun removeFavourite_fromDb() = runTest {
+        repository.removeFavourite(54, 854)
+    }
+
 }
