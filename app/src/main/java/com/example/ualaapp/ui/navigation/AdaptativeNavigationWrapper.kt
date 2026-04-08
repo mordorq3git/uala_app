@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package com.example.ualaapp.ui.navigation
 
 import androidx.activity.compose.BackHandler
@@ -30,7 +28,7 @@ import com.example.ualaapp.ui.screens.CitiesListScreen
 import com.example.ualaapp.ui.screens.MapScreen
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
+@OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun AdaptativeNavigationWrapper(modifier: Modifier = Modifier) {
     val navigator = rememberListDetailPaneScaffoldNavigator<Int>()
@@ -73,11 +71,12 @@ fun AdaptativeNavigationWrapper(modifier: Modifier = Modifier) {
                     CenterAlignedTopAppBar(
                         title = {
                             Text(
-                                text = stringResource(R.string.city_detail_title_topbar),
-                                color = MaterialTheme.colorScheme.surface)
+                                text = stringResource(R.string.city_detail_title_topbar)
+                            )
                         },
                         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                            containerColor = Color.Transparent
+                            containerColor = Color.Transparent,
+                            titleContentColor = MaterialTheme.colorScheme.onSurface
                         ),
                         navigationIcon = {
                             if (navigator.canNavigateBack()) {

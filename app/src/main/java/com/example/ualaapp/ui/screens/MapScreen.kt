@@ -23,11 +23,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.ualaapp.R
 import com.example.ualaapp.data.City
 import com.example.ualaapp.data.Coordinates
 import com.example.ualaapp.presentation.map.MapIntent
@@ -192,7 +194,8 @@ fun CityMapDetailCard(
             }) {
                 Icon(
                     imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-                    contentDescription = if (isFavorite) "Quitar de favoritos" else "Agregar a favoritos",
+                    contentDescription = if (isFavorite)
+                        stringResource(R.string.remove_from_favorites) else stringResource(R.string.add_to_favorites),
                     tint = if (isFavorite) Color.Red else Color.Gray
                 )
             }
