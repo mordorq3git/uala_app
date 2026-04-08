@@ -1,5 +1,6 @@
 package com.example.ualaapp.presentation.citieslist
 
+import app.cash.turbine.test
 import com.example.ualaapp.data.City
 import com.example.ualaapp.data.Coordinates
 import com.example.ualaapp.repository.implementations.BaseRepositoryImpl
@@ -9,14 +10,11 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 
@@ -35,74 +33,84 @@ class CitiesListViewModelTest {
         this.viewModel = CitiesListViewModel(repository)
     }
 
-    @Ignore("Al cambiar por flow cambia la manera de como trabaja el test, revisar con mayor profundidad")
     @Test
     fun getCities_withValues() = runTest {
         val repository = mockk<BaseRepositoryImpl>()
-        every { repository.getCitiesWithFavouritesFlow("") } returns flowOf(listOf(
-            mockk<City>(),
-            mockk<City>(),
-            mockk<City>(),
-            mockk<City>(),
-            mockk<City>()
-        ))
+        val listOfMockedCities = List(5) { mockk<City>() }
+        every { repository.getCitiesWithFavouritesFlow("") } returns flowOf(listOfMockedCities)
 
         viewModel = CitiesListViewModel(repository)
 
-        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
-            viewModel.citiesState.collect()
-        }
+        viewModel.citiesState.test {
+            advanceUntilIdle()
 
-        assertEquals(5, viewModel.citiesState.value.size)
+            val actualCities = expectMostRecentItem()
+            assertEquals(5, actualCities.size)
+
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
-    @Ignore("Al cambiar por flow cambia la manera de como trabaja el test, revisar con mayor profundidad")
     @Test
     fun filter_cities() = runTest {
         val repository = mockk<BaseRepositoryImpl>()
-        every { repository.getCitiesWithFavouritesFlow("") } returns flowOf(listOf(
+        val cities = listOf(
             City(_id = 1, name = "Alabama", country = "US", Coordinates(1.0, 2.0)),
-            City(_id = 1, name = "Albuquerque", country = "US", Coordinates(1.0, 2.0)),
-            City(_id = 1, name = "Anaheim", country = "US", Coordinates(1.0, 2.0)),
-            City(_id = 1, name = "Arizona", country = "US", Coordinates(1.0, 2.0)),
-            City(_id = 1, name = "Sydney", country = "AU", Coordinates(1.0, 2.0)),
-        ))
+            City(_id = 2, name = "Albuquerque", country = "US", Coordinates(1.0, 2.0)),
+            City(_id = 3, name = "Anaheim", country = "US", Coordinates(1.0, 2.0)),
+            City(_id = 4, name = "Arizona", country = "US", Coordinates(1.0, 2.0)),
+            City(_id = 5, name = "Sydney", country = "AU", Coordinates(1.0, 2.0)),
+        )
+
+        every { repository.getCitiesWithFavouritesFlow(any()) } answers {
+            val query = firstArg<String>()
+            flowOf(cities.filter { it.name.startsWith(query, ignoreCase = true) })
+        }
 
         viewModel = CitiesListViewModel(repository)
 
-        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
-            viewModel.citiesState.collect()
+        viewModel.citiesState.test {
+            val initialItems = expectMostRecentItem()
+            assertEquals(5, initialItems.size)
+
+            viewModel.onEvent(CitiesListIntent.Filter("Bue"))
+            val bueItems = awaitItem()
+            assertEquals(0, bueItems.size)
+            assertEquals("Bue", viewModel.filterState.value)
+
+            viewModel.onEvent(CitiesListIntent.Filter("Al"))
+            val alItems = awaitItem()
+            assertEquals(2, alItems.size)
+            assertEquals("Al", viewModel.filterState.value)
+            assertEquals("Alabama", alItems[0].name)
+            assertEquals("Albuquerque", alItems[1].name)
+
+            viewModel.onEvent(CitiesListIntent.Filter("Ala"))
+            val alaItems = awaitItem()
+            assertEquals(1, alaItems.size)
+            assertEquals("Ala", viewModel.filterState.value)
+            assertEquals("Alabama", alaItems[0].name)
+
+            viewModel.onEvent(CitiesListIntent.Filter("bue"))
+            val bueItems2 = awaitItem()
+            assertEquals(0, bueItems2.size)
+            assertEquals("bue", viewModel.filterState.value)
+
+            viewModel.onEvent(CitiesListIntent.Filter("al"))
+            val alItems2 = awaitItem()
+            assertEquals(2, alItems2.size)
+            assertEquals("al", viewModel.filterState.value)
+            assertEquals("Alabama", alItems2[0].name)
+            assertEquals("Albuquerque", alItems2[1].name)
+
+            viewModel.onEvent(CitiesListIntent.Filter("ala"))
+            val alaItems2 = awaitItem()
+            assertEquals(1, alaItems2.size)
+            assertEquals("ala", viewModel.filterState.value)
+            assertEquals("Alabama", alaItems2[0].name)
+
+            cancelAndIgnoreRemainingEvents()
         }
-
-        viewModel.onEvent(CitiesListIntent.Filter("Bue"))
-
-        assertEquals("Bue", viewModel.filterState.value)
-        assertEquals(0, viewModel.citiesState.value.size)
-
-        viewModel.onEvent(CitiesListIntent.Filter("Al"))
-
-        assertEquals("Al", viewModel.filterState.value)
-        assertEquals(2, viewModel.citiesState.value.size)
-
-        viewModel.onEvent(CitiesListIntent.Filter("Ala"))
-
-        assertEquals("Ala", viewModel.filterState.value)
-        assertEquals(1, viewModel.citiesState.value.size)
-
-        viewModel.onEvent(CitiesListIntent.Filter("bue"))
-
-        assertEquals("bue", viewModel.filterState.value)
-        assertEquals(0, viewModel.citiesState.value.size)
-
-        viewModel.onEvent(CitiesListIntent.Filter("al"))
-
-        assertEquals("al", viewModel.filterState.value)
-        assertEquals(2, viewModel.citiesState.value.size)
-
-        viewModel.onEvent(CitiesListIntent.Filter("ala"))
-
-        assertEquals("ala", viewModel.filterState.value)
-        assertEquals(1, viewModel.citiesState.value.size)
     }
 
     @Test
