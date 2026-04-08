@@ -26,29 +26,22 @@ class DataBaseRepositoryImpl @Inject constructor(
 
     override suspend fun getCities() = mapCitiesEntitiesToDto(cityDao.getAll())
 
-    override fun getCitiesFiltered(userId: Long, query: String) : Flow<List<City>> {
-        return cityDao.getCitiesFlow(userId, query).map { list ->
+    override fun getCitiesFilteredFlow(userId: Long, query: String) : Flow<List<City>> {
+        return cityDao.getCitiesFilteredFlow(userId, query).map { list ->
             mapCitiesWithFavoriteToDto(list)
         }.flowOn(Dispatchers.Default)
     }
 
-    override fun getCities(userId: Long) : Flow<List<City>> {
-        return cityDao.getAllCitiesWithFavorite(userId).map { list ->
-            mapCitiesWithFavoriteToDto(list)
-        }.flowOn(Dispatchers.Default)
-    }
-
-    override fun getCity(userId: Long, id: Int): Flow<City> {
-        val cityEntity = cityDao.get(userId, id)
+    override fun getCityFavoritedFlow(userId: Long, id: Int): Flow<City> {
+        val cityEntity = cityDao.getCityFavoritedFlow(userId, id)
 
         return cityEntity.map {
             entity -> mapCityEntityToDto(entity)
         }.flowOn(Dispatchers.Default)
-        //return mapCityEntityToDto(cityEntity)
     }
 
-    override suspend fun getUniqueCity(userId: Long, id: Int): City {
-        val cityEntity = cityDao.getUniqueCity(userId, id)
+    override suspend fun getCityFavorited(userId: Long, id: Int): City {
+        val cityEntity = cityDao.getCityFavorited(userId, id)
 
         return mapCityEntityToDto(cityEntity)
     }

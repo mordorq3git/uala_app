@@ -49,7 +49,7 @@ fun MapScreen(
     viewModel: MapViewModel = hiltViewModel()
 ) {
     val currentCity by viewModel.currentCityState.collectAsStateWithLifecycle()
-    val listenerState by viewModel.listenerCityState.collectAsStateWithLifecycle()
+    val listenerCityState by viewModel.listenerCityState.collectAsStateWithLifecycle()
 
     val initLocation = LatLng(-34.6037, -58.3816) // Buenos Aires
 
@@ -86,7 +86,7 @@ fun MapScreen(
         modifier = modifier,
         cameraPositionState = cameraPositionState,
         markerState = markerState,
-        city = if(listenerState?._id == currentCity?._id) listenerState else currentCity,
+        city = if(listenerCityState?._id == currentCity?._id) listenerCityState else currentCity,
         onAddFavouriteEvent = { _id ->
             viewModel.onEvent(MapIntent.AddToFavourites(_id))
         },

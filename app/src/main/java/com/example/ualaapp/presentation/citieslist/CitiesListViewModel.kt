@@ -29,7 +29,7 @@ class CitiesListViewModel @Inject constructor(
     val filterState: StateFlow<String> = _filterState.asStateFlow()
     val citiesState: StateFlow<List<City>> = _filterState
         .flatMapLatest { query ->
-            baseRepository.getCitiesWithFavourites(query)
+            baseRepository.getCitiesWithFavouritesFlow(query)
         }
         .flowOn(Dispatchers.Default)
         .stateIn(

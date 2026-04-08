@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import com.example.ualaapp.data.City
 import com.example.ualaapp.repository.implementations.database.entities.CityEntity
 import com.example.ualaapp.repository.implementations.database.entities.CityWithFavorite
 import kotlinx.coroutines.flow.Flow
@@ -26,15 +25,6 @@ interface CityDao {
     suspend fun getAll(): List<CityEntity>
 
     @Query("""
-        SELECT cities.*,
-               (favourites._id IS NOT NULL) AS isFavorite 
-        FROM cities 
-        LEFT JOIN favourites ON cities._id = favourites._id 
-        AND favourites.id_user = :userId ORDER BY cities.name ASC LIMIT 200
-    """)
-    fun getAllCitiesWithFavorite(userId: Long): Flow<List<CityWithFavorite>>
-
-    @Query("""
         SELECT cities.*, 
            (f._id IS NOT NULL) AS isFavorite 
         FROM cities 
@@ -44,7 +34,7 @@ interface CityDao {
             ORDER BY cities.name ASC 
             LIMIT 500
     """)
-    fun getCitiesFlow(userId: Long, query: String): Flow<List<CityWithFavorite>>
+    fun getCitiesFilteredFlow(userId: Long, query: String): Flow<List<CityWithFavorite>>
 
     @Query("""
         SELECT cities.*, 
@@ -55,9 +45,8 @@ interface CityDao {
         WHERE cities._id = :id
             LIMIT 1
     """)
-    fun get(userId: Long, id: Int): Flow<CityWithFavorite>
+    fun getCityFavoritedFlow(userId: Long, id: Int): Flow<CityWithFavorite>
 
-    //@Query("SELECT * FROM cities WHERE _id = :id")
     @Query("""
         SELECT cities.*, 
            (f._id IS NOT NULL) AS isFavorite 
@@ -67,7 +56,7 @@ interface CityDao {
         WHERE cities._id = :id
             LIMIT 1
     """)
-    suspend fun getUniqueCity(userId: Long, id: Int) : CityWithFavorite
+    suspend fun getCityFavorited(userId: Long, id: Int) : CityWithFavorite
 
     @Transaction
     suspend fun refreshData(listOfCityEntities: List<CityEntity>) {

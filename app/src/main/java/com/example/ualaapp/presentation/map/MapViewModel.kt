@@ -32,7 +32,7 @@ class MapViewModel @Inject constructor(
 
     private fun listenerState(id: Int) {
         viewModelScope.launch {
-            baseRepository.getCity(id).collect { city ->
+            baseRepository.getCityFavoritedFlow(id).collect { city ->
                 _listenerCityState.update { city }
             }
         }
@@ -41,7 +41,7 @@ class MapViewModel @Inject constructor(
     private fun getCity(id: Int) {
         viewModelScope.launch {
             _currentCityState.update {
-                baseRepository.getUniqueCity(id)
+                baseRepository.getCityFavorited(id)
             }
         }
     }
