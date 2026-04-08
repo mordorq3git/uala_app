@@ -1,17 +1,18 @@
 package com.example.ualaapp.presentation.map
 
+import app.cash.turbine.test
 import com.example.ualaapp.data.City
 import com.example.ualaapp.data.Coordinates
 import com.example.ualaapp.repository.implementations.BaseRepositoryImpl
 import com.example.ualaapp.utils.MainDispatcherRule
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
-
 
 class MapViewModelTest {
     @get:Rule
@@ -23,12 +24,13 @@ class MapViewModelTest {
     fun init() {
         val repository = mockk<BaseRepositoryImpl>()
 
+        every { repository.getUserSessionId() } returns 555
+
         this.viewModel = MapViewModel(repository)
     }
 
-    @Ignore("Al cambiar por flow cambia la manera de como trabaja el test, revisar con mayor profundidad")
     @Test
-    fun getCityFromDatabase() {
+    fun getCityFromDatabase() = runTest {
         val city = City(
             _id = 214,
             name = "Buenos Aires",
@@ -38,16 +40,23 @@ class MapViewModelTest {
 
         val repository = mockk<BaseRepositoryImpl>()
 
-        //coEvery { repository.getCity(214) } returns city
+        coEvery { repository.getCityFavorited(214) } returns city
+        every { repository.getUserSessionId() } returns 555
 
         val viewModel = MapViewModel(repository)
 
-        viewModel.onEvent(MapIntent.GetCity(214))
+        viewModel.currentCityState.test {
+            viewModel.onEvent(MapIntent.GetCity(214))
 
-        assertEquals(214, viewModel.currentCityState.value!!._id)
-        assertEquals("Buenos Aires", viewModel.currentCityState.value!!.name)
-        assertEquals("AR", viewModel.currentCityState.value!!.country)
-        assertEquals(1.0, viewModel.currentCityState.value!!.coord.lat, 0.0)
-        assertEquals(2.0, viewModel.currentCityState.value!!.coord.lon, 0.0)
+            val currentCityState = expectMostRecentItem()!!
+
+            assertEquals(214, currentCityState._id)
+            assertEquals("Buenos Aires", currentCityState.name)
+            assertEquals("AR", currentCityState.country)
+            assertEquals(1.0, currentCityState.coord.lat, 0.0)
+            assertEquals(2.0, currentCityState.coord.lon, 0.0)
+
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 }

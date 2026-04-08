@@ -23,11 +23,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.ualaapp.R
 import com.example.ualaapp.data.City
 import com.example.ualaapp.data.Coordinates
 import com.example.ualaapp.presentation.map.MapIntent
@@ -49,36 +52,42 @@ fun MapScreen(
     viewModel: MapViewModel = hiltViewModel()
 ) {
     val currentCity by viewModel.currentCityState.collectAsStateWithLifecycle()
-    val listenerCityState by viewModel.listenerCityState.collectAsStateWithLifecycle()
+    val isFavorite by viewModel.existFavorite.collectAsStateWithLifecycle()
 
     val initLocation = LatLng(-34.6037, -58.3816) // Buenos Aires
 
-    val displayPosition = currentCity?.let {
+    val displayPosition: LatLng = currentCity?.let {
         LatLng(it.coord.lat, it.coord.lon)
     } ?: initLocation
 
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(displayPosition, 10f)
     }
-    val markerState = rememberMarkerState(position = displayPosition)
+
+    val markerState = currentCity?.let {
+        rememberMarkerState(position = displayPosition)
+    }
 
     LaunchedEffect(selectedCityId) {
         if(selectedCityId != -1) {
             viewModel.onEvent(MapIntent.GetCity(selectedCityId))
-            viewModel.onEvent(MapIntent.ListenerState(selectedCityId))
+        }
+    }
+
+    LaunchedEffect(selectedCityId) {
+        if(selectedCityId != -1) {
+            viewModel.checkFavoriteStatus(selectedCityId)
         }
     }
 
     LaunchedEffect(currentCity) {
-        if(selectedCityId != -1) {
-            currentCity?.let { city ->
-                val cityPos = LatLng(city.coord.lat, city.coord.lon)
-                markerState.position = cityPos
-                cameraPositionState.animate(
-                    update = CameraUpdateFactory.newLatLngZoom(cityPos, 10f),
-                    durationMs = 1000
-                )
-            }
+        currentCity?.let { city ->
+            val cityPos = LatLng(city.coord.lat, city.coord.lon)
+            markerState?.position = cityPos
+            cameraPositionState.animate(
+                update = CameraUpdateFactory.newLatLngZoom(cityPos, 10f),
+                durationMs = 1000
+            )
         }
     }
 
@@ -86,12 +95,13 @@ fun MapScreen(
         modifier = modifier,
         cameraPositionState = cameraPositionState,
         markerState = markerState,
-        city = if(listenerCityState?._id == currentCity?._id) listenerCityState else currentCity,
-        onAddFavouriteEvent = { _id ->
-            viewModel.onEvent(MapIntent.AddToFavourites(_id))
+        isFavorite = isFavorite,
+        city = currentCity,
+        onAddFavoriteEvent = { _id ->
+            viewModel.onEvent(MapIntent.AddToFavorites(_id))
         },
-        onRemoveFavouriteEvent = { _id ->
-            viewModel.onEvent(MapIntent.RemoveFromFavourites(_id))
+        onRemoveFavoriteEvent = { _id ->
+            viewModel.onEvent(MapIntent.RemoveFromFavorites(_id))
         }
     )
 }
@@ -99,11 +109,12 @@ fun MapScreen(
 @Composable
 fun MapComponent(
     modifier: Modifier = Modifier,
-    cameraPositionState: CameraPositionState,
-    markerState: MarkerState,
-    city: City?,
-    onAddFavouriteEvent: (Int) -> Unit = {},
-    onRemoveFavouriteEvent: (Int) -> Unit = {}
+    cameraPositionState: CameraPositionState = rememberCameraPositionState(),
+    markerState: MarkerState? = null,
+    city: City? = null,
+    isFavorite: Boolean = false,
+    onAddFavoriteEvent: (Int) -> Unit = {},
+    onRemoveFavoriteEvent: (Int) -> Unit = {}
 ) {
     Box(modifier = Modifier
         .fillMaxSize()
@@ -113,43 +124,43 @@ fun MapComponent(
             modifier = modifier.fillMaxSize(),
             cameraPositionState = cameraPositionState
         ) {
-            Marker(
-                state = markerState,
-                title = city?.name ?: "Ubicacion",
-                onClick = {
-                    true
-                }
-            )
+            markerState?.let {
+                Marker(
+                    state = it,
+                    title = city?.name ?: "Ubicacion",
+                    onClick = { true }
+                )
+            }
         }
 
         city?.let { city ->
-            val favouriteEvent =
-                if (!city.isFavourite) onAddFavouriteEvent else onRemoveFavouriteEvent
+            val favoriteEvent = if (!isFavorite) onAddFavoriteEvent else onRemoveFavoriteEvent
 
-            CityMapDetailCard(
+            MapCardComponent(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(36.dp),
-                name = city.name,
+                    .padding(36.dp)
+                    .testTag("map_card"),
+                city = city.name,
                 country = city.country,
                 lat = city.coord.lat,
                 lon = city.coord.lon,
-                isFavorite = city.isFavourite,
-                onFavouriteClick = { favouriteEvent(city._id) }
+                isFavorite = isFavorite,
+                onFavoriteClick = { favoriteEvent(city._id) }
             )
         }
     }
 }
 
 @Composable
-fun CityMapDetailCard(
+fun MapCardComponent(
     modifier: Modifier = Modifier,
-    name: String = "",
+    city: String = "",
     country: String = "",
     lat: Double = 0.0,
     lon: Double = 0.0,
     isFavorite: Boolean = false,
-    onFavouriteClick: () -> Unit = {}
+    onFavoriteClick: () -> Unit = {}
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -165,7 +176,7 @@ fun CityMapDetailCard(
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = name,
+                    text = city,
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold
                 )
@@ -180,12 +191,16 @@ fun CityMapDetailCard(
                 )
             }
 
-            IconButton(onClick = {
-                onFavouriteClick()
-            }) {
+            IconButton(
+                modifier = Modifier.testTag("favorite_icon_map_card"),
+                onClick = {
+                    onFavoriteClick()
+                }
+            ) {
                 Icon(
                     imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-                    contentDescription = if (isFavorite) "Quitar de favoritos" else "Agregar a favoritos",
+                    contentDescription = if (isFavorite)
+                        stringResource(R.string.remove_from_favorites) else stringResource(R.string.add_to_favorites),
                     tint = if (isFavorite) Color.Red else Color.Gray
                 )
             }
@@ -214,25 +229,25 @@ private fun MapScreenPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun CityMapDetailCard_WithFavorite_Preview() {
-    CityMapDetailCard(
-        name = "Gualeguaychú",
+    MapCardComponent(
+        city = "Gualeguaychú",
         country = "AR",
         lat = 1.0,
         lon = 2.0,
         isFavorite = true,
-        onFavouriteClick = {}
+        onFavoriteClick = {}
     )
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun CityMapDetailCard_WithoutFavorite_Preview() {
-    CityMapDetailCard(
-        name = "Gualeguaychú",
+    MapCardComponent(
+        city = "Gualeguaychú",
         country = "AR",
         lat = 1.0,
         lon = 2.0,
         isFavorite = false,
-        onFavouriteClick = {}
+        onFavoriteClick = {}
     )
 }

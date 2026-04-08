@@ -2,9 +2,7 @@ package com.example.ualaapp.repository.implementations
 
 import android.content.SharedPreferences
 import com.example.ualaapp.data.City
-import com.example.ualaapp.data.User
 import com.example.ualaapp.repository.BaseRepository
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 private const val USER_ID = "USER_ID"
@@ -28,43 +26,21 @@ class BaseRepositoryImpl @Inject constructor(
 
     private suspend fun getCitiesFromDb() = dataBaseRepository.getCities()
 
-    private fun getCitiesFromDb(userId: Long, query: String) = dataBaseRepository.getCitiesFilteredFlow(userId, query)
+    private fun getCitiesFromDbFilteredFlow(userId: Long, query: String) = dataBaseRepository.getCitiesFilteredFlow(userId, query)
 
     private suspend fun getCitiesFromApi() = apiRepository.loadCities()
-
-    override fun getCitiesWithFavouritesFlow(query: String) : Flow<List<City>> {
-        val sessionId = sharedPreferences.getLong(USER_ID, USER_ID_DEF_VALUE)
-
-        return getCitiesFromDb(sessionId, query)
-    }
-
-    override fun getCityFavoritedFlow(id: Int) : Flow<City> {
-        val sessionId = sharedPreferences.getLong(USER_ID, USER_ID_DEF_VALUE)
-
-        return dataBaseRepository.getCityFavoritedFlow(sessionId, id)
-    }
-
-    override suspend fun getCityFavorited(id: Int): City {
-        val sessionId = sharedPreferences.getLong(USER_ID, USER_ID_DEF_VALUE)
-
-        return dataBaseRepository.getCityFavorited(sessionId, id)
-    }
 
     private suspend fun saveCities(listOfCities: List<City>) {
         dataBaseRepository.saveCities(listOfCities)
     }
 
     // Users
+    override fun getUserSessionId() = sharedPreferences.getLong(USER_ID, USER_ID_DEF_VALUE)
+
     override suspend fun saveUser(username: String) {
         val idUser = dataBaseRepository.saveUser(username)
 
         addUserToSession(idUser)
-    }
-
-    override suspend fun getUser(username: String) : User {
-        val sessionId = sharedPreferences.getLong(USER_ID, USER_ID_DEF_VALUE)
-
-        return dataBaseRepository.getUser(sessionId)
     }
 
     private fun addUserToSession(generatedId: Long) {
@@ -74,16 +50,18 @@ class BaseRepositoryImpl @Inject constructor(
         }
     }
 
-    // Favourites
-    override suspend fun saveFavourite(cityId: Int) {
-        val sessionId = sharedPreferences.getLong(USER_ID, USER_ID_DEF_VALUE)
-
-        dataBaseRepository.saveFavourite(sessionId, cityId)
+    // Favorites
+    override suspend fun saveFavorite(cityId: Int) {
+        dataBaseRepository.saveFavorite(getUserSessionId(), cityId)
     }
 
-    override suspend fun removeFavourite(cityId: Int) {
-        val sessionId = sharedPreferences.getLong(USER_ID, USER_ID_DEF_VALUE)
+    override fun getCitiesWithFavoritesFlow(query: String) = getCitiesFromDbFilteredFlow(getUserSessionId(), query)
 
-        dataBaseRepository.removeFavourite(sessionId, cityId)
+    override suspend fun getCityFavorited(cityId: Int) = dataBaseRepository.getCityFavorited(getUserSessionId(), cityId)
+
+    override suspend fun removeFavorite(cityId: Int) {
+        dataBaseRepository.removeFavorite(getUserSessionId(), cityId)
     }
+
+    override fun existFavorite(userId: Long, cityId: Int) = dataBaseRepository.existFavorite(userId, cityId)
 }

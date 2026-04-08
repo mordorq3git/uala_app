@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.example.ualaapp.repository.implementations.database.AppDatabase
 import com.example.ualaapp.repository.implementations.database.daos.CityDao
-import com.example.ualaapp.repository.implementations.database.daos.FavouriteDao
+import com.example.ualaapp.repository.implementations.database.daos.FavoriteDao
 import com.example.ualaapp.repository.implementations.database.daos.UserDao
 import dagger.Module
 import dagger.Provides
@@ -38,7 +38,7 @@ object DatabaseModule {
     }
 
     @Provides
-    fun provideFavouriteDao(db: AppDatabase): FavouriteDao {
-        return db.favouriteDao()
+    fun provideFavoriteDao(db: AppDatabase): FavoriteDao {
+        return db.favoriteDao()
     }
 }
