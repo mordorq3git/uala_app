@@ -10,6 +10,8 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -55,6 +57,40 @@ class MapViewModelTest {
             assertEquals("AR", currentCityState.country)
             assertEquals(1.0, currentCityState.coord.lat, 0.0)
             assertEquals(2.0, currentCityState.coord.lon, 0.0)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun shouldShowMapCardComponent() = runTest {
+        viewModel.shouldShowMapCard.test {
+            awaitItem()
+
+            viewModel.onEvent(MapIntent.ShowMapCard(true))
+
+            val shouldShowMapCard = awaitItem()
+
+            assertTrue(shouldShowMapCard)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun shouldHideMapCardComponent() = runTest {
+        viewModel.shouldShowMapCard.test {
+            awaitItem()
+
+            //Obligo al stateflow a que cambie de estado, ya que si no detecta cambios, el test no se cumple
+            viewModel.onEvent(MapIntent.ShowMapCard(true))
+
+            awaitItem()
+            viewModel.onEvent(MapIntent.ShowMapCard(false))
+
+            val shouldShowMapCard = awaitItem()
+
+            assertFalse(shouldShowMapCard)
 
             cancelAndIgnoreRemainingEvents()
         }

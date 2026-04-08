@@ -53,6 +53,7 @@ fun MapScreen(
 ) {
     val currentCity by viewModel.currentCityState.collectAsStateWithLifecycle()
     val isFavorite by viewModel.existFavorite.collectAsStateWithLifecycle()
+    val shouldShowMapCard by viewModel.shouldShowMapCard.collectAsStateWithLifecycle()
 
     val initLocation = LatLng(-34.6037, -58.3816) // Buenos Aires
 
@@ -77,6 +78,7 @@ fun MapScreen(
     LaunchedEffect(selectedCityId) {
         if(selectedCityId != -1) {
             viewModel.checkFavoriteStatus(selectedCityId)
+            viewModel.onEvent(MapIntent.ShowMapCard(false))
         }
     }
 
@@ -102,7 +104,11 @@ fun MapScreen(
         },
         onRemoveFavoriteEvent = { _id ->
             viewModel.onEvent(MapIntent.RemoveFromFavorites(_id))
-        }
+        },
+        onSholdShowCityCard = { show ->
+            viewModel.onEvent(MapIntent.ShowMapCard(show))
+        },
+        shouldShowsCityCard = shouldShowMapCard
     )
 }
 
@@ -114,7 +120,9 @@ fun MapComponent(
     city: City? = null,
     isFavorite: Boolean = false,
     onAddFavoriteEvent: (Int) -> Unit = {},
-    onRemoveFavoriteEvent: (Int) -> Unit = {}
+    onRemoveFavoriteEvent: (Int) -> Unit = {},
+    onSholdShowCityCard: (Boolean) -> Unit? = {},
+    shouldShowsCityCard: Boolean = false
 ) {
     Box(modifier = Modifier
         .fillMaxSize()
@@ -128,26 +136,31 @@ fun MapComponent(
                 Marker(
                     state = it,
                     title = city?.name ?: "Ubicacion",
-                    onClick = { true }
+                    onClick = {
+                        onSholdShowCityCard(true)
+                        true
+                    }
                 )
             }
         }
 
         city?.let { city ->
-            val favoriteEvent = if (!isFavorite) onAddFavoriteEvent else onRemoveFavoriteEvent
+            if (shouldShowsCityCard) {
+                val favoriteEvent = if (!isFavorite) onAddFavoriteEvent else onRemoveFavoriteEvent
 
-            MapCardComponent(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(36.dp)
-                    .testTag("map_card"),
-                city = city.name,
-                country = city.country,
-                lat = city.coord.lat,
-                lon = city.coord.lon,
-                isFavorite = isFavorite,
-                onFavoriteClick = { favoriteEvent(city._id) }
-            )
+                MapCardComponent(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(36.dp)
+                        .testTag("map_card"),
+                    city = city.name,
+                    country = city.country,
+                    lat = city.coord.lat,
+                    lon = city.coord.lon,
+                    isFavorite = isFavorite,
+                    onFavoriteClick = { favoriteEvent(city._id) }
+                )
+            }
         }
     }
 }

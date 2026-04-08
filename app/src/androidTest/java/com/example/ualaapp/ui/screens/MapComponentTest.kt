@@ -35,14 +35,15 @@ class MapComponentTest {
             )
         }
 
-        composeTestRule.onNodeWithTag("map_card").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("map_card").assertIsNotDisplayed()
     }
 
     @Test
-    fun verifyCardIsShowed_integration() {
+    fun verifyCardIs_shouldShowed_true() {
         composeTestRule.setContent {
             MapComponent(
-                city = City(123, "City", "CTRY", Coordinates(0.65465, 1.5588))
+                city = City(123, "City", "CTRY", Coordinates(0.65465, 1.5588)),
+                shouldShowsCityCard = true
             )
         }
 
@@ -53,5 +54,17 @@ class MapComponentTest {
         composeTestRule.onNodeWithText("Lat: 0.65465, Lon: 1.5588").assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription("Quitar de favoritos").assertIsNotDisplayed()
         composeTestRule.onNodeWithContentDescription("Agregar a favoritos").assertIsDisplayed()
+    }
+
+    @Test
+    fun verifyCardIs_shouldShowed_false() {
+        composeTestRule.setContent {
+            MapComponent(
+                city = City(123, "City", "CTRY", Coordinates(0.65465, 1.5588)),
+                shouldShowsCityCard = false
+            )
+        }
+
+        composeTestRule.onNodeWithTag("map_card").assertIsNotDisplayed()
     }
 }
