@@ -15,6 +15,10 @@ class BaseRepositoryImpl @Inject constructor(
     private val sharedPreferences: SharedPreferences
 ) : BaseRepository {
 
+    override fun getUserSessionId(): Long {
+        return sharedPreferences.getLong(USER_ID, USER_ID_DEF_VALUE)
+    }
+
     // Cities
     override suspend fun loadCities() {
         var cities = getCitiesFromDb()
@@ -85,5 +89,9 @@ class BaseRepositoryImpl @Inject constructor(
         val sessionId = sharedPreferences.getLong(USER_ID, USER_ID_DEF_VALUE)
 
         dataBaseRepository.removeFavourite(sessionId, cityId)
+    }
+
+    override fun existFavourite(userId: Long, cityId: Int) : Flow<Boolean> {
+        return dataBaseRepository.existFavourite(userId, cityId)
     }
 }

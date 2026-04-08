@@ -25,4 +25,6 @@ interface DatabaseRepository : Repository {
     suspend fun saveFavourite(userId: Long, cityId: Int)
 
     suspend fun removeFavourite(userId: Long, cityId: Int)
+
+    fun existFavourite(userId: Long, cityId: Int) : Flow<Boolean>
 }

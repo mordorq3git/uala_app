@@ -6,25 +6,28 @@ import kotlinx.coroutines.flow.Flow
 
 interface BaseRepository : Repository {
 
+    fun getUserSessionId(): Long
 
     // Cities
     suspend fun loadCities()
 
     fun getCitiesWithFavouritesFlow(query: String): Flow<List<City>>
 
-    fun getCityFavoritedFlow(id: Int) : Flow<City>
+    fun getCityFavoritedFlow(id: Int): Flow<City>
 
-    suspend fun getCityFavorited(id: Int) : City
+    suspend fun getCityFavorited(id: Int): City
 
 
     // Users
     suspend fun saveUser(username: String)
 
-    suspend fun getUser(username: String) : User
+    suspend fun getUser(username: String): User
 
 
     // Favourites
     suspend fun saveFavourite(cityId: Int)
 
     suspend fun removeFavourite(cityId: Int)
+
+    fun existFavourite(userId: Long, cityId: Int): Flow<Boolean>
 }

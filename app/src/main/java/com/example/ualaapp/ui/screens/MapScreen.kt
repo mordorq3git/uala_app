@@ -49,7 +49,7 @@ fun MapScreen(
     viewModel: MapViewModel = hiltViewModel()
 ) {
     val currentCity by viewModel.currentCityState.collectAsStateWithLifecycle()
-    val listenerCityState by viewModel.listenerCityState.collectAsStateWithLifecycle()
+    val isFavorite by viewModel.existFavourite.collectAsStateWithLifecycle()
 
     val initLocation = LatLng(-34.6037, -58.3816) // Buenos Aires
 
@@ -65,20 +65,23 @@ fun MapScreen(
     LaunchedEffect(selectedCityId) {
         if(selectedCityId != -1) {
             viewModel.onEvent(MapIntent.GetCity(selectedCityId))
-            viewModel.onEvent(MapIntent.ListenerState(selectedCityId))
+        }
+    }
+
+    LaunchedEffect(selectedCityId) {
+        if(selectedCityId != -1) {
+            viewModel.checkFavouriteStatus(selectedCityId)
         }
     }
 
     LaunchedEffect(currentCity) {
-        if(selectedCityId != -1) {
-            currentCity?.let { city ->
-                val cityPos = LatLng(city.coord.lat, city.coord.lon)
-                markerState.position = cityPos
-                cameraPositionState.animate(
-                    update = CameraUpdateFactory.newLatLngZoom(cityPos, 10f),
-                    durationMs = 1000
-                )
-            }
+        currentCity?.let { city ->
+            val cityPos = LatLng(city.coord.lat, city.coord.lon)
+            markerState.position = cityPos
+            cameraPositionState.animate(
+                update = CameraUpdateFactory.newLatLngZoom(cityPos, 10f),
+                durationMs = 1000
+            )
         }
     }
 
@@ -86,11 +89,12 @@ fun MapScreen(
         modifier = modifier,
         cameraPositionState = cameraPositionState,
         markerState = markerState,
-        city = if(listenerCityState?._id == currentCity?._id) listenerCityState else currentCity,
-        onAddFavouriteEvent = { _id ->
+        isFavorite = isFavorite,
+        city = currentCity,
+        onAddFavoriteEvent = { _id ->
             viewModel.onEvent(MapIntent.AddToFavourites(_id))
         },
-        onRemoveFavouriteEvent = { _id ->
+        onRemoveFavoriteEvent = { _id ->
             viewModel.onEvent(MapIntent.RemoveFromFavourites(_id))
         }
     )
@@ -102,8 +106,9 @@ fun MapComponent(
     cameraPositionState: CameraPositionState,
     markerState: MarkerState,
     city: City?,
-    onAddFavouriteEvent: (Int) -> Unit = {},
-    onRemoveFavouriteEvent: (Int) -> Unit = {}
+    isFavorite: Boolean = false,
+    onAddFavoriteEvent: (Int) -> Unit = {},
+    onRemoveFavoriteEvent: (Int) -> Unit = {}
 ) {
     Box(modifier = Modifier
         .fillMaxSize()
@@ -116,15 +121,12 @@ fun MapComponent(
             Marker(
                 state = markerState,
                 title = city?.name ?: "Ubicacion",
-                onClick = {
-                    true
-                }
+                onClick = { true }
             )
         }
 
         city?.let { city ->
-            val favouriteEvent =
-                if (!city.isFavourite) onAddFavouriteEvent else onRemoveFavouriteEvent
+            val favoriteEvent = if (!isFavorite) onAddFavoriteEvent else onRemoveFavoriteEvent
 
             CityMapDetailCard(
                 modifier = Modifier
@@ -134,8 +136,8 @@ fun MapComponent(
                 country = city.country,
                 lat = city.coord.lat,
                 lon = city.coord.lon,
-                isFavorite = city.isFavourite,
-                onFavouriteClick = { favouriteEvent(city._id) }
+                isFavorite = isFavorite,
+                onFavoriteClick = { favoriteEvent(city._id) }
             )
         }
     }
@@ -149,7 +151,7 @@ fun CityMapDetailCard(
     lat: Double = 0.0,
     lon: Double = 0.0,
     isFavorite: Boolean = false,
-    onFavouriteClick: () -> Unit = {}
+    onFavoriteClick: () -> Unit = {}
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -181,7 +183,7 @@ fun CityMapDetailCard(
             }
 
             IconButton(onClick = {
-                onFavouriteClick()
+                onFavoriteClick()
             }) {
                 Icon(
                     imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
@@ -220,7 +222,7 @@ private fun CityMapDetailCard_WithFavorite_Preview() {
         lat = 1.0,
         lon = 2.0,
         isFavorite = true,
-        onFavouriteClick = {}
+        onFavoriteClick = {}
     )
 }
 
@@ -233,6 +235,6 @@ private fun CityMapDetailCard_WithoutFavorite_Preview() {
         lat = 1.0,
         lon = 2.0,
         isFavorite = false,
-        onFavouriteClick = {}
+        onFavoriteClick = {}
     )
 }

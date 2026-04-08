@@ -132,4 +132,13 @@ class DataBaseRepositoryImpl @Inject constructor(
             city_id = cityId
         )
     }
+
+    override fun existFavourite(userId: Long, cityId: Int) : Flow<Boolean> {
+        val existFavourite = favouriteDao.existFavourite(
+            id_user = userId,
+            city_id = cityId
+        )
+
+        return existFavourite
+    }
 }

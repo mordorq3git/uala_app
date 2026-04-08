@@ -7,8 +7,14 @@ import com.example.ualaapp.repository.implementations.BaseRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -20,6 +26,21 @@ class MapViewModel @Inject constructor(
     val currentCityState: StateFlow<City?> = _currentCityState.asStateFlow()
     private val _listenerCityState: MutableStateFlow<City?> = MutableStateFlow(null)
     val listenerCityState: StateFlow<City?> = _listenerCityState.asStateFlow()
+    private val _currentCityId = MutableStateFlow(-999)
+    private val _currentUserId = MutableStateFlow(baseRepository.getUserSessionId())
+
+    val existFavourite: StateFlow<Boolean> = combine(_currentCityId, _currentUserId) { cityId, userId ->
+        if (cityId != -999 && userId != -999L) {
+            baseRepository.existFavourite(userId, cityId)
+        } else {
+            flowOf(false)
+        }
+    }.flatMapLatest { it }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000),
+        false
+    )
+
 
     fun onEvent(intent: MapIntent) {
         when(intent) {
@@ -60,5 +81,9 @@ class MapViewModel @Inject constructor(
 
             _currentCityState.update { it!!.copy(isFavourite = false) }
         }
+    }
+
+    fun checkFavouriteStatus(cityId: Int) {
+        _currentCityId.update { cityId }
     }
 }
