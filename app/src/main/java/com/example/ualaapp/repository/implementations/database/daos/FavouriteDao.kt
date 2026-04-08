@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import com.example.ualaapp.repository.implementations.database.entities.FavouriteEntity
-import com.example.ualaapp.repository.implementations.database.entities.UserEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

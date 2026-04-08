@@ -6,26 +6,25 @@ import com.example.ualaapp.data.City
 import com.example.ualaapp.repository.implementations.BaseRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class MapViewModel @Inject constructor(
     private val baseRepository: BaseRepositoryImpl
 ) : ViewModel() {
     private val _currentCityState: MutableStateFlow<City?> = MutableStateFlow(null)
     val currentCityState: StateFlow<City?> = _currentCityState.asStateFlow()
-    private val _listenerCityState: MutableStateFlow<City?> = MutableStateFlow(null)
-    val listenerCityState: StateFlow<City?> = _listenerCityState.asStateFlow()
     private val _currentCityId = MutableStateFlow(-999)
     private val _currentUserId = MutableStateFlow(baseRepository.getUserSessionId())
 
@@ -44,18 +43,9 @@ class MapViewModel @Inject constructor(
 
     fun onEvent(intent: MapIntent) {
         when(intent) {
-            is MapIntent.ListenerState -> listenerState(intent.id)
             is MapIntent.GetCity -> getCity(intent.id)
             is MapIntent.AddToFavourites -> addToFavourites(intent._id)
             is MapIntent.RemoveFromFavourites -> removeFromFavourites(intent._id)
-        }
-    }
-
-    private fun listenerState(id: Int) {
-        viewModelScope.launch {
-            baseRepository.getCityFavoritedFlow(id).collect { city ->
-                _listenerCityState.update { city }
-            }
         }
     }
 
