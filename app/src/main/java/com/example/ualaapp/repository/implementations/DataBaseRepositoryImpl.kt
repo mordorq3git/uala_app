@@ -23,27 +23,13 @@ class DataBaseRepositoryImpl @Inject constructor(
     private val userDao: UserDao,
     private val favouriteDao: FavouriteDao
 ) : DatabaseRepository {
-
+    // Cities
     override suspend fun getCities() = mapCitiesEntitiesToDto(cityDao.getAll())
 
     override fun getCitiesFilteredFlow(userId: Long, query: String) : Flow<List<City>> {
         return cityDao.getCitiesFilteredFlow(userId, query).map { list ->
             mapCitiesWithFavoriteToDto(list)
         }.flowOn(Dispatchers.Default)
-    }
-
-    override fun getCityFavoritedFlow(userId: Long, id: Int): Flow<City> {
-        val cityEntity = cityDao.getCityFavoritedFlow(userId, id)
-
-        return cityEntity.map {
-            entity -> mapCityEntityToDto(entity)
-        }.flowOn(Dispatchers.Default)
-    }
-
-    override suspend fun getCityFavorited(userId: Long, id: Int): City {
-        val cityEntity = cityDao.getCityFavorited(userId, id)
-
-        return mapCityEntityToDto(cityEntity)
     }
 
     override suspend fun saveCities(listOfCities: List<City>) {
@@ -97,6 +83,7 @@ class DataBaseRepositoryImpl @Inject constructor(
             )
     }
 
+    // Users
     override suspend fun saveUser(username: String) : Long {
         var generatedId = userDao.getUserId(username)
 
@@ -118,12 +105,19 @@ class DataBaseRepositoryImpl @Inject constructor(
         name = userEntity.name
     )
 
+    // Favorites
     override suspend fun saveFavourite(userId: Long, cityId: Int) {
         val favouriteEntity = FavouriteEntity(
             id_user = userId,
             _id = cityId
         )
         favouriteDao.insert(favouriteEntity)
+    }
+
+    override suspend fun getCityFavorited(userId: Long, id: Int): City {
+        val cityEntity = favouriteDao.getCityFavorited(userId, id)
+
+        return mapCityEntityToDto(cityEntity)
     }
 
     override suspend fun removeFavourite(userId: Long, cityId: Int) {
