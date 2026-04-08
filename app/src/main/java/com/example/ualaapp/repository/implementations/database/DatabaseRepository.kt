@@ -16,6 +16,8 @@ interface DatabaseRepository : Repository {
 
     fun getCity(userId: Long, id: Int): Flow<City>
 
+    suspend fun getUniqueCity(userId: Long, id: Int): City
+
     suspend fun saveUser(username: String) : Long
 
     suspend fun getUser(id: Long) : User

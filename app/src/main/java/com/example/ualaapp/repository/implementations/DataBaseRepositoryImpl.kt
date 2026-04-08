@@ -47,6 +47,12 @@ class DataBaseRepositoryImpl @Inject constructor(
         //return mapCityEntityToDto(cityEntity)
     }
 
+    override suspend fun getUniqueCity(userId: Long, id: Int): City {
+        val cityEntity = cityDao.getUniqueCity(userId, id)
+
+        return mapCityEntityToDto(cityEntity)
+    }
+
     override suspend fun saveCities(listOfCities: List<City>) {
         val listOfCitiesEntities = mapCitiesDtoToEntities(listOfCities)
 

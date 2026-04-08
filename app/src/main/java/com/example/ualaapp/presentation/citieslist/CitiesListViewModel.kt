@@ -25,25 +25,8 @@ import kotlin.collections.emptyList
 class CitiesListViewModel @Inject constructor(
     private val baseRepository: BaseRepositoryImpl
 ) : ViewModel() {
-    private val _citiesState = MutableStateFlow<List<City>>(emptyList())
     private val _filterState = MutableStateFlow("")
     val filterState: StateFlow<String> = _filterState.asStateFlow()
-    /*val citiesState: StateFlow<List<City>> = combine(baseRepository.getCitiesWithFavourites(), _filterState) { cities, query ->
-        if (query.isBlank()) {
-            cities
-        } else {
-            cities.filter { city ->
-                city.name.startsWith(
-                    query,
-                    ignoreCase = true
-                )
-            }
-        }
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = emptyList()
-    )*/
     val citiesState: StateFlow<List<City>> = _filterState
         .flatMapLatest { query ->
             baseRepository.getCitiesWithFavourites(query)
@@ -57,17 +40,10 @@ class CitiesListViewModel @Inject constructor(
 
     fun onEvent(intent: CitiesListIntent) {
         when(intent) {
-            CitiesListIntent.Get -> getCities()
             is CitiesListIntent.Filter -> filterCities(intent.filter)
             is CitiesListIntent.AddToFavourites -> addToFavourites(intent._id)
             is CitiesListIntent.RemoveFromFavourites -> removeFromFavourites(intent._id)
         }
-    }
-
-    private fun getCities() {
-        /*viewModelScope.launch {
-            _citiesState.update { baseRepository.getCitiesWithFavourites() }
-        }*/
     }
 
     private fun filterCities(filterText: String) {
@@ -77,28 +53,12 @@ class CitiesListViewModel @Inject constructor(
     private fun addToFavourites(cityId: Int) {
         viewModelScope.launch {
             baseRepository.saveFavourite(cityId)
-
-            // updateFavouriteStatus(cityId, true)
         }
     }
 
     private fun removeFromFavourites(cityId: Int) {
         viewModelScope.launch {
             baseRepository.removeFavourite(cityId)
-
-            // updateFavouriteStatus(cityId, false)
-        }
-    }
-
-    private fun updateFavouriteStatus(cityId: Int, isFavourite: Boolean) {
-        _citiesState.update { currentCities ->
-            currentCities.map { city ->
-                if (city._id == cityId) {
-                    city.copy(isFavourite = isFavourite)
-                } else {
-                    city
-                }
-            }
         }
     }
 }

@@ -13,6 +13,8 @@ interface BaseRepository : Repository {
 
     fun getCity(id: Int) : Flow<City>
 
+    suspend fun getUniqueCity(id: Int) : City
+
     suspend fun saveUser(username: String)
 
     suspend fun getUser(username: String) : User

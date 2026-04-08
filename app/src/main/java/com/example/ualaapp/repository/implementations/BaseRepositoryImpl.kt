@@ -46,6 +46,12 @@ class BaseRepositoryImpl @Inject constructor(
         return dataBaseRepository.getCity(sessionId, id)
     }
 
+    override suspend fun getUniqueCity(id: Int): City {
+        val sessionId = sharedPreferences.getLong(USER_ID, USER_ID_DEF_VALUE)
+
+        return dataBaseRepository.getUniqueCity(sessionId, id)
+    }
+
     private suspend fun saveCities(listOfCities: List<City>) {
         dataBaseRepository.saveCities(listOfCities)
     }

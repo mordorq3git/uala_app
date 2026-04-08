@@ -49,6 +49,7 @@ fun MapScreen(
     viewModel: MapViewModel = hiltViewModel()
 ) {
     val currentCity by viewModel.currentCityState.collectAsStateWithLifecycle()
+    val listenerState by viewModel.listenerCityState.collectAsStateWithLifecycle()
 
     val initLocation = LatLng(-34.6037, -58.3816) // Buenos Aires
 
@@ -64,24 +65,11 @@ fun MapScreen(
     LaunchedEffect(selectedCityId) {
         if(selectedCityId != -1) {
             viewModel.onEvent(MapIntent.GetCity(selectedCityId))
+            viewModel.onEvent(MapIntent.ListenerState(selectedCityId))
         }
     }
 
     LaunchedEffect(currentCity) {
-        if(selectedCityId != -1) {
-            currentCity?.let { city ->
-                if(city._id == selectedCityId) {
-                    val cityPos = LatLng(city.coord.lat, city.coord.lon)
-                    markerState.position = cityPos
-                    cameraPositionState.animate(
-                        update = CameraUpdateFactory.newLatLngZoom(cityPos, 10f),
-                        durationMs = 1000
-                    )
-                }
-            }
-        }
-    }
-    /*LaunchedEffect(selectedCityId) {
         if(selectedCityId != -1) {
             currentCity?.let { city ->
                 val cityPos = LatLng(city.coord.lat, city.coord.lon)
@@ -92,30 +80,13 @@ fun MapScreen(
                 )
             }
         }
-    }*/
-
-    /*LaunchedEffect(currentCity?.coord) {
-        currentCity?.let {
-            markerState.position = LatLng(it.coord.lat, it.coord.lon)
-        }
-    }*/
-    /*LaunchedEffect(displayPosition) {
-        markerState.position = displayPosition
-
-        cameraPositionState.animate(
-            update = CameraUpdateFactory.newLatLngZoom(
-                displayPosition,
-                10f
-            ),
-            durationMs = 1000
-        )
-    }*/
+    }
 
     MapComponent(
         modifier = modifier,
         cameraPositionState = cameraPositionState,
         markerState = markerState,
-        city = currentCity,
+        city = if(listenerState?._id == currentCity?._id) listenerState else currentCity,
         onAddFavouriteEvent = { _id ->
             viewModel.onEvent(MapIntent.AddToFavourites(_id))
         },
@@ -152,7 +123,8 @@ fun MapComponent(
         }
 
         city?.let { city ->
-            val favouriteEvent = if(!city.isFavourite) onAddFavouriteEvent else onRemoveFavouriteEvent
+            val favouriteEvent =
+                if (!city.isFavourite) onAddFavouriteEvent else onRemoveFavouriteEvent
 
             CityMapDetailCard(
                 modifier = Modifier
@@ -209,7 +181,7 @@ fun CityMapDetailCard(
             }
 
             IconButton(onClick = {
-                //onFavouriteClick()
+                onFavouriteClick()
             }) {
                 Icon(
                     imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
