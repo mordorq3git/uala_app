@@ -23,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -135,11 +136,11 @@ fun MapComponent(
         city?.let { city ->
             val favoriteEvent = if (!isFavorite) onAddFavoriteEvent else onRemoveFavoriteEvent
 
-            CityMapDetailCard(
+            MapCardComponent(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(36.dp),
-                name = city.name,
+                city = city.name,
                 country = city.country,
                 lat = city.coord.lat,
                 lon = city.coord.lon,
@@ -151,9 +152,9 @@ fun MapComponent(
 }
 
 @Composable
-fun CityMapDetailCard(
+fun MapCardComponent(
     modifier: Modifier = Modifier,
-    name: String = "",
+    city: String = "",
     country: String = "",
     lat: Double = 0.0,
     lon: Double = 0.0,
@@ -174,7 +175,7 @@ fun CityMapDetailCard(
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = name,
+                    text = city,
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold
                 )
@@ -189,9 +190,12 @@ fun CityMapDetailCard(
                 )
             }
 
-            IconButton(onClick = {
-                onFavoriteClick()
-            }) {
+            IconButton(
+                modifier = Modifier.testTag("favorite_icon_map_card"),
+                onClick = {
+                    onFavoriteClick()
+                }
+            ) {
                 Icon(
                     imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
                     contentDescription = if (isFavorite)
@@ -224,8 +228,8 @@ private fun MapScreenPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun CityMapDetailCard_WithFavorite_Preview() {
-    CityMapDetailCard(
-        name = "Gualeguaychú",
+    MapCardComponent(
+        city = "Gualeguaychú",
         country = "AR",
         lat = 1.0,
         lon = 2.0,
@@ -237,8 +241,8 @@ private fun CityMapDetailCard_WithFavorite_Preview() {
 @Preview(showBackground = true)
 @Composable
 private fun CityMapDetailCard_WithoutFavorite_Preview() {
-    CityMapDetailCard(
-        name = "Gualeguaychú",
+    MapCardComponent(
+        city = "Gualeguaychú",
         country = "AR",
         lat = 1.0,
         lon = 2.0,
