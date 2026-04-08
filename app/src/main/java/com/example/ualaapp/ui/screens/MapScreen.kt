@@ -109,9 +109,9 @@ fun MapScreen(
 @Composable
 fun MapComponent(
     modifier: Modifier = Modifier,
-    cameraPositionState: CameraPositionState,
-    markerState: MarkerState?,
-    city: City?,
+    cameraPositionState: CameraPositionState = rememberCameraPositionState(),
+    markerState: MarkerState? = null,
+    city: City? = null,
     isFavorite: Boolean = false,
     onAddFavoriteEvent: (Int) -> Unit = {},
     onRemoveFavoriteEvent: (Int) -> Unit = {}
@@ -139,7 +139,8 @@ fun MapComponent(
             MapCardComponent(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(36.dp),
+                    .padding(36.dp)
+                    .testTag("map_card"),
                 city = city.name,
                 country = city.country,
                 lat = city.coord.lat,
