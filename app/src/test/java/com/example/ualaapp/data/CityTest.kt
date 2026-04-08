@@ -28,7 +28,7 @@ class CityTest {
         assertNotNull(city.coord)
         assertEquals(-58.450001, city.coord.lat, 0.0)
         assertEquals(-34.599998, city.coord.lon, 0.0)
-        assertFalse(city.isFavourite)
+        assertFalse(city.isFavorite)
     }
 
     @Test
@@ -50,7 +50,7 @@ class CityTest {
         assertNotNull(city.coord)
         assertEquals(-58.51722, city.coord.lat, 0.0)
         assertEquals(-33.00938, city.coord.lon, 0.0)
-        assertFalse(city.isFavourite)
+        assertFalse(city.isFavorite)
     }
 
     @Test
@@ -64,7 +64,7 @@ class CityTest {
         assertNotNull(city.coord)
         assertEquals(60.166672, city.coord.lat, 0.0)
         assertEquals(24.41667, city.coord.lon, 0.0)
-        assertFalse(city.isFavourite)
+        assertFalse(city.isFavorite)
     }
 
     @Test
@@ -77,7 +77,7 @@ class CityTest {
                 lat = -58.51722,
                 lon = -33.00938
             ),
-            isFavourite = true
+            isFavorite = true
         )
 
         assertNotNull(city)
@@ -87,6 +87,6 @@ class CityTest {
         assertNotNull(city.coord)
         assertEquals(-58.51722, city.coord.lat, 0.0)
         assertEquals(-33.00938, city.coord.lon, 0.0)
-        assertTrue(city.isFavourite)
+        assertTrue(city.isFavorite)
     }
 }

@@ -33,7 +33,7 @@ class CitiesListScreenTest {
             CitiesFilterComponent()
         }
 
-        composeTestRule.onNodeWithText("Filter by City Name").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Filtrar por Nombre de Ciudad").assertIsDisplayed()
     }
 
     @Test
@@ -181,8 +181,8 @@ class CitiesListScreenTest {
         composeTestRule.onNodeWithTag("city_item").assertHasClickAction()
         composeTestRule.onNodeWithText("City, CountryCode").assertIsDisplayed()
         composeTestRule.onNodeWithText("latitude, longitude").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("favourite_icon_city_item").assertContentDescriptionEquals("Favorito desactivo").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("favourite_icon_city_item").assertHasClickAction()
+        composeTestRule.onNodeWithTag("favorite_icon_city_item").assertContentDescriptionEquals("Favorito desactivo").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("favorite_icon_city_item").assertHasClickAction()
     }
 
     @Test
@@ -196,33 +196,33 @@ class CitiesListScreenTest {
 
         composeTestRule.onNodeWithText("City 2, CountryCode 2").assertIsDisplayed()
         composeTestRule.onNodeWithText("latitude 2, longitude 2").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("favourite_icon_city_item").assertContentDescriptionEquals("Favorito desactivod").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("favorite_icon_city_item").assertContentDescriptionEquals("Favorito desactivo").assertIsDisplayed()
     }
 
     @Test
-    fun cityItemComponent_setFavourite() {
+    fun cityItemComponent_setFavorite() {
         composeTestRule.setContent {
             CityItemComponent(
                 title = "City, CountryCode",
                 subtitle = "latitude, longitude",
-                isFavourite = true
+                isFavorite = true
             )
         }
 
-        composeTestRule.onNodeWithTag("favourite_icon_city_item").assertContentDescriptionEquals("Favorito activo").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("favorite_icon_city_item").assertContentDescriptionEquals("Favorito activo").assertIsDisplayed()
     }
 
     @Test
-    fun cityItemComponent_unsetFavourite() {
+    fun cityItemComponent_unsetFavorite() {
         composeTestRule.setContent {
             CityItemComponent(
                 title = "City, CountryCode",
                 subtitle = "latitude, longitude",
-                isFavourite = false
+                isFavorite = false
             )
         }
 
-        composeTestRule.onNodeWithTag("favourite_icon_city_item").assertContentDescriptionEquals("Favorito desactivo").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("favorite_icon_city_item").assertContentDescriptionEquals("Favorito desactivo").assertIsDisplayed()
     }
 
     @Test
@@ -243,19 +243,19 @@ class CitiesListScreenTest {
     }
 
     @Test
-    fun cityItemComponent_clicOnFavourite_event() {
-        var favouriteClicked = false
+    fun cityItemComponent_clicOnFavorite_event() {
+        var favoriteClicked = false
 
         composeTestRule.setContent {
             CityItemComponent(
                 title = "City, CountryCode",
                 subtitle = "latitude, longitude",
-                onFavouriteClickEvent = { favouriteClicked = true }
+                onFavoriteClickEvent = { favoriteClicked = true }
             )
         }
 
-        composeTestRule.onNodeWithTag("favourite_icon_city_item").assertHasClickAction()
-        composeTestRule.onNodeWithTag("favourite_icon_city_item").performClick()
-        assertTrue(favouriteClicked)
+        composeTestRule.onNodeWithTag("favorite_icon_city_item").assertHasClickAction()
+        composeTestRule.onNodeWithTag("favorite_icon_city_item").performClick()
+        assertTrue(favoriteClicked)
     }
 }

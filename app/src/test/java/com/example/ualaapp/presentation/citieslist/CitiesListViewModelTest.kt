@@ -28,7 +28,7 @@ class CitiesListViewModelTest {
     @Before
     fun init() {
         val repository = mockk<BaseRepositoryImpl>()
-        every { repository.getCitiesWithFavouritesFlow(any()) } returns flowOf(emptyList())
+        every { repository.getCitiesWithFavoritesFlow(any()) } returns flowOf(emptyList())
 
         this.viewModel = CitiesListViewModel(repository)
     }
@@ -37,7 +37,7 @@ class CitiesListViewModelTest {
     fun getCities_withValues() = runTest {
         val repository = mockk<BaseRepositoryImpl>()
         val listOfMockedCities = List(5) { mockk<City>() }
-        every { repository.getCitiesWithFavouritesFlow("") } returns flowOf(listOfMockedCities)
+        every { repository.getCitiesWithFavoritesFlow("") } returns flowOf(listOfMockedCities)
 
         viewModel = CitiesListViewModel(repository)
 
@@ -62,15 +62,20 @@ class CitiesListViewModelTest {
             City(_id = 5, name = "Sydney", country = "AU", Coordinates(1.0, 2.0)),
         )
 
-        every { repository.getCitiesWithFavouritesFlow(any()) } answers {
+        every { repository.getCitiesWithFavoritesFlow(any()) } answers {
             val query = firstArg<String>()
             flowOf(cities.filter { it.name.startsWith(query, ignoreCase = true) })
         }
 
-        viewModel = CitiesListViewModel(repository)
+        val viewModel = CitiesListViewModel(repository)
 
         viewModel.citiesState.test {
-            val initialItems = expectMostRecentItem()
+            var initialItems = awaitItem()
+
+            if (initialItems.isEmpty()) {
+                initialItems = awaitItem()
+            }
+
             assertEquals(5, initialItems.size)
 
             viewModel.onEvent(CitiesListIntent.Filter("Bue"))
@@ -130,26 +135,26 @@ class CitiesListViewModelTest {
     }
 
     @Test
-    fun add_to_favourites() = runTest {
+    fun add_to_favorites() = runTest {
         val repository = mockk<BaseRepositoryImpl>()
-        coEvery { repository.saveFavourite(214) } returns Unit
+        coEvery { repository.saveFavorite(214) } returns Unit
 
         viewModel = CitiesListViewModel(repository)
 
-        viewModel.onEvent(CitiesListIntent.AddToFavourites(214))
+        viewModel.onEvent(CitiesListIntent.AddToFavorites(214))
 
-        coVerify { repository.saveFavourite(214) }
+        coVerify { repository.saveFavorite(214) }
     }
 
     @Test
-    fun remove_to_favourites() = runTest {
+    fun remove_to_favorites() = runTest {
         val repository = mockk<BaseRepositoryImpl>()
-        coEvery { repository.removeFavourite(218) } returns Unit
+        coEvery { repository.removeFavorite(218) } returns Unit
 
         viewModel = CitiesListViewModel(repository)
 
-        viewModel.onEvent(CitiesListIntent.RemoveFromFavourites(218))
+        viewModel.onEvent(CitiesListIntent.RemoveFromFavorites(218))
 
-        coVerify { repository.removeFavourite(218) }
+        coVerify { repository.removeFavorite(218) }
     }
 }

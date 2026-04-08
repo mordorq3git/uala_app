@@ -50,18 +50,18 @@ class BaseRepositoryImpl @Inject constructor(
         }
     }
 
-    // Favourites
-    override suspend fun saveFavourite(cityId: Int) {
-        dataBaseRepository.saveFavourite(getUserSessionId(), cityId)
+    // Favorites
+    override suspend fun saveFavorite(cityId: Int) {
+        dataBaseRepository.saveFavorite(getUserSessionId(), cityId)
     }
 
-    override fun getCitiesWithFavouritesFlow(query: String) = getCitiesFromDbFilteredFlow(getUserSessionId(), query)
+    override fun getCitiesWithFavoritesFlow(query: String) = getCitiesFromDbFilteredFlow(getUserSessionId(), query)
 
     override suspend fun getCityFavorited(cityId: Int) = dataBaseRepository.getCityFavorited(getUserSessionId(), cityId)
 
-    override suspend fun removeFavourite(cityId: Int) {
-        dataBaseRepository.removeFavourite(getUserSessionId(), cityId)
+    override suspend fun removeFavorite(cityId: Int) {
+        dataBaseRepository.removeFavorite(getUserSessionId(), cityId)
     }
 
-    override fun existFavourite(userId: Long, cityId: Int) = dataBaseRepository.existFavourite(userId, cityId)
+    override fun existFavorite(userId: Long, cityId: Int) = dataBaseRepository.existFavorite(userId, cityId)
 }

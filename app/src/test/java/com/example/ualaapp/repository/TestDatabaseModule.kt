@@ -42,6 +42,6 @@ object TestDatabaseModule {
 
     @Provides
     @Singleton
-    fun provideFavouriteDao(db: AppDatabase) = db.favouriteDao()
+    fun provideFavoriteDao(db: AppDatabase) = db.favoriteDao()
 
 }
