@@ -50,11 +50,11 @@ fun CitiesListScreen(
         onValueChangeEvent = { newValue -> viewModel.onEvent(CitiesListIntent.Filter(newValue)) },
         listOfCities = citiesStates,
         onRowClickEvent = onCitySelected,
-        onAddFavouriteClickEvent = {
-            newValue -> viewModel.onEvent(CitiesListIntent.AddToFavourites(newValue))
+        onAddFavoriteClickEvent = {
+            newValue -> viewModel.onEvent(CitiesListIntent.AddToFavorites(newValue))
         },
-        onRemoveFavouriteClickEvent = {
-            newValue -> viewModel.onEvent(CitiesListIntent.RemoveFromFavourites(newValue))
+        onRemoveFavoriteClickEvent = {
+            newValue -> viewModel.onEvent(CitiesListIntent.RemoveFromFavorites(newValue))
         }
     )
 }
@@ -66,8 +66,8 @@ fun CitiesFilterListComponent(
     onValueChangeEvent: (String) -> Unit = {},
     listOfCities: List<City>,
     onRowClickEvent: (Int) -> Unit = {},
-    onAddFavouriteClickEvent: (Int) -> Unit = {},
-    onRemoveFavouriteClickEvent: (Int) -> Unit = {}
+    onAddFavoriteClickEvent: (Int) -> Unit = {},
+    onRemoveFavoriteClickEvent: (Int) -> Unit = {}
 ) {
     Column(modifier = modifier) {
         CitiesFilterComponent(
@@ -77,8 +77,8 @@ fun CitiesFilterListComponent(
         CitiesListComponent(
             listOfCities = listOfCities,
             onRowClickEvent = onRowClickEvent,
-            onAddFavouriteClickEvent = onAddFavouriteClickEvent,
-            onRemoveFavouriteClickEvent = onRemoveFavouriteClickEvent
+            onAddFavoriteClickEvent = onAddFavoriteClickEvent,
+            onRemoveFavoriteClickEvent = onRemoveFavoriteClickEvent
         )
     }
 }
@@ -112,22 +112,22 @@ fun CitiesFilterComponent(
 fun CitiesListComponent(
     listOfCities: List<City> = emptyList(),
     onRowClickEvent: (Int) -> Unit = {},
-    onAddFavouriteClickEvent: (Int) -> Unit = {},
-    onRemoveFavouriteClickEvent: (Int) -> Unit = {}
+    onAddFavoriteClickEvent: (Int) -> Unit = {},
+    onRemoveFavoriteClickEvent: (Int) -> Unit = {}
 ) {
     LazyColumn(
         modifier = Modifier
             .testTag("cities_list")
     ) {
         items(listOfCities) { city ->
-            val favouriteEvent = if(!city.isFavourite) onAddFavouriteClickEvent else onRemoveFavouriteClickEvent
+            val favoriteEvent = if(!city.isFavorite) onAddFavoriteClickEvent else onRemoveFavoriteClickEvent
 
             CityItemComponent(
                 title = "${city.name}, ${city.country}",
                 subtitle = "${city.coord.lat}, ${city.coord.lon}",
-                isFavourite = city.isFavourite,
+                isFavorite = city.isFavorite,
                 onRowClickEvent = { onRowClickEvent(city._id) },
-                onFavouriteClickEvent = { favouriteEvent(city._id) }
+                onFavoriteClickEvent = { favoriteEvent(city._id) }
             )
         }
     }
@@ -137,13 +137,13 @@ fun CitiesListComponent(
 fun CityItemComponent(
     title: String,
     subtitle: String,
-    isFavourite: Boolean = false,
+    isFavorite: Boolean = false,
     onRowClickEvent: () -> Unit = {},
-    onFavouriteClickEvent: () -> Unit = {}
+    onFavoriteClickEvent: () -> Unit = {}
 ) {
-    val favouriteContentDescription = if (isFavourite)
+    val favoriteContentDescription = if (isFavorite)
         stringResource(R.string.favorite_active) else stringResource(R.string.favorite_deactive)
-    val favouriteImage = if (isFavourite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder
+    val favoriteImage = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder
 
     Row(
         modifier = Modifier
@@ -173,17 +173,17 @@ fun CityItemComponent(
             )
         }
         Image(
-            imageVector = favouriteImage,
-            contentDescription = favouriteContentDescription,
-            colorFilter = ColorFilter.tint(if (isFavourite) Color.Red else Color.Gray),
+            imageVector = favoriteImage,
+            contentDescription = favoriteContentDescription,
+            colorFilter = ColorFilter.tint(if (isFavorite) Color.Red else Color.Gray),
             modifier = Modifier
                 .size(36.dp)
                 .align(Alignment.CenterVertically)
                 .weight(0.15f)
                 .clickable(enabled = true, onClick = {
-                    onFavouriteClickEvent()
+                    onFavoriteClickEvent()
                 })
-                .testTag("favourite_icon_city_item")
+                .testTag("favorite_icon_city_item")
         )
     }
     HorizontalDivider()
@@ -206,10 +206,10 @@ private fun CityItemComponent_Preview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun CityItemComponent_favourite_Preview() {
+private fun CityItemComponent_favorite_Preview() {
     CityItemComponent(
         title = "City, CountryCode",
         subtitle = "latitude, longitude",
-        isFavourite = true
+        isFavorite = true
     )
 }

@@ -28,7 +28,7 @@ class CitiesListViewModel @Inject constructor(
     val filterState: StateFlow<String> = _filterState.asStateFlow()
     val citiesState: StateFlow<List<City>> = _filterState
         .flatMapLatest { query ->
-            baseRepository.getCitiesWithFavouritesFlow(query)
+            baseRepository.getCitiesWithFavoritesFlow(query)
         }
         .flowOn(Dispatchers.Default)
         .stateIn(
@@ -40,8 +40,8 @@ class CitiesListViewModel @Inject constructor(
     fun onEvent(intent: CitiesListIntent) {
         when(intent) {
             is CitiesListIntent.Filter -> filterCities(intent.filter)
-            is CitiesListIntent.AddToFavourites -> addToFavourites(intent._id)
-            is CitiesListIntent.RemoveFromFavourites -> removeFromFavourites(intent._id)
+            is CitiesListIntent.AddToFavorites -> addToFavorites(intent._id)
+            is CitiesListIntent.RemoveFromFavorites -> removeFromFavorites(intent._id)
         }
     }
 
@@ -49,15 +49,15 @@ class CitiesListViewModel @Inject constructor(
         _filterState.update { filterText }
     }
 
-    private fun addToFavourites(cityId: Int) {
+    private fun addToFavorites(cityId: Int) {
         viewModelScope.launch {
-            baseRepository.saveFavourite(cityId)
+            baseRepository.saveFavorite(cityId)
         }
     }
 
-    private fun removeFromFavourites(cityId: Int) {
+    private fun removeFromFavorites(cityId: Int) {
         viewModelScope.launch {
-            baseRepository.removeFavourite(cityId)
+            baseRepository.removeFavorite(cityId)
         }
     }
 }
