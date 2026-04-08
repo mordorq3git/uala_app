@@ -109,6 +109,16 @@ class CitiesListViewModelTest {
             assertEquals("ala", viewModel.filterState.value)
             assertEquals("Alabama", alaItems2[0].name)
 
+            viewModel.onEvent(CitiesListIntent.Filter("s"))
+            val sItems = awaitItem()
+            assertEquals(1, sItems.size)
+            assertEquals("s", viewModel.filterState.value)
+            assertEquals("Sydney", sItems[0].name)
+
+            viewModel.onEvent(CitiesListIntent.Filter("syd"))
+            assertEquals("syd", viewModel.filterState.value)
+            assertEquals("Sydney", viewModel.citiesState.value[0].name)
+
             cancelAndIgnoreRemainingEvents()
         }
     }
