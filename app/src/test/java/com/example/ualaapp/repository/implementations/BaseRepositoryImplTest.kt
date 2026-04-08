@@ -5,8 +5,9 @@ import app.cash.turbine.test
 import com.example.ualaapp.data.City
 import com.example.ualaapp.data.Coordinates
 import com.example.ualaapp.repository.implementations.api.CitiesApiService
+import com.example.ualaapp.repository.implementations.database.AppDatabase
 import com.example.ualaapp.repository.implementations.database.daos.CityDao
-import com.example.ualaapp.repository.implementations.database.daos.FavouriteDao
+import com.example.ualaapp.repository.implementations.database.daos.FavoriteDao
 import com.example.ualaapp.repository.implementations.database.daos.UserDao
 import com.example.ualaapp.repository.implementations.database.entities.CityEntity
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -15,6 +16,7 @@ import dagger.hilt.android.testing.HiltTestApplication
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
+import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -32,8 +34,9 @@ class BaseRepositoryImplTest {
     var hiltRule = HiltAndroidRule(this)
     @Inject lateinit var cityDao: CityDao
     @Inject lateinit var userDao: UserDao
-    @Inject lateinit var favouriteDao: FavouriteDao
+    @Inject lateinit var favoriteDao: FavoriteDao
     @Inject lateinit var sharedPreferences: SharedPreferences
+    @Inject lateinit var appDatabase: AppDatabase
 
     private val mockApiService: CitiesApiService = mockk()
 
@@ -45,7 +48,8 @@ class BaseRepositoryImplTest {
     fun init() {
         hiltRule.inject()
 
-        dataBaseRepository = DataBaseRepositoryImpl(cityDao, userDao, favouriteDao)
+        appDatabase.clearAllTables()
+        dataBaseRepository = DataBaseRepositoryImpl(cityDao, userDao, favoriteDao)
         apiRepository = ApiRepositoryImpl(mockApiService)
 
         baseRepository = BaseRepositoryImpl(
@@ -55,13 +59,18 @@ class BaseRepositoryImplTest {
         )
     }
 
+    @After
+    fun tearDown() {
+        appDatabase.close()
+    }
+
     @Test
-    fun getCitiesWithFavouritesFlow_returnsEmptyList() = runTest {
+    fun getCitiesWithFavoritesFlow_returnsEmptyList() = runTest {
         coEvery { apiRepository.loadCities() } returns emptyList()
 
         baseRepository.loadCities()
 
-        baseRepository.getCitiesWithFavouritesFlow("").test {
+        baseRepository.getCitiesWithFavoritesFlow("").test {
             val cities = awaitItem()
 
             Assert.assertNotNull(cities)
@@ -72,15 +81,19 @@ class BaseRepositoryImplTest {
     }
 
     @Test
-    fun getCitiesWithFavouritesFlow_returnsEmptyList_from_db() = runTest {
+    fun getCitiesWithFavoritesFlow_returnsEmptyList_from_db() = runTest {
         val listOfMockedCities = List(6) { mockk<City>(relaxed = true) }
 
         coEvery { apiRepository.loadCities() } returns listOfMockedCities
 
         baseRepository.loadCities()
 
-        baseRepository.getCitiesWithFavouritesFlow("").test {
-            val cities = awaitItem()
+        baseRepository.getCitiesWithFavoritesFlow("").test {
+            var cities = awaitItem()
+
+            if (cities.isEmpty()) {
+                cities = awaitItem()
+            }
 
             Assert.assertNotNull(cities)
             Assert.assertFalse(cities.isEmpty())
@@ -91,11 +104,11 @@ class BaseRepositoryImplTest {
     }
 
     @Test
-    fun getCitiesWithFavouritesFlow_returnsEmptyList_fromDbAndApi_with_insertAll() = runTest {
+    fun getCitiesWithFavoritesFlow_returnsEmptyList_fromDbAndApi_with_insertAll() = runTest {
         val listOfMockedCityEntities = List(8) { mockk<CityEntity>(relaxed = true) }
         cityDao.insertAll(listOfMockedCityEntities)
 
-        dataBaseRepository = DataBaseRepositoryImpl(cityDao, userDao, favouriteDao)
+        dataBaseRepository = DataBaseRepositoryImpl(cityDao, userDao, favoriteDao)
 
         baseRepository = BaseRepositoryImpl(
             apiRepository = apiRepository,
@@ -103,7 +116,7 @@ class BaseRepositoryImplTest {
             sharedPreferences = sharedPreferences
         )
 
-        baseRepository.getCitiesWithFavouritesFlow("").test {
+        baseRepository.getCitiesWithFavoritesFlow("").test {
             val cities = awaitItem()
 
             Assert.assertNotNull(cities)
@@ -115,11 +128,11 @@ class BaseRepositoryImplTest {
     }
 
     @Test
-    fun getCitiesWithFavouritesFlow_returnsEmptyList_fromDbAndApi_With_isolatedInsert() = runTest {
+    fun getCitiesWithFavoritesFlow_returnsEmptyList_fromDbAndApi_With_isolatedInsert() = runTest {
         val mockedCityEntity = mockk<CityEntity>(relaxed = true)
         for (n in 1 .. 5) cityDao.insert(mockedCityEntity)
 
-        dataBaseRepository = DataBaseRepositoryImpl(cityDao, userDao, favouriteDao)
+        dataBaseRepository = DataBaseRepositoryImpl(cityDao, userDao, favoriteDao)
 
         baseRepository = BaseRepositoryImpl(
             apiRepository = apiRepository,
@@ -127,7 +140,7 @@ class BaseRepositoryImplTest {
             sharedPreferences = sharedPreferences
         )
 
-        baseRepository.getCitiesWithFavouritesFlow("").test {
+        baseRepository.getCitiesWithFavoritesFlow("").test {
             val cities = awaitItem()
 
             Assert.assertNotNull(cities)
@@ -146,7 +159,7 @@ class BaseRepositoryImplTest {
 
         baseRepository.loadCities()
 
-        baseRepository.getCitiesWithFavouritesFlow("").test {
+        baseRepository.getCitiesWithFavoritesFlow("").test {
             val cities = awaitItem()
 
             Assert.assertNotNull(cities)
@@ -176,7 +189,7 @@ class BaseRepositoryImplTest {
 
         baseRepository.loadCities()
 
-        baseRepository.getCitiesWithFavouritesFlow("").test {
+        baseRepository.getCitiesWithFavoritesFlow("").test {
             val cities = awaitItem()
 
             Assert.assertFalse(cities.isEmpty())
@@ -193,7 +206,7 @@ class BaseRepositoryImplTest {
     }
 
     @Test
-    fun saveFavourite_toDb() = runTest {
+    fun saveFavorite_toDb() = runTest {
         val city = City(
             _id = 214,
             name = "Buenos Aires",
@@ -213,11 +226,11 @@ class BaseRepositoryImplTest {
 
         baseRepository.saveUser("username")
 
-        baseRepository.saveFavourite(214)
+        baseRepository.saveFavorite(214)
     }
 
     @Test
-    fun removeFavourite_toDb() = runTest {
+    fun removeFavorite_toDb() = runTest {
         val city = City(
             _id = 214,
             name = "Buenos Aires",
@@ -237,6 +250,6 @@ class BaseRepositoryImplTest {
 
         baseRepository.saveUser("username")
 
-        baseRepository.removeFavourite(214)
+        baseRepository.removeFavorite(214)
     }
 }

@@ -30,9 +30,9 @@ class MapViewModel @Inject constructor(
     private val _shouldShowMapCard = MutableStateFlow(false)
     val shouldShowMapCard = _shouldShowMapCard.asStateFlow()
 
-    val existFavourite: StateFlow<Boolean> = combine(_currentCityId, _currentUserId) { cityId, userId ->
+    val existFavorite: StateFlow<Boolean> = combine(_currentCityId, _currentUserId) { cityId, userId ->
         if (cityId != -999 && userId != -999L) {
-            baseRepository.existFavourite(userId, cityId)
+            baseRepository.existFavorite(userId, cityId)
         } else {
             flowOf(false)
         }
@@ -46,8 +46,8 @@ class MapViewModel @Inject constructor(
     fun onEvent(intent: MapIntent) {
         when(intent) {
             is MapIntent.GetCity -> getCity(intent.id)
-            is MapIntent.AddToFavourites -> addToFavourites(intent._id)
-            is MapIntent.RemoveFromFavourites -> removeFromFavourites(intent._id)
+            is MapIntent.AddToFavorites -> addToFavorites(intent._id)
+            is MapIntent.RemoveFromFavorites -> removeFromFavorites(intent._id)
             is MapIntent.ShowMapCard -> showMapCard(intent.shouldShow)
         }
     }
@@ -60,19 +60,19 @@ class MapViewModel @Inject constructor(
         }
     }
 
-    private fun addToFavourites(cityId: Int) {
+    private fun addToFavorites(cityId: Int) {
         viewModelScope.launch {
-            baseRepository.saveFavourite(cityId)
+            baseRepository.saveFavorite(cityId)
         }
     }
 
-    private fun removeFromFavourites(cityId: Int) {
+    private fun removeFromFavorites(cityId: Int) {
         viewModelScope.launch {
-            baseRepository.removeFavourite(cityId)
+            baseRepository.removeFavorite(cityId)
         }
     }
 
-    fun checkFavouriteStatus(cityId: Int) {
+    fun checkFavoriteStatus(cityId: Int) {
         viewModelScope.launch {
             _currentCityId.update { cityId }
         }

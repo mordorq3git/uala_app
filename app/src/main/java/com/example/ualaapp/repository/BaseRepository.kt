@@ -1,7 +1,6 @@
 package com.example.ualaapp.repository
 
 import com.example.ualaapp.data.City
-import com.example.ualaapp.data.User
 import kotlinx.coroutines.flow.Flow
 
 interface BaseRepository : Repository {
@@ -14,14 +13,14 @@ interface BaseRepository : Repository {
 
     suspend fun saveUser(username: String)
 
-    // Favourites
-    suspend fun saveFavourite(cityId: Int)
+    // Favorites
+    suspend fun saveFavorite(cityId: Int)
 
-    fun getCitiesWithFavouritesFlow(query: String): Flow<List<City>>
+    fun getCitiesWithFavoritesFlow(query: String): Flow<List<City>>
 
     suspend fun getCityFavorited(cityId: Int): City
 
-    suspend fun removeFavourite(cityId: Int)
+    suspend fun removeFavorite(cityId: Int)
 
-    fun existFavourite(userId: Long, cityId: Int): Flow<Boolean>
+    fun existFavorite(userId: Long, cityId: Int): Flow<Boolean>
 }

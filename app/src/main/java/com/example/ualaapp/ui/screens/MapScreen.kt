@@ -20,7 +20,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -53,7 +52,7 @@ fun MapScreen(
     viewModel: MapViewModel = hiltViewModel()
 ) {
     val currentCity by viewModel.currentCityState.collectAsStateWithLifecycle()
-    val isFavorite by viewModel.existFavourite.collectAsStateWithLifecycle()
+    val isFavorite by viewModel.existFavorite.collectAsStateWithLifecycle()
     val shouldShowMapCard by viewModel.shouldShowMapCard.collectAsStateWithLifecycle()
 
     val initLocation = LatLng(-34.6037, -58.3816) // Buenos Aires
@@ -78,7 +77,7 @@ fun MapScreen(
 
     LaunchedEffect(selectedCityId) {
         if(selectedCityId != -1) {
-            viewModel.checkFavouriteStatus(selectedCityId)
+            viewModel.checkFavoriteStatus(selectedCityId)
             viewModel.onEvent(MapIntent.ShowMapCard(false))
         }
     }
@@ -101,10 +100,10 @@ fun MapScreen(
         isFavorite = isFavorite,
         city = currentCity,
         onAddFavoriteEvent = { _id ->
-            viewModel.onEvent(MapIntent.AddToFavourites(_id))
+            viewModel.onEvent(MapIntent.AddToFavorites(_id))
         },
         onRemoveFavoriteEvent = { _id ->
-            viewModel.onEvent(MapIntent.RemoveFromFavourites(_id))
+            viewModel.onEvent(MapIntent.RemoveFromFavorites(_id))
         },
         onSholdShowCityCard = { show ->
             viewModel.onEvent(MapIntent.ShowMapCard(show))

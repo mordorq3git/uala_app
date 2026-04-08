@@ -114,13 +114,13 @@ class DataBaseRepositoryImplTest {
     }
 
     @Test
-    fun saveFavourite_toDb() = runTest {
-        repository.saveFavourite(54, 854)
+    fun saveFavorite_toDb() = runTest {
+        repository.saveFavorite(54, 854)
     }
 
     @Test
-    fun removeFavourite_fromDb() = runTest {
-        repository.removeFavourite(54, 854)
+    fun removeFavorite_fromDb() = runTest {
+        repository.removeFavorite(54, 854)
     }
 
 }

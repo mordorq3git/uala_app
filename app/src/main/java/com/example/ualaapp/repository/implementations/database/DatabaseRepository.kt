@@ -19,11 +19,11 @@ interface DatabaseRepository : Repository {
     suspend fun getUser(id: Long) : User
 
     // Favorites
-    suspend fun saveFavourite(userId: Long, cityId: Int)
+    suspend fun saveFavorite(userId: Long, cityId: Int)
 
     suspend fun getCityFavorited(userId: Long, id: Int): City
 
-    suspend fun removeFavourite(userId: Long, cityId: Int)
+    suspend fun removeFavorite(userId: Long, cityId: Int)
 
-    fun existFavourite(userId: Long, cityId: Int) : Flow<Boolean>
+    fun existFavorite(userId: Long, cityId: Int) : Flow<Boolean>
 }
