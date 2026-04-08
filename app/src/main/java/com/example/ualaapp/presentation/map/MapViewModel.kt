@@ -60,16 +60,12 @@ class MapViewModel @Inject constructor(
     private fun addToFavourites(cityId: Int) {
         viewModelScope.launch {
             baseRepository.saveFavourite(cityId)
-
-            _currentCityState.update { it!!.copy(isFavourite = true) }
         }
     }
 
     private fun removeFromFavourites(cityId: Int) {
         viewModelScope.launch {
             baseRepository.removeFavourite(cityId)
-
-            _currentCityState.update { it!!.copy(isFavourite = false) }
         }
     }
 

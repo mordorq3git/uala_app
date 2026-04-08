@@ -141,7 +141,8 @@ fun CityItemComponent(
     onRowClickEvent: () -> Unit = {},
     onFavouriteClickEvent: () -> Unit = {}
 ) {
-    val favouriteContentDescription = if (isFavourite) "Favourite activated" else "Favourite deactivated"
+    val favouriteContentDescription = if (isFavourite)
+        stringResource(R.string.favorite_active) else stringResource(R.string.favorite_deactive)
     val favouriteImage = if (isFavourite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder
 
     Row(

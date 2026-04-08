@@ -6,4 +6,6 @@
     <string name="loading_cities">Cargando ciudades...</string>
     <string name="filter_city">Filter by City Name</string>
     <string name="city_detail_title_topbar">Detalle de Ciudad</string>
+    <string name="favorite_active">Favorito activo</string>
+    <string name="favorite_deactive">Favorito desactivo</string>
 </resources>

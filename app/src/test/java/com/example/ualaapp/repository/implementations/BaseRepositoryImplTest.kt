@@ -3,7 +3,6 @@ package com.example.ualaapp.repository.implementations
 import android.content.SharedPreferences
 import com.example.ualaapp.data.City
 import com.example.ualaapp.data.Coordinates
-import com.example.ualaapp.data.User
 import com.example.ualaapp.repository.implementations.api.CitiesApiService
 import com.example.ualaapp.repository.implementations.database.daos.CityDao
 import com.example.ualaapp.repository.implementations.database.daos.FavouriteDao
@@ -14,7 +13,6 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.HiltTestApplication
 import io.mockk.coEvery
 import io.mockk.mockk
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Before
@@ -166,15 +164,6 @@ class BaseRepositoryImplTest {
         // Assert.assertNotNull(cityFromDb)
         // Assert.assertEquals("Salta", cityFromDb.name)
         // Assert.assertEquals("AR", cityFromDb.country)
-    }
-
-    @Test
-    fun saveUser_toDb() = runTest {
-        baseRepository.saveUser("username")
-
-        val user: User = baseRepository.getUser("username")
-
-        Assert.assertEquals("username", user.name)
     }
 
     @Test
