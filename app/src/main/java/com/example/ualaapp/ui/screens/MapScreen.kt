@@ -53,14 +53,17 @@ fun MapScreen(
 
     val initLocation = LatLng(-34.6037, -58.3816) // Buenos Aires
 
-    val displayPosition = currentCity?.let {
+    val displayPosition: LatLng = currentCity?.let {
         LatLng(it.coord.lat, it.coord.lon)
     } ?: initLocation
 
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(displayPosition, 10f)
     }
-    val markerState = rememberMarkerState(position = displayPosition)
+
+    val markerState = currentCity?.let {
+        rememberMarkerState(position = displayPosition)
+    }
 
     LaunchedEffect(selectedCityId) {
         if(selectedCityId != -1) {
@@ -77,7 +80,7 @@ fun MapScreen(
     LaunchedEffect(currentCity) {
         currentCity?.let { city ->
             val cityPos = LatLng(city.coord.lat, city.coord.lon)
-            markerState.position = cityPos
+            markerState?.position = cityPos
             cameraPositionState.animate(
                 update = CameraUpdateFactory.newLatLngZoom(cityPos, 10f),
                 durationMs = 1000
@@ -104,7 +107,7 @@ fun MapScreen(
 fun MapComponent(
     modifier: Modifier = Modifier,
     cameraPositionState: CameraPositionState,
-    markerState: MarkerState,
+    markerState: MarkerState?,
     city: City?,
     isFavorite: Boolean = false,
     onAddFavoriteEvent: (Int) -> Unit = {},
@@ -118,11 +121,13 @@ fun MapComponent(
             modifier = modifier.fillMaxSize(),
             cameraPositionState = cameraPositionState
         ) {
-            Marker(
-                state = markerState,
-                title = city?.name ?: "Ubicacion",
-                onClick = { true }
-            )
+            markerState?.let {
+                Marker(
+                    state = it,
+                    title = city?.name ?: "Ubicacion",
+                    onClick = { true }
+                )
+            }
         }
 
         city?.let { city ->
