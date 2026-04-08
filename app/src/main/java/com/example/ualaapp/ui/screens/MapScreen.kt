@@ -32,6 +32,7 @@ import com.example.ualaapp.data.City
 import com.example.ualaapp.data.Coordinates
 import com.example.ualaapp.presentation.map.MapIntent
 import com.example.ualaapp.presentation.map.MapViewModel
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
@@ -66,25 +67,60 @@ fun MapScreen(
         }
     }
 
-    LaunchedEffect(displayPosition) {
+    LaunchedEffect(currentCity) {
+        if(selectedCityId != -1) {
+            currentCity?.let { city ->
+                if(city._id == selectedCityId) {
+                    val cityPos = LatLng(city.coord.lat, city.coord.lon)
+                    markerState.position = cityPos
+                    cameraPositionState.animate(
+                        update = CameraUpdateFactory.newLatLngZoom(cityPos, 10f),
+                        durationMs = 1000
+                    )
+                }
+            }
+        }
+    }
+    /*LaunchedEffect(selectedCityId) {
+        if(selectedCityId != -1) {
+            currentCity?.let { city ->
+                val cityPos = LatLng(city.coord.lat, city.coord.lon)
+                markerState.position = cityPos
+                cameraPositionState.animate(
+                    update = CameraUpdateFactory.newLatLngZoom(cityPos, 10f),
+                    durationMs = 1000
+                )
+            }
+        }
+    }*/
+
+    /*LaunchedEffect(currentCity?.coord) {
+        currentCity?.let {
+            markerState.position = LatLng(it.coord.lat, it.coord.lon)
+        }
+    }*/
+    /*LaunchedEffect(displayPosition) {
         markerState.position = displayPosition
 
         cameraPositionState.animate(
-            update = com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom(
+            update = CameraUpdateFactory.newLatLngZoom(
                 displayPosition,
                 10f
             ),
             durationMs = 1000
         )
-    }
+    }*/
 
     MapComponent(
         modifier = modifier,
         cameraPositionState = cameraPositionState,
         markerState = markerState,
         city = currentCity,
-        onFavouriteClick = { _id ->
-            //viewModel.onEvent(MapIntent.UpdateFavourite(_id))
+        onAddFavouriteEvent = { _id ->
+            viewModel.onEvent(MapIntent.AddToFavourites(_id))
+        },
+        onRemoveFavouriteEvent = { _id ->
+            viewModel.onEvent(MapIntent.RemoveFromFavourites(_id))
         }
     )
 }
@@ -95,7 +131,8 @@ fun MapComponent(
     cameraPositionState: CameraPositionState,
     markerState: MarkerState,
     city: City?,
-    onFavouriteClick: (Int) -> Unit = {}
+    onAddFavouriteEvent: (Int) -> Unit = {},
+    onRemoveFavouriteEvent: (Int) -> Unit = {}
 ) {
     Box(modifier = Modifier
         .fillMaxSize()
@@ -115,6 +152,8 @@ fun MapComponent(
         }
 
         city?.let { city ->
+            val favouriteEvent = if(!city.isFavourite) onAddFavouriteEvent else onRemoveFavouriteEvent
+
             CityMapDetailCard(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
@@ -124,7 +163,7 @@ fun MapComponent(
                 lat = city.coord.lat,
                 lon = city.coord.lon,
                 isFavorite = city.isFavourite,
-                onFavouriteClick = { onFavouriteClick(city._id) }
+                onFavouriteClick = { favouriteEvent(city._id) }
             )
         }
     }
@@ -170,7 +209,7 @@ fun CityMapDetailCard(
             }
 
             IconButton(onClick = {
-                onFavouriteClick()
+                //onFavouriteClick()
             }) {
                 Icon(
                     imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,

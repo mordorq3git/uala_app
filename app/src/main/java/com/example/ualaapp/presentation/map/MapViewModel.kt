@@ -22,14 +22,28 @@ class MapViewModel @Inject constructor(
     fun onEvent(intent: MapIntent) {
         when(intent) {
             is MapIntent.GetCity -> getCity(intent.id)
+            is MapIntent.AddToFavourites -> addToFavourites(intent._id)
+            is MapIntent.RemoveFromFavourites -> removeFromFavourites(intent._id)
         }
     }
 
     private fun getCity(id: Int) {
         viewModelScope.launch {
-            val city = baseRepository.getCity(id)
+            baseRepository.getCity(id).collect { city ->
+                _currentCityState.update { city }
+            }
+        }
+    }
 
-            _currentCityState.update { city }
+    private fun addToFavourites(cityId: Int) {
+        viewModelScope.launch {
+            baseRepository.saveFavourite(cityId)
+        }
+    }
+
+    private fun removeFromFavourites(cityId: Int) {
+        viewModelScope.launch {
+            baseRepository.removeFavourite(cityId)
         }
     }
 }

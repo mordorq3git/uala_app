@@ -12,6 +12,10 @@ import com.example.ualaapp.repository.implementations.database.entities.CityWith
 import com.example.ualaapp.repository.implementations.database.entities.CoordinatesEntity
 import com.example.ualaapp.repository.implementations.database.entities.FavouriteEntity
 import com.example.ualaapp.repository.implementations.database.entities.UserEntity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class DataBaseRepositoryImpl @Inject constructor(
@@ -22,16 +26,25 @@ class DataBaseRepositoryImpl @Inject constructor(
 
     override suspend fun getCities() = mapCitiesEntitiesToDto(cityDao.getAll())
 
-    override suspend fun getCities(userId: Long) : List<City> {
-        val listOfCitiesWithFavourites = mapCitiesWithFavoriteToDto(cityDao.getAllCitiesWithFavorite(userId))
-
-        return listOfCitiesWithFavourites
+    override fun getCitiesFiltered(userId: Long, query: String) : Flow<List<City>> {
+        return cityDao.getCitiesFlow(userId, query).map { list ->
+            mapCitiesWithFavoriteToDto(list)
+        }.flowOn(Dispatchers.Default)
     }
 
-    override suspend fun getCity(id: Int): City {
-        val cityEntity = cityDao.get(id)
+    override fun getCities(userId: Long) : Flow<List<City>> {
+        return cityDao.getAllCitiesWithFavorite(userId).map { list ->
+            mapCitiesWithFavoriteToDto(list)
+        }.flowOn(Dispatchers.Default)
+    }
 
-        return mapCityEntityToDto(cityEntity)
+    override fun getCity(userId: Long, id: Int): Flow<City> {
+        val cityEntity = cityDao.get(userId, id)
+
+        return cityEntity.map {
+            entity -> mapCityEntityToDto(entity)
+        }.flowOn(Dispatchers.Default)
+        //return mapCityEntityToDto(cityEntity)
     }
 
     override suspend fun saveCities(listOfCities: List<City>) {

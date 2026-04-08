@@ -4,8 +4,8 @@ import android.content.SharedPreferences
 import com.example.ualaapp.data.City
 import com.example.ualaapp.data.User
 import com.example.ualaapp.repository.BaseRepository
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
-import kotlin.apply
 
 private const val USER_ID = "USER_ID"
 private const val USER_ID_DEF_VALUE: Long = -999
@@ -27,20 +27,24 @@ class BaseRepositoryImpl @Inject constructor(
 
     private suspend fun getCitiesFromDb() = dataBaseRepository.getCities()
 
-    private suspend fun getCitiesFromDb(userId: Long) = dataBaseRepository.getCities(userId)
+    private fun getCitiesFromDb(userId: Long, query: String) = dataBaseRepository.getCitiesFiltered(userId, query)
 
     private suspend fun getCitiesFromApi() = apiRepository.loadCities()
 
 
     override suspend fun getCities() = getCitiesFromDb()
 
-    override suspend fun getCitiesWithFavourites() : List<City> {
+    override fun getCitiesWithFavourites(query: String) : Flow<List<City>> {
         val sessionId = sharedPreferences.getLong(USER_ID, USER_ID_DEF_VALUE)
 
-        return getCitiesFromDb(sessionId)
+        return getCitiesFromDb(sessionId, query)
     }
 
-    override suspend fun getCity(id: Int) = dataBaseRepository.getCity(id)
+    override fun getCity(id: Int) : Flow<City> {
+        val sessionId = sharedPreferences.getLong(USER_ID, USER_ID_DEF_VALUE)
+
+        return dataBaseRepository.getCity(sessionId, id)
+    }
 
     private suspend fun saveCities(listOfCities: List<City>) {
         dataBaseRepository.saveCities(listOfCities)
